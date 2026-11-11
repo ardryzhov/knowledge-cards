@@ -2,6 +2,31 @@ import { expect, test } from '@playwright/test'
 import { mockOwnerSignIn, sampleCards, sampleTopics, topicId } from './mock-owner'
 import { mockTrainingApi } from './mock-training'
 
+test('длинный ответ прокручивается внутри карточки и не сдвигает кнопки', async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 568 })
+  const card = {
+    ...sampleCards[0]!,
+    answer: Array.from({ length: 35 }, (_, index) => `Абзац ${index + 1}: ${'подробное объяснение '.repeat(12)}`).join('\n\n')
+      + `\n\n${'ДлинныйТерминБезПробелов'.repeat(20)}`,
+  }
+  await mockOwnerSignIn(page, { topics: sampleTopics, cards: [card] })
+  await mockTrainingApi(page, [card])
+  await page.goto(`/#training?topic=${topicId}&mode=spaced`)
+  await page.getByRole('button', { name: 'Показать ответ' }).click()
+  const answer = page.getByLabel('Ответ')
+  await expect(answer).toBeVisible()
+  const before = await answer.evaluate(element => ({ height: element.clientHeight, content: element.scrollHeight }))
+  expect(before.content).toBeGreaterThan(before.height)
+  await answer.evaluate(element => { element.scrollTop = element.scrollHeight })
+  expect(await answer.evaluate(element => element.scrollTop)).toBeGreaterThan(0)
+  const rateButton = page.getByRole('button', { name: 'Знал', exact: true })
+  await expect(rateButton).toBeVisible()
+  const bounds = await rateButton.boundingBox()
+  expect(bounds).not.toBeNull()
+  expect(bounds!.y + bounds!.height).toBeLessThanOrEqual(568)
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320)
+})
+
 test('spaced: выбор режима, подсказки, самооценка и сохранённый результат', async ({ page }) => {
   const directWrites: string[] = []
   page.on('request', request => {

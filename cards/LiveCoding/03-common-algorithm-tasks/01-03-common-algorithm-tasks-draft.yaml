@@ -1,0 +1,297 @@
+topic: "Популярные алгоритмические задачи"
+cards:
+  - question: "Дан int[] и target. Верни индексы двух разных элементов с суммой target или пустой массив; существует не более одного ответа."
+    answer: "1) Идём слева направо. 2) Для x ищем target−x среди уже увиденных. 3) Если нет — сохраняем x и индекс. Сложность: O(n) времени, O(n) памяти."
+    category: "HashMap"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |
+      int[] twoSum(int[] a, int target) {
+          Map<Long, Integer> seen = new HashMap<>();
+          for (int i = 0; i < a.length; i++) {
+              long need = (long) target - a[i];
+              if (seen.containsKey(need)) return new int[]{seen.get(need), i};
+              seen.put((long) a[i], i);
+          }
+          return new int[0];
+      }
+  - question: "Дан int[]. Определи, есть ли повторяющееся значение."
+    answer: "1) Создаём set увиденных. 2) Если add вернул false, дубль найден. 3) Иначе продолжаем. Ожидаемо O(n) времени и O(n) памяти."
+    category: "HashSet"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: |
+      boolean hasDuplicate(int[] a) {
+          Set<Integer> seen = new HashSet<>();
+          for (int x : a) if (!seen.add(x)) return true;
+          return false;
+      }
+  - question: "Разверни односвязный список на месте; Node содержит int value и Node next. Верни новую голову."
+    answer: "1) Держим prev и текущий узел. 2) Сохраняем next, меняем ссылку на prev. 3) Сдвигаем оба указателя. O(n) времени, O(1) памяти."
+    category: "Связный список"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |
+      Node reverse(Node head) {
+          Node prev = null;
+          while (head != null) {
+              Node next = head.next;
+              head.next = prev;
+              prev = head;
+              head = next;
+          }
+          return prev;
+      }
+  - question: "Проверь, корректно ли вложены скобки ()[]{} в строке, содержащей только эти символы."
+    answer: "1) Открывающие кладём в стек. 2) На закрывающей проверяем ожидаемую открывающую. 3) В конце стек пуст. O(n) времени и памяти."
+    category: "Стек"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |
+      boolean valid(String s) {
+          Deque<Character> st = new ArrayDeque<>();
+          for (char c : s.toCharArray()) {
+              if (c == '(') st.push(')');
+              else if (c == '[') st.push(']');
+              else if (c == '{') st.push('}');
+              else if (st.isEmpty() || st.pop() != c) return false;
+          }
+          return st.isEmpty();
+      }
+  - question: "Найди индекс target в отсортированном int[] без дублей или верни -1."
+    answer: "1) Держим полуоткрытый диапазон [l,r). 2) Проверяем середину. 3) Отбрасываем половину по сравнению. O(log n) времени, O(1) памяти."
+    category: "Бинарный поиск"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: |
+      int indexOf(int[] a, int target) {
+          int l = 0, r = a.length;
+          while (l < r) {
+              int m = l + (r - l) / 2;
+              if (a[m] == target) return m;
+              if (a[m] < target) l = m + 1;
+              else r = m;
+          }
+          return -1;
+      }
+  - question: "Найди первый индекс target в отсортированном int[] с возможными дублями или верни -1."
+    answer: "1) Бинарным поиском находим первый индекс, где a[i]≥target. 2) Проверяем границу и равенство. O(log n) времени, O(1) памяти."
+    category: "Бинарный поиск"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |
+      int first(int[] a, int target) {
+          int l = 0, r = a.length;
+          while (l < r) {
+              int m = l + (r - l) / 2;
+              if (a[m] < target) l = m + 1;
+              else r = m;
+          }
+          return l < a.length && a[l] == target ? l : -1;
+      }
+  - question: "Найди максимальную сумму непустого непрерывного подмассива int[]; вход непустой, результат помещается в int."
+    answer: "1) На каждом элементе выбираем: продолжить текущий отрезок или начать новый. 2) Обновляем лучший ответ. O(n) времени, O(1) памяти."
+    category: "Динамическое программирование"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |
+      int maxSubarray(int[] a) {
+          int cur = a[0], best = a[0];
+          for (int i = 1; i < a.length; i++) {
+              cur = Math.max(a[i], cur + a[i]);
+              best = Math.max(best, cur);
+          }
+          return best;
+      }
+  - question: "Найди длину самой длинной подстроки без повторяющихся char; сравнение идёт по UTF-16 char."
+    answer: "1) Храним последний индекс символа. 2) При повторе сдвигаем левую границу за прошлое появление. 3) Обновляем максимум. O(n) времени, O(u) памяти."
+    category: "Скользящее окно"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |
+      int longestUnique(String s) {
+          Map<Character, Integer> last = new HashMap<>();
+          int left = 0, best = 0;
+          for (int right = 0; right < s.length(); right++) {
+              char c = s.charAt(right);
+              if (last.containsKey(c)) left = Math.max(left, last.get(c) + 1);
+              last.put(c, right);
+              best = Math.max(best, right - left + 1);
+          }
+          return best;
+      }
+  - question: "Даны отсортированный int[] и target. Есть ли пара разных элементов с такой суммой?"
+    answer: "1) Ставим указатели по краям. 2) Сумма меньше target — двигаем левый, больше — правый. 3) При равенстве нашли ответ. O(n) времени, O(1) памяти."
+    category: "Два указателя"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |
+      boolean pairSum(int[] a, long target) {
+          int l = 0, r = a.length - 1;
+          while (l < r) {
+              long sum = (long) a[l] + a[r];
+              if (sum == target) return true;
+              if (sum < target) l++;
+              else r--;
+          }
+          return false;
+      }
+  - question: "Проверь, является ли строка палиндромом, игнорируя регистр и неалфавитно-цифровые символы; работай с char."
+    answer: "1) Два указателя идут навстречу. 2) Пропускаем неподходящие символы. 3) Сравниваем после приведения регистра. O(n) времени, O(1) памяти."
+    category: "Два указателя"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |
+      boolean palindrome(String s) {
+          int l = 0, r = s.length() - 1;
+          while (l < r) {
+              if (!Character.isLetterOrDigit(s.charAt(l))) {
+                  l++;
+                  continue;
+              }
+              if (!Character.isLetterOrDigit(s.charAt(r))) {
+                  r--;
+                  continue;
+              }
+              if (Character.toLowerCase(s.charAt(l)) !=
+                  Character.toLowerCase(s.charAt(r))) return false;
+              l++;
+              r--;
+          }
+          return true;
+      }
+  - question: "Определи, содержит ли односвязный список цикл; Node содержит поле next."
+    answer: "1) Медленный указатель идёт на один узел, быстрый на два. 2) Встретились — цикл есть. 3) Быстрый дошёл до null — цикла нет. O(n) времени, O(1) памяти."
+    category: "Связный список"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |
+      boolean hasCycle(Node head) {
+          Node slow = head, fast = head;
+          while (fast != null && fast.next != null) {
+              slow = slow.next;
+              fast = fast.next.next;
+              if (slow == fast) return true;
+          }
+          return false;
+      }
+  - question: "Даны два отсортированных int[] a и b. Верни новый отсортированный массив всех элементов."
+    answer: "1) Держим индекс в каждом входе. 2) Берём меньший элемент. 3) Дописываем остаток. O(n+m) времени и O(n+m) памяти для результата."
+    category: "Слияние"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: |
+      int[] merge(int[] a, int[] b) {
+          int[] out = new int[a.length + b.length];
+          int i = 0, j = 0, k = 0;
+          while (i < a.length && j < b.length) {
+              if (a[i] <= b[j]) out[k++] = a[i++];
+              else out[k++] = b[j++];
+          }
+          while (i < a.length) {
+              out[k++] = a[i++];
+          }
+          while (j < b.length) {
+              out[k++] = b[j++];
+          }
+          return out;
+      }
+  - question: "Дан int[] с возможными отрицательными значениями. Посчитай число непрерывных подмассивов с суммой k; ответ помещается в long."
+    answer: "1) Храним частоты префиксных сумм, начав с 0→1. 2) Для текущей суммы S добавляем частоту S−k. 3) Затем записываем S. Ожидаемо O(n) времени и памяти."
+    category: "Префиксные суммы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: |
+      long countSubarrays(int[] a, long k) {
+          Map<Long, Long> freq = new HashMap<>();
+          freq.put(0L, 1L);
+          long sum = 0, count = 0;
+          for (int x : a) {
+              sum += x;
+              count += freq.getOrDefault(sum - k, 0L);
+              freq.merge(sum, 1L, Long::sum);
+          }
+          return count;
+      }
+  - question: "Дан отсортированный int[]. Удали дубликаты на месте и верни новую длину; элементы после неё не важны."
+    answer: "1) Один указатель читает, второй пишет следующий уникальный элемент. 2) Сравниваем с последним записанным. O(n) времени, O(1) памяти."
+    category: "Два указателя"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: |
+      int uniqueLength(int[] a) {
+          if (a.length == 0) return 0;
+          int write = 1;
+          for (int read = 1; read < a.length; read++) {
+              if (a[read] != a[write - 1]) {
+                  a[write] = a[read];
+                  write++;
+              }
+          }
+          return write;
+      }
+  - question: "Найди минимальную длину непрерывного подмассива с суммой ≥ target; все элементы положительны, target > 0."
+    answer: "1) Расширяем окно вправо. 2) Пока сумма достаточна, обновляем ответ и сужаем слева. 3) Если нет ответа, возвращаем 0. O(n) времени, O(1) памяти."
+    category: "Скользящее окно"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |
+      int minLength(int[] a, long target) {
+          int left = 0, best = a.length + 1;
+          long sum = 0;
+          for (int right = 0; right < a.length; right++) {
+              sum += a[right];
+              while (sum >= target) {
+                  best = Math.min(best, right - left + 1);
+                  sum -= a[left++];
+              }
+          }
+          return best == a.length + 1 ? 0 : best;
+      }
+  - question: "Дан int[] длины n с числами от 1 до n; одного числа нет, одно встречается дважды. Верни повторяющееся."
+    answer: "1) Отмечаем встреченные числа в boolean-массиве. 2) При повторной встрече возвращаем значение. O(n) времени и памяти; условие диапазона важно."
+    category: "Частоты"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: |
+      int duplicate(int[] a) {
+          boolean[] seen = new boolean[a.length + 1];
+          for (int x : a) {
+              if (seen[x]) return x;
+              seen[x] = true;
+          }
+          throw new IllegalArgumentException("нет дубля");
+      }
+

@@ -1,0 +1,185 @@
+topic: "Рефакторинг и code review"
+cards:
+  - question: "В проверке `if (age < 18 && age > 65)` пытаются отклонить возраст вне диапазона 18–65. Что исправить?"
+    answer: "1) Условия не могут быть истинными одновременно. 2) Для значений вне диапазона нужен OR. 3) Проверить 17,18,65,66."
+    category: "Логика"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: |
+      if (age < 18 || age > 65) {
+          throw new IllegalArgumentException("age");
+      }
+  - question: "Код `name.charAt(0)` проверяет первую букву. Какой крайний случай пропущен?"
+    answer: "Пустая строка вызывает StringIndexOutOfBoundsException, null — NPE. Сначала явно проверить обязательность и непустоту, затем первый символ."
+    category: "Валидация"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: |
+      if (name == null || name.isEmpty())
+          throw new IllegalArgumentException("name");
+      if (name.charAt(0) == 'Ы')
+          throw new IllegalArgumentException("first letter");
+  - question: "В record Person(String name, int age, String rank) метод пишет `person.rank = \"X\"`. Что исправить?"
+    answer: "record не позволяет присваивать полю. Вычислить новое звание и вернуть новый Person; контракт метода должен предусматривать возврат значения."
+    category: "Records"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |
+      Person withRank(Person p, String rank) {
+          return new Person(p.name(), p.age(), rank);
+      }
+  - question: "В сервисе внешний HTTP-вызов выполняется внутри @Transactional. Как уменьшить риск?"
+    answer: "1) Оценить, нужна ли сеть внутри атомарной границы. 2) Сократить транзакцию до операций БД, а интеграцию вынести или использовать outbox/saga. 3) Определить неизвестный исход."
+    category: "Транзакции"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "В цикле по 1000 элементам вызывают метод с REQUIRES_NEW для каждой записи. Что проверить и изменить?"
+    answer: "1000 отдельных транзакций и возможное удержание внешнего соединения. Проверить нужную атомарность; при массовой записи рассмотреть batch и ограниченные транзакционные чанки."
+    category: "Транзакции"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Контроллер возвращает JPA Entity напрямую. Какие риски в review?"
+    answer: "Утечка полей и структуры БД, lazy-загрузка и нестабильный API-контракт. Выделить DTO с явно выбранными полями и маппингом."
+    category: "API"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "В коде вызывают Optional.get() без проверки. Как улучшить?"
+    answer: "Явно определить поведение отсутствующего значения: orElseThrow с доменной ошибкой, fallback или другой контракт. Не прятать отсутствие за NoSuchElementException."
+    category: "Optional"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: |
+      User user = repository.findById(id)
+          .orElseThrow(() -> new NotFoundException(id));
+  - question: "В catch(Exception e) только логируют ошибку и возвращают успешный ответ. Что не так?"
+    answer: "Вызывающий получает ложный успех, хотя операция могла не выполниться. Нужно определить ошибочный результат, rollback и политику повтора; лог не заменяет контракт."
+    category: "Ошибки"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "В тесте метода с Clock используют LocalDateTime.now(). Как улучшить дизайн?"
+    answer: "Внедрить Clock и явно задать ZoneId. Тогда тест устанавливает время, а бизнес-правило проверяется на границе."
+    category: "Тестируемость"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |
+      Instant now = clock.instant();
+      // clock передан через конструктор
+  - question: "В HashMap используют объект-ключ и после put меняют поле, участвующее в hashCode. Что может случиться?"
+    answer: "Поиск по ключу перестанет находить запись в ожидаемой корзине. Сделать ключ неизменяемым или не менять значимые поля после вставки."
+    category: "Коллекции"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "В методе подряд идут `if (size > 2) ...; if (size == 1) ...; else ...`. Где риск?"
+    answer: "else относится ко второму if; при size>2 выполнится первая ветка и затем else, перезаписав результат. Нужна взаимоисключающая цепочка if/else if/else."
+    category: "Логика"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |
+      if (size == 1) rank = "Начинающий";
+      else if (size == 2) rank = "Двоих";
+      else if (size > 2) rank = "Почётный";
+  - question: "Для поиска пользователя вызывают `repository.findAll().stream().filter(...)`. Как улучшить?"
+    answer: "Фильтрация после загрузки всех строк расходует память и время. Выразить поиск как запрос БД с нужным фильтром и индексом, проверить план."
+    category: "БД"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Для каждого заказа вызывают отдельный запрос к пользователю. Какой паттерн проблемы и решение?"
+    answer: "Это N+1 запросов. В зависимости от сценария использовать join fetch, batch loading или DTO-проекцию; измерить число запросов."
+    category: "БД"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "В параллельном stream меняют внешний ArrayList. Что изменить?"
+    answer: "Общий ArrayList не потокобезопасен. Выразить сбор через collect/toList или использовать подходящий синхронизированный механизм при особой необходимости."
+    category: "Потоки"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |
+      List<Result> results = input.parallelStream()
+          .map(this::convert).toList();
+  - question: "В коде есть несколько одинаковых `if (type.equals(...))` по типам операции. Когда вводить Strategy?"
+    answer: "Если ветви растут и различаются по бизнес-логике, выделить реализации общего интерфейса и выбор по типу. Для двух коротких стабильных веток if может быть понятнее."
+    category: "Дизайн"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "В методе исключение оборачивают как `new RuntimeException(\"failed\")` без cause. Что исправить?"
+    answer: "Сохранять исходную причину, иначе теряется стек и контекст диагностики. Новое исключение должно добавлять смысл операции."
+    category: "Ошибки"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: |
+      throw new ProcessingException("order " + id, e);
+  - question: "В коде повторяют HTTP-запрос после любого 4xx. Почему это плохая политика?"
+    answer: "Большинство 4xx требуют изменения запроса, а повтор только увеличивает нагрузку. Retry нужен для временных ошибок и безопасных или идемпотентных операций по контракту."
+    category: "Интеграции"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "При code review метода сначала видишь 200 строк. Как начать осмысленную проверку?"
+    answer: "Определить контракт и границы метода, пройти основной и ошибочный путь, побочные эффекты, транзакцию и тесты. После этого оценить разбиение на функции без механического дробления."
+    category: "Ревью"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "В запросе SQL склеивают строку с пользовательским input. Что предложить?"
+    answer: "Параметризованный запрос вместо конкатенации; он отделяет данные от SQL и устраняет SQL injection в этом месте."
+    category: "Безопасность"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: |
+      SELECT id FROM users WHERE email = :email;
+  - question: "В коде `BigDecimal` создают как `new BigDecimal(0.1)`. Почему результат может удивить?"
+    answer: "double не хранит 0.1 точно, а конструктор сохраняет его двоичное приближение. Использовать строку или BigDecimal.valueOf(double), если вход уже double."
+    category: "Числа"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |
+      BigDecimal rate = new BigDecimal("0.1");
+

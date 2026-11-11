@@ -1,0 +1,78 @@
+topic: "Популярные алгоритмические задачи"
+cards:
+  - question: "Даны две строки из строчных латинских букв. Проверь, являются ли они анаграммами."
+    answer: "1) Разная длина сразу даёт false. 2) Увеличиваем частоты букв первой строки и уменьшаем по второй. 3) Все частоты нулевые — анаграммы. O(n) времени, O(1) памяти."
+    category: "Частоты"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: |
+      boolean anagram(String a, String b) {
+          if (a.length() != b.length()) return false;
+          int[] freq = new int[26];
+          for (int i = 0; i < a.length(); i++) {
+              freq[a.charAt(i) - 'a']++;
+              freq[b.charAt(i) - 'a']--;
+          }
+          for (int x : freq) if (x != 0) return false;
+          return true;
+      }
+  - question: "Перемести все нули int[] в конец на месте, сохранив порядок ненулевых элементов."
+    answer: "1) Записываем ненулевые элементы слева. 2) Остаток массива заполняем нулями. O(n) времени, O(1) памяти."
+    category: "Два указателя"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: |
+      void moveZeros(int[] a) {
+          int write = 0;
+          for (int x : a) if (x != 0) a[write++] = x;
+          while (write < a.length) a[write++] = 0;
+      }
+  - question: "Дан массив закрытых интервалов [start,end], start≤end. Объедини пересекающиеся интервалы; вход не меняй."
+    answer: "1) Копируем внешний массив и сортируем по start. 2) Каждый интервал либо создаёт новую группу, либо расширяет последнюю. O(n log n) времени, O(n) памяти."
+    category: "Сортировка"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |
+      int[][] mergeIntervals(int[][] intervals) {
+          int[][] sorted = intervals.clone();
+          Arrays.sort(sorted, Comparator.comparingInt(x -> x[0]));
+          List<int[]> out = new ArrayList<>();
+          for (int[] p : sorted) {
+              if (out.isEmpty() || out.getLast()[1] < p[0])
+                  out.add(new int[]{p[0], p[1]});
+              else out.getLast()[1] = Math.max(out.getLast()[1], p[1]);
+          }
+          return out.toArray(int[][]::new);
+      }
+  - question: "Дан невзвешенный граф `List<List<Integer>> graph` с вершинами 0..n-1. Найди минимальное число рёбер от s до t или -1."
+    answer: "1) BFS начинает с s. 2) Каждому непосещённому соседу назначаем расстояние +1 и ставим в очередь. 3) Первое достижение t минимально. O(V+E) времени, O(V) памяти."
+    category: "BFS"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |
+      int distance(List<List<Integer>> g, int s, int t) {
+          int[] d = new int[g.size()];
+          Arrays.fill(d, -1);
+          Deque<Integer> q = new ArrayDeque<>();
+          d[s] = 0;
+          q.add(s);
+          while (!q.isEmpty()) {
+              int v = q.remove();
+              if (v == t) return d[v];
+              for (int u : g.get(v)) {
+                  if (d[u] != -1) continue;
+                  d[u] = d[v] + 1;
+                  q.add(u);
+              }
+          }
+          return -1;
+      }
+

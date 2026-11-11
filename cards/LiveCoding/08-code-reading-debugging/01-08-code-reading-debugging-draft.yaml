@@ -1,0 +1,172 @@
+topic: "Чтение кода и debugging"
+cards:
+  - question: "Что произойдёт: List<Integer> a = List.of(1, 2); a.add(3);?"
+    answer: "1) List.of создаёт неизменяемый список. 2) add выбросит UnsupportedOperationException. 3) Для изменения нужна изменяемая копия."
+    category: "Коллекции"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что произойдёт: List<String> a = Arrays.asList(\"a\", \"b\"); a.set(0, \"x\"); a.add(\"c\");?"
+    answer: "1) set сработает: список фиксированного размера. 2) add выбросит UnsupportedOperationException. Список связан с исходным массивом, если он был передан."
+    category: "Коллекции"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что вернёт: List<Integer> a = new ArrayList<>(List.of(10,20,30)); a.remove(1);?"
+    answer: "Вызовется remove(int index), он удалит элемент по индексу 1 и вернёт 20. Чтобы удалить значение Integer(1), нужен remove(Object)."
+    category: "Перегрузка"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что напечатает: String s = \"a\"; s.concat(\"b\"); System.out.println(s);?"
+    answer: "Напечатает a. String неизменяем; concat возвращает новую строку, результат нужно присвоить."
+    category: "Строки"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что напечатает: Stream.of(1, 2).map(x -> { System.out.print(x); return x; });?"
+    answer: "Ничего. map — промежуточная ленивая операция; без терминальной операции поток не выполняется."
+    category: "Stream"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему Stream.of(1,2).collect(Collectors.toMap(x -> 0, x -> x)) падает?"
+    answer: "Оба элемента дают ключ 0, а toMap без merge-функции бросает IllegalStateException при повторе ключа."
+    category: "Stream"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что произойдёт: Map.of(\"a\", null);?"
+    answer: "Map.of не допускает null ключи и значения, поэтому при создании будет NullPointerException."
+    category: "Коллекции"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что произойдёт: Optional.of(null);?"
+    answer: "Будет NullPointerException; для допустимого null используют Optional.ofNullable."
+    category: "Optional"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему Optional.of(\"x\").orElse(expensive()) вызывает expensive()?"
+    answer: "Аргументы метода вычисляются до вызова orElse. Для ленивого запасного значения используют orElseGet(() -> expensive())."
+    category: "Optional"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что даст new BigDecimal(\"2.0\").equals(new BigDecimal(\"2.00\")) и почему?"
+    answer: "false: equals учитывает значение и scale. compareTo вернёт 0 для равного числового значения; смешивать эти критерии в ключах осторожно."
+    category: "Числа"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Есть `Data data = new Data(new ArrayList<>());`, где `record Data(List<String> names) {}`. Что сделает `data.names().add(\"x\")`?"
+    answer: "Если список изменяемый, его содержимое изменится. record не обеспечивает глубокую неизменяемость; нужна защитная копия."
+    category: "Records"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |
+      record Data(List<String> names) {
+          Data {
+              names = List.copyOf(names);
+          }
+      }
+  - question: "Почему метод @Transactional внутри того же Spring-класса может выполниться без своей транзакционной настройки?"
+    answer: "Вызов this.method() обходит proxy-based перехват Spring. Нужен вызов через управляемую границу или другая архитектура."
+    category: "Spring"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что вернёт List.of(1,2,3).stream().filter(x -> x > 5).findFirst()?"
+    answer: "Optional.empty(). Фильтр не оставит элементов; вызов get() после этого бросил бы NoSuchElementException."
+    category: "Stream"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что делает IntStream.range(1, 4).sum()?"
+    answer: "Возвращает 6: range включает 1 и исключает 4, то есть элементы 1, 2, 3."
+    category: "Stream"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему код `if (map.containsKey(k)) map.put(k, map.get(k)+1)` небезопасен при общей HashMap?"
+    answer: "HashMap не потокобезопасна, а проверка и обновление неатомарны. Нужны ConcurrentHashMap и атомарный merge/compute либо блокировка."
+    category: "Concurrency"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Что не так: catch (InterruptedException e) { } в worker?"
+    answer: "Прерывание потеряно, worker может продолжить работу вопреки запросу остановки. Нужно пробросить исключение или восстановить флаг и завершить цикл."
+    category: "Concurrency"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |
+      catch (InterruptedException e) {
+          Thread.currentThread().interrupt();
+          return;
+      }
+  - question: "Почему @Transactional(readOnly = true) не является защитой от любого UPDATE?"
+    answer: "Это подсказка для фреймворка/драйвера и возможная оптимизация, а не универсальный запрет записи. Реальное поведение зависит от БД и конфигурации."
+    category: "Spring"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что произойдёт при Map<String,Integer> m = new HashMap<>(); m.put(\"x\", null); m.getOrDefault(\"x\", 5)?"
+    answer: "Вернётся null: ключ присутствует и связан с null. getOrDefault возвращает запасное значение только при отсутствии ключа."
+    category: "Коллекции"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему `a == b` для двух Integer не подходит для проверки равенства значений?"
+    answer: "== сравнивает ссылки; часть небольших значений кэшируется, поэтому тест может случайно проходить. Для значений используют equals или unboxing с учётом null."
+    category: "Числа"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что произойдёт: List.of(1, 2).stream().toList().add(3);?"
+    answer: "Stream.toList возвращает неизменяемый список; add выбросит UnsupportedOperationException."
+    category: "Stream"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+
