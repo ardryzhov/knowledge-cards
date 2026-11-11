@@ -1,0 +1,101 @@
+topic: "Java Concurrency"
+cards:
+  - question: "Чем Thread.sleep отличается от Object.wait относительно монитора?"
+    answer: "sleep приостанавливает поток, но не освобождает удерживаемый монитор. wait вызывают при владении монитором указанного объекта; он временно освобождает именно этот монитор и после пробуждения захватывает его снова."
+    category: "Ожидание"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Освобождает ли notify монитор сразу после вызова?"
+    answer: "Нет. notify переводит ожидающий поток к возможности продолжить, но тот должен снова захватить монитор. Уведомляющий поток освобождает монитор только при выходе из synchronized-блока или метода."
+    category: "Ожидание"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Когда LongAdder может быть лучше AtomicLong для счётчика?"
+    answer: "При высокой конкуренции LongAdder распределяет обновления по нескольким ячейкам и часто даёт большую пропускную способность. sum не является атомарным снимком при одновременных обновлениях, поэтому для строгой последовательной семантики выбирают AtomicLong."
+    category: "Атомарность"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Что такое ABA-проблема в CAS?"
+    answer: "Значение меняется из A в B и обратно в A, поэтому CAS видит ожидаемое A и не замечает промежуточного изменения. Если история изменений важна, используют версионирование или атомарную ссылку с меткой."
+    category: "Атомарность"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+
+  - question: "Почему double-checked locking singleton требует volatile у поля экземпляра?"
+    answer: "Без нужных гарантий видимости другой поток может увидеть ссылку на объект до безопасного завершения его инициализации. volatile вместе с корректными проверками и блокировкой обеспечивает необходимый порядок публикации. Более простой вариант — holder или enum."
+    category: "Синхронизация"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+
+  - question: "Как BlockingQueue упрощает схему producer-consumer?"
+    answer: "Очередь обеспечивает потокобезопасную передачу элементов и операции ожидания при пустой или полной очереди. Она убирает необходимость вручную писать wait/notify, но ёмкость и политика остановки должны быть выбраны явно."
+    category: "Ожидание"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Для чего подходит Semaphore?"
+    answer: "Он ограничивает число одновременно выполняемых операций или пользователей ресурса через permits. Например, можно ограничить число одновременных запросов к дорогой зависимости. Каждый успешный acquire должен иметь соответствующий release, обычно в finally."
+    category: "Ожидание"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Чем Callable отличается от Runnable?"
+    answer: "Callable возвращает результат и может объявлять checked exception. Runnable ничего не возвращает и не объявляет checked exception в методе run. Оба можно отправлять в executor, который возвращает Future для отслеживания выполнения."
+    category: "ExecutorService"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+
+  - question: "Почему фиксированный пул с неограниченной очередью задач может привести к OutOfMemoryError?"
+    answer: "Если задачи поступают быстрее, чем выполняются, очередь растёт без ограничения и удерживает объекты в памяти. Нужны ограниченная очередь, политика отказа или backpressure и метрики длины ожидания."
+    category: "ExecutorService"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Чем CompletableFuture.thenCompose отличается от thenApply?"
+    answer: "thenApply преобразует результат обычной функцией и при функции, возвращающей CompletableFuture, создаёт вложенный future. thenCompose объединяет асинхронные этапы в один CompletableFuture результата."
+    category: "ExecutorService"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Как обработать исключение в цепочке CompletableFuture, не потеряв его причину?"
+    answer: "Использовать exceptionally, handle или whenComplete в соответствии с тем, нужно ли восстановить значение, преобразовать оба исхода или только наблюдать. При get/join исключение может быть обёрнуто; исходную причину нужно извлечь и сохранить при передаче выше."
+    category: "ExecutorService"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+

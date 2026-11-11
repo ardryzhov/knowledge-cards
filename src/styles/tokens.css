@@ -1,0 +1,22 @@
+:root {
+  color-scheme: dark;
+  --background: #09161B;
+  --foreground: #FFFFFF;
+  --text-secondary: #D6DBD8;
+  --primary: #71F49D;
+  --primary-foreground: #09161B;
+  --gradient-blue: linear-gradient(135deg, #0D2D43, #09202C);
+  --gradient-green: linear-gradient(135deg, #09231C, #081718);
+  --success: #71F49D;
+  --danger: #FF7272;
+  --warning: #F4C76A;
+  --surface: #0C1B21;
+  --surface-raised: #10232A;
+  --surface-hover: #142B31;
+  --border: #203138;
+  --muted: #96A9AA;
+  --blue: #7FC8EC;
+  --radius: 14px;
+  --font-mono: 'Geist Mono', monospace;
+  --font-sans: 'Geist', sans-serif;
+}

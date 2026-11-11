@@ -1,0 +1,48 @@
+{
+  "name": "knowledge-cards",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc -b && vite build",
+    "typecheck": "tsc -b --pretty false",
+    "lint": "eslint . --max-warnings 0",
+    "preview": "vite preview --host 127.0.0.1",
+    "test:e2e": "VITE_SUPABASE_URL=https://cards-test.supabase.co VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_test npm run build && playwright test"
+  },
+  "dependencies": {
+    "@fontsource/geist": "^5.2.0",
+    "@fontsource/geist-mono": "^5.2.0",
+    "@radix-ui/react-slot": "^1.2.0",
+    "@supabase/supabase-js": "^2.119.0",
+    "@tailwindcss/vite": "^4.1.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.468.0",
+    "motion": "^12.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-markdown": "^10.1.0",
+    "rehype-sanitize": "^6.0.0",
+    "remark-gfm": "^4.0.1",
+    "tailwind-merge": "^3.0.0",
+    "tailwindcss": "^4.1.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.4.0",
+    "eslint": "^10.14.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
+    "supabase": "^3.0.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.72.1",
+    "vite": "^6.4.0",
+    "yaml": "^2.9.1"
+  }
+}

@@ -1,0 +1,51 @@
+topic: "Kafka"
+cards:
+  - question: "Чем max.poll.interval.ms отличается от session.timeout.ms у Kafka consumer?"
+    answer: "session.timeout.ms ограничивает время отсутствия heartbeat до признания consumer недоступным. max.poll.interval.ms ограничивает паузу между вызовами poll и выявляет зависшую обработку, даже если heartbeat продолжает работать; превышение может привести к rebalance."
+    category: "Consumer"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему сообщение, постоянно вызывающее ошибку десериализации, может остановить продвижение consumer?"
+    answer: "Consumer не может успешно обработать запись и сдвинуть подтверждённый offset; повторное чтение возвращает ту же запись. Нужна явная политика: диагностировать, отправить в DLQ или пропустить по контролируемому решению, сохранив исходные данные и причину."
+    category: "Обработка ошибок"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Может ли Kafka exactly-once гарантировать однократное изменение внешней PostgreSQL базы consumer-ом?"
+    answer: "Нет, транзакции Kafka охватывают операции внутри Kafka, например чтение и запись в топики с фиксацией offsets. Изменение внешней БД требует собственного механизма идемпотентности, inbox или координации; обещание end-to-end exactly-once без этих условий неверно."
+    category: "Семантика доставки"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Почему retry через отдельный Kafka-топик может нарушить порядок событий по одному ключу?"
+    answer: "Пока неуспешное событие отложено в retry-топик, основной consumer продолжит читать следующие события того же ключа. Если порядок важен, нужно остановить продвижение этой партиции либо спроектировать другую стратегию обработки."
+    category: "Порядок и retry"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Как изменение схемы события может сломать старого и нового потребителя при совместной работе?"
+    answer: "Старый consumer может не понять новое обязательное поле или изменённый тип, а новый может не обработать старые записи из retention. Нужно выбирать правила backward/forward compatibility и тестировать обе версии на реальных схемах и примерах."
+    category: "Схемы событий"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Чем выбор партиции по ключу отличается от round-robin для сообщений без ключа?"
+    answer: "Ключ обычно хешируется, поэтому одинаковые ключи стабильно попадают в одну партицию при неизменном числе партиций. Для сообщений без ключа конкретная стратегия зависит от клиента и его версии; нельзя обещать round-robin как универсальное правило."
+    category: "Producer и партиции"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+

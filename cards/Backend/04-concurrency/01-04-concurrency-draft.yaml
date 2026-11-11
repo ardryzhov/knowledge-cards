@@ -1,0 +1,182 @@
+topic: "Java Concurrency"
+cards:
+  - question: "Чем вызов thread.start() отличается от thread.run()?"
+    answer: "start создаёт новый путь выполнения и затем вызывает run в новом потоке. Прямой вызов run выполняет метод в текущем потоке как обычный метод. Один объект Thread можно запустить через start только один раз."
+    category: "Потоки"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+
+  - question: "Чем задача Runnable отличается от потока Thread?"
+    answer: "Runnable описывает работу без результата, а Thread представляет конкретный поток выполнения. Разделение задачи и механизма запуска позволяет передавать задачи в ExecutorService и переиспользовать потоки."
+    category: "Потоки"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+
+  - question: "Почему count++ не является атомарной операцией?"
+    answer: "Инкремент состоит из чтения, вычисления и записи. Два потока могут прочитать одно старое значение и записать одинаковый новый результат, потеряв обновление. Нужны синхронизация, атомарный тип или другой согласованный механизм."
+    category: "Гонки данных"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Что гарантирует synchronized для кода внутри критической секции?"
+    answer: "Взаимное исключение для потоков, использующих один монитор, и отношения видимости памяти при освобождении и последующем захвате этого монитора. Синхронизация не помогает, если часть обращений к общему состоянию обходит тот же механизм."
+    category: "Синхронизация"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Почему volatile не подходит для корректного count++?"
+    answer: "volatile обеспечивает видимость и порядок чтений и записей переменной, но не объединяет чтение, изменение и запись в одну атомарную операцию. Для инкремента используют AtomicInteger, LongAdder или блокировку."
+    category: "Модель памяти"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Что означает happens-before в Java Memory Model?"
+    answer: "Это отношение между действиями, при котором эффекты первого гарантированно видны второму при соблюдении правил модели памяти. Его создают, например, захват и освобождение одного монитора, операции с volatile и завершение потока перед успешным join."
+    category: "Модель памяти"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+
+  - question: "Как CAS помогает атомарному обновлению и какой у него компромисс?"
+    answer: "Compare-and-set меняет значение только если оно равно ожидаемому; при конфликте операция может повторяться. Это позволяет избежать блокировки для простых обновлений, но при сильной конкуренции повторы могут быть дорогими, а сложные инварианты требуют другого решения."
+    category: "Атомарность"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Чем ReentrantLock отличается от synchronized на практике?"
+    answer: "ReentrantLock требует явного unlock в finally, но предоставляет tryLock, прерываемое ожидание и возможность настроить справедливость. synchronized освобождает монитор автоматически при выходе из блока. Выбирают минимальный механизм, нужный конкретному сценарию."
+    category: "Блокировки"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Что такое deadlock и как уменьшить риск при захвате двух блокировок?"
+    answer: "Deadlock — циклическое ожидание, когда потоки удерживают ресурсы, нужные друг другу. Единый порядок захвата блокировок, сокращение вложенных блокировок и таймауты помогают его избежать. Диагностировать его можно по thread dump."
+    category: "Блокировки"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Чем livelock отличается от deadlock?"
+    answer: "При deadlock потоки стоят и ждут. При livelock они продолжают действовать и реагировать друг на друга, но полезная работа не продвигается. Причина часто в симметричных повторных попытках без случайной задержки или ограничения."
+    category: "Блокировки"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Почему wait обычно вызывают в цикле while, а не в if?"
+    answer: "Пробуждение возможно без выполнения ожидаемого условия, а после notify другой поток может изменить состояние до повторного захвата монитора. Цикл заново проверяет предикат; вызывать wait нужно при владении монитором соответствующего объекта."
+    category: "Ожидание"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Чем CountDownLatch отличается от CyclicBarrier?"
+    answer: "CountDownLatch позволяет ждать, пока счётчик дойдёт до нуля, и не переиспользуется. CyclicBarrier синхронизирует заданное число участников на общей точке и может применяться повторно. Их используют для разных схем координации."
+    category: "Ожидание"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Почему после использования ExecutorService важно вызвать shutdown и дождаться завершения задач?"
+    answer: "Пул может удерживать рабочие потоки и ресурсы, поэтому процесс не завершится как ожидается. shutdown запрещает новые задачи, а awaitTermination даёт завершить уже отправленные. При необходимости применяют контролируемое принудительное завершение."
+    category: "ExecutorService"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Чем Future отличается от CompletableFuture?"
+    answer: "Future позволяет получить результат и отменить задачу, но комбинирование и обработка продолжений неудобны. CompletableFuture поддерживает цепочки преобразований, объединение нескольких задач и обработку ошибок; нужно понимать, в каком executor выполняются этапы."
+    category: "ExecutorService"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Что должен сделать код, поймавший InterruptedException, если он не может передать его выше?"
+    answer: "Обычно восстановить флаг через Thread.currentThread().interrupt() и корректно завершить операцию. Молчаливое игнорирование ломает протокол отмены и завершения. Конкретное действие зависит от контракта метода."
+    category: "Прерывание"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Какой риск создаёт ThreadLocal в пуле потоков?"
+    answer: "Потоки пула живут дольше одной задачи, поэтому оставленное значение может попасть в следующую задачу или удерживать память. Значение следует удалять в finally через remove, если оно не должно переживать задачу."
+    category: "ThreadLocal"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Почему get(), затем put() в ConcurrentHashMap не гарантируют атомарность всей операции?"
+    answer: "Каждый вызов потокобезопасен по отдельности, но между ними другой поток может изменить карту. Для условного обновления нужны атомарные операции putIfAbsent, compute или merge с учётом их контракта."
+    category: "Конкурентные коллекции"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Для каких задач виртуальные потоки Java 21 полезны, а для каких не ускоряют вычисления?"
+    answer: "Они упрощают масштабирование большого числа блокирующих I/O-задач за счёт дешёвого ожидания. CPU-вычисления не становятся быстрее от увеличения числа потоков; также важно проверять ограничения библиотек и участки, которые удерживают carrier thread."
+    category: "Виртуальные потоки"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Как daemon-потоки влияют на завершение JVM?"
+    answer: "JVM может завершиться, когда закончились все недемонические потоки, даже если daemon-потоки ещё работают. Поэтому важную работу и сохранение данных нельзя оставлять только daemon-потоку без явного ожидания завершения."
+    category: "Завершение JVM"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Что покажет thread dump при расследовании зависшего Java-сервиса?"
+    answer: "Он показывает стеки потоков, их состояния и часто информацию о мониторах или блокировках. По нему можно искать deadlock, длительное ожидание и горячие участки, но для полной картины иногда нужны несколько снимков во времени."
+    category: "Диагностика"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+

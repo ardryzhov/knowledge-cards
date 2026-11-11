@@ -1,0 +1,174 @@
+topic: Java Core
+cards:
+  - question: Почему BigDecimal("2.0").equals(BigDecimal("2.00")) возвращает false, а compareTo() — ноль?
+    answer: "equals сравнивает и числовое значение, и scale; у 2.0 и 2.00 scale различается. compareTo сравнивает числовой порядок и считает эти значения равными. Это важно при выборе ключа для HashMap или TreeMap: две структуры могут по-разному трактовать такие значения."
+    category: Типы и ссылки
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |-
+      BigDecimal a = new BigDecimal("2.0");
+      BigDecimal b = new BigDecimal("2.00");
+      System.out.println(a.equals(b));   // false
+      System.out.println(a.compareTo(b)); // 0
+  - question: Почему присваивание long результата выражения int * int не предотвращает переполнение?
+    answer: Оба операнда int, поэтому умножение выполняется как int и может переполниться до присваивания long. Нужно преобразовать хотя бы один операнд к long до операции, например 1L * a * b. Тип переменной результата не меняет тип уже вычисленного выражения.
+    category: Типы и ссылки
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |-
+      int a = 1_500_000_000;
+      int b = 2;
+      long wrong = a * b;
+      long correct = 1L * a * b;
+  - question: Чем && отличается от & для boolean-выражений?
+    answer: "&& вычисляет правый операнд только если левый равен true. & для boolean вычисляет оба операнда всегда. Короткое замыкание важно, например, в проверке value != null && value.isValid(); замена на & вызвала бы обращение к null."
+    category: Типы и ссылки
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: Какие группы методов объявлены в Object и какие из них чаще всего обсуждают при проектировании класса?
+    answer: В Object есть методы идентичности и представления (equals, hashCode, toString, getClass), копирования (clone), ожидания на мониторе (wait, notify, notifyAll) и устаревший finalize. Для прикладного класса чаще всего важны согласованные equals/hashCode и безопасный toString; wait/notify относятся к синхронизации.
+    category: Объектная модель
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: Какие свойства обязан соблюдать корректный equals?
+    answer: Равенство должно быть рефлексивным, симметричным, транзитивным и согласованным при неизменном значимом состоянии объекта; сравнение с null должно возвращать false. Нарушение этих свойств делает поведение коллекций и клиентского кода непредсказуемым.
+    category: Объектная модель
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: Почему два массива с одинаковыми элементами обычно не равны через обычный equals()?
+    answer: Массивы не переопределяют Object.equals для сравнения элементов, поэтому вызов equals проверяет идентичность массивов. Для одномерных массивов используют Arrays.equals, а для вложенных массивов при нужной семантике — Arrays.deepEquals.
+    category: Объектная модель
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: |-
+      int[] a = {1, 2};
+      int[] b = {1, 2};
+      System.out.println(a.equals(b));        // false
+      System.out.println(Arrays.equals(a, b)); // true
+  - question: В каком порядке выполняются инициализация полей и конструкторы при создании объекта подкласса?
+    answer: Сначала инициализируются нужные классы, затем память объекта получает значения полей по умолчанию. В цепочке конструкторов сначала выполняются инициализаторы полей и блоки экземпляра родителя, затем тело его конструктора; после возврата из него выполняются инициализаторы и тело конструктора подкласса.
+    category: Объектная модель
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: Чем интерфейс отличается от абстрактного класса при проектировании API?
+    answer: Интерфейс задаёт контракт, который класс может реализовать наряду с другими интерфейсами. Абстрактный класс может хранить состояние и общую реализацию в единственной ветке наследования классов. Выбор зависит от необходимости общего состояния, эволюции API и формы связи между типами.
+    category: Полиморфизм
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: Зачем ставить @Override на метод, который должен переопределять метод родителя?
+    answer: Аннотация просит компилятор проверить, что метод действительно переопределяет или реализует метод супертипа. Ошибка в имени или параметрах тогда обнаружится при сборке, а не превратится в случайную перегрузку с другим поведением.
+    category: Полиморфизм
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: Чем StringBuilder отличается от StringBuffer?
+    answer: Оба предоставляют изменяемую последовательность символов. Методы StringBuffer синхронизированы, а StringBuilder не обеспечивает такую встроенную синхронизацию и обычно предпочтителен при использовании в одном потоке. Выбор зависит от реальной модели совместного доступа.
+    category: Строки
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: Почему String.split(".") не делит строку по буквальной точке?
+    answer: Аргумент split — регулярное выражение, где точка означает любой символ. Для буквальной точки нужен экранированный шаблон или Pattern.quote. При разборе фиксированного разделителя следует учитывать regex-семантику метода.
+    category: Строки
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: String[] parts = "a.b".split(".");
+  - question: Почему length() строки не всегда равно количеству видимых пользователю символов?
+    answer: String.length считает 16-битные кодовые единицы UTF-16. Символ за пределами базовой многоязычной плоскости занимает суррогатную пару, а один видимый графемный кластер может состоять из нескольких кодовых точек. Для соответствующей задачи нужны codePoints или правила сегментации текста.
+    category: Строки
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: В каком порядке try-with-resources закрывает несколько ресурсов?
+    answer: "Ресурсы закрываются в порядке, обратном их объявлению. Это соответствует принципу стека: последний открытый ресурс закрывается первым. Такой порядок полезен, когда один ресурс зависит от другого."
+    category: Исключения
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: Зачем сохранять исходную причину при оборачивании исключения?
+    answer: Причина сохраняет цепочку ошибок и позволяет увидеть, где сбой возник на самом деле. Создавая исключение более высокого уровня, передают исходное как cause, например new ServiceException(message, cause), вместо потери stack trace.
+    category: Исключения
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: Чем Optional.of(value) отличается от Optional.ofNullable(value)?
+    answer: Optional.of требует ненулевое значение и выбрасывает NullPointerException при null. Optional.ofNullable возвращает пустой Optional для null. Выбор показывает, является ли null допустимым входом для конкретного API.
+    category: Optional
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: Какие методы и члены компилятор автоматически создаёт для record?
+    answer: Для компонентов record создаются private final поля и публичные accessor-методы с именами компонентов. Также генерируются канонический конструктор, equals, hashCode и toString на основе компонентов, если они не объявлены явно.
+    category: Современная Java
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: Почему хранить enum в базе только по ordinal рискованно?
+    answer: ordinal зависит от порядка объявления констант. Вставка или перестановка констант меняет числовые значения старых элементов и может исказить сохранённые данные. Стабильный внешний код или имя с явной политикой миграции обычно безопаснее.
+    category: Enum, аннотации и рефлексия
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: Что определяет RetentionPolicy у аннотации?
+    answer: "Она задаёт, до какого этапа сохраняется аннотация: только исходный код, файл класса или доступность во время выполнения через рефлексию. Если аннотацию читает runtime-фреймворк, ей нужна RetentionPolicy.RUNTIME."
+    category: Enum, аннотации и рефлексия
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: Почему одного вызова InputStream.read(buffer) может быть недостаточно для заполнения buffer?
+    answer: read возвращает фактическое число считанных байтов, которое может быть меньше длины буфера даже до конца потока. Код должен обрабатывать частичное чтение и значение -1 при конце потока; для фиксированного объёма можно использовать readNBytes или цикл.
+    category: I/O и сериализация
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: Почему десериализацию недоверенных данных через ObjectInputStream считают рискованной?
+    answer: Обработка потока может создавать произвольные классы из доступного classpath и запускать их логику восстановления объекта, что создаёт поверхность для атак. Для недоверенного ввода лучше использовать ограниченный формат и строгую валидацию; при необходимости Java-сериализации применяют фильтрацию типов.
+    category: I/O и сериализация
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null

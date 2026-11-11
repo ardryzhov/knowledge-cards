@@ -1,0 +1,65 @@
+topic: "Spring Web and API"
+cards:
+  - question: "Чем @RestController отличается от @Controller?"
+    answer: "@RestController объединяет @Controller и семантику @ResponseBody для методов, обычно сериализуя возвращаемые значения в тело HTTP-ответа. @Controller часто используют для MVC-представлений; тело ответа можно включить отдельной @ResponseBody."
+    category: "Spring MVC"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+
+  - question: "Чем @ControllerAdvice отличается от @ExceptionHandler внутри одного контроллера?"
+    answer: "@ExceptionHandler задаёт обработку исключения для локального контроллера или класса advice. @ControllerAdvice позволяет применять обработчики и другие настройки к нескольким контроллерам. Порядок и область действия нужно проверять при пересечении обработчиков."
+    category: "Spring MVC"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Чем 502, 503 и 504 отличаются при сбое зависимости?"
+    answer: "502 означает некорректный ответ upstream у посредника, 503 — временную недоступность сервиса, 504 — истечение времени ожидания upstream у шлюза. Приложение должно выбирать статус по своей роли и фактическому виду сбоя, а не все ошибки превращать в 500."
+    category: "HTTP"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Почему нельзя полагаться на тело GET-запроса как на универсальный API-контракт?"
+    answer: "Семантика тела GET не стандартизована для общего использования, а прокси и клиенты могут его игнорировать или обрабатывать по-разному. Для фильтров обычно применяют query-параметры, а для сложного поиска — явно описанный POST endpoint."
+    category: "Контракт"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Зачем пул соединений у HTTP-клиента сервиса?"
+    answer: "Повторное использование соединений уменьшает стоимость установки TCP/TLS и нагрузку на систему. Пул должен иметь лимиты и таймауты ожидания; иначе зависшая внешняя система может исчерпать соединения и потоки."
+    category: "Клиенты"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Когда gRPC может быть удобнее REST/JSON, и что усложняется?"
+    answer: "gRPC с Protobuf удобен для типизированных внутренних контрактов, потоковой передачи и эффективного бинарного обмена. Он требует управления схемами, совместимости полей и поддержки инфраструктуры HTTP/2. Для публичных браузерных API REST/JSON часто проще."
+    category: "Контракт"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Почему Bean Validation аннотаций на DTO может быть недостаточно для проверки всей операции?"
+    answer: "Аннотации проверяют отдельные поля и некоторые структурные правила. Они не знают актуальное состояние БД, права пользователя и межполевые бизнес-инварианты без дополнительного кода. Такие проверки должны выполняться в нужной сервисной границе."
+    category: "Валидация"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+

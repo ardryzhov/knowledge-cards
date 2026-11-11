@@ -1,0 +1,182 @@
+topic: "Spring Data and JPA"
+cards:
+  - question: "Чем JPA отличается от Hibernate и Spring Data JPA?"
+    answer: "JPA задаёт спецификацию ORM, Hibernate является одной из её реализаций, а Spring Data JPA добавляет репозитории и удобный слой доступа поверх JPA. Их возможности и поведение нельзя считать полностью одинаковыми."
+    category: "ORM"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+
+  - question: "Что такое persistence context?"
+    answer: "Это область управления сущностями, в которой EntityManager отслеживает их идентичность и изменения. В рамках одного контекста повторное получение одной сущности обычно возвращает тот же управляемый объект. Контекст не равен глобальному кэшу приложения."
+    category: "ORM"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Чем transient, managed, detached и removed состояния сущности различаются?"
+    answer: "Transient ещё не управляется контекстом; managed отслеживается и может синхронизироваться с БД; detached существовала в контексте, но больше не отслеживается; removed помечена на удаление. Операции persist, merge и remove меняют эти состояния."
+    category: "ORM"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Как работает dirty checking у managed-сущности?"
+    answer: "ORM сравнивает отслеживаемое состояние сущности и при flush формирует SQL для изменённых данных. Явный save не всегда нужен для managed-сущности в транзакции. На detached-объекте автоматическое отслеживание не работает."
+    category: "ORM"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Чем flush отличается от commit?"
+    answer: "flush синхронизирует изменения persistence context с БД внутри транзакции, но не делает транзакцию окончательно зафиксированной. Commit завершает транзакцию и делает изменения видимыми согласно изоляции. После flush всё ещё возможен rollback."
+    category: "ORM"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Чем persist отличается от merge?"
+    answer: "persist делает новый объект управляемым в текущем контексте. merge копирует состояние переданного объекта в управляемый экземпляр и возвращает его; исходный объект не становится автоматически managed. Использование merge без понимания состояния может перезаписать данные."
+    category: "ORM"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+
+  - question: "Почему LAZY-связь может вызвать LazyInitializationException?"
+    answer: "Доступ к не загруженной связи требует действующего persistence context. Если контекст закрыт, ORM не может догрузить данные. Решают это выборкой нужных данных внутри границы операции, DTO-проекцией или явной fetch-стратегией, а не бесконтрольным расширением транзакции."
+    category: "Связи"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Что такое проблема N+1 запросов?"
+    answer: "После одного запроса за списком сущностей обращение к связи каждой из них запускает ещё по запросу, создавая N дополнительных обращений к БД. Нужно измерить SQL и выбрать подходящий fetch join, entity graph, batch fetching или проекцию."
+    category: "Связи"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Почему EAGER не является универсальным решением N+1?"
+    answer: "EAGER требует загрузки связи, но не гарантирует один SQL-запрос и может загрузить лишние данные. Для конкретного сценария лучше задавать форму выборки явно и проверять фактические запросы."
+    category: "Связи"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Чем CascadeType.REMOVE отличается от orphanRemoval?"
+    answer: "REMOVE распространяет удаление родителя на связанные сущности при соответствующей операции. orphanRemoval удаляет дочернюю сущность, когда она исключена из отношения владения. Неправильная настройка может удалить данные неожиданно."
+    category: "Связи"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+
+  - question: "Почему двустороннюю связь JPA нужно поддерживать согласованно с обеих сторон в памяти?"
+    answer: "Одна сторона владеет внешним ключом, но прикладной код видит оба направления. Если обновить только одну коллекцию или ссылку, граф объектов до flush может быть противоречивым, а SQL — не соответствовать ожиданиям. Помогают методы связи add/remove."
+    category: "Связи"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Когда работает optimistic locking с @Version?"
+    answer: "При обновлении ORM проверяет версию строки и повышает её. Если другой участник уже изменил запись, обновление затронет ноль строк и возникает конфликт оптимистической блокировки. Клиент должен решить, повторять ли всю операцию или показать конфликт."
+    category: "Транзакции"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Когда выбирать pessimistic locking и какой у него риск?"
+    answer: "Когда конфликт вероятен и нужно удержать блокировку строки до завершения операции. Это снижает риск одновременных изменений, но увеличивает ожидание, риск deadlock и нагрузку. Решение зависит от частоты конфликтов и длительности транзакции."
+    category: "Транзакции"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Почему bulk update через JPQL может оставить managed-сущности устаревшими?"
+    answer: "Bulk-операция выполняется напрямую в БД и обходит обычный dirty checking объектов в persistence context. Уже загруженные сущности могут содержать старые значения. После такой операции контекст при необходимости очищают или обновляют явно."
+    category: "Запросы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+
+  - question: "Когда DTO-проекция полезнее загрузки полной сущности?"
+    answer: "Для чтения небольшого набора полей, особенно списков и отчётов, проекция уменьшает объём данных и избегает ненужного графа связей. Для изменения доменного состояния обычно удобнее управляемая сущность с проверкой инвариантов."
+    category: "Запросы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Почему пагинация с fetch join коллекции может работать плохо?"
+    answer: "JOIN размножает строки родителя по числу дочерних элементов, поэтому ограничение строк SQL не равно ограничению числа сущностей. ORM может применить пагинацию в памяти или выдать некорректный результат; часто нужен двухэтапный запрос."
+    category: "Запросы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+
+  - question: "Почему equals/hashCode для JPA-сущности требуют осторожности?"
+    answer: "Идентификатор может появиться только после сохранения, а proxy может менять видимый runtime-класс. Если хеш сущности меняется после помещения в Set, коллекция работает неверно. Стратегию равенства выбирают по жизненному циклу и бизнес-идентичности."
+    category: "Сущности"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+
+  - question: "Чем getReference отличается от find?"
+    answer: "getReference может вернуть ссылку-proxy без немедленной загрузки данных, если реализация это поддерживает; обращение к полям позже может потребовать SQL и завершиться ошибкой, если строки нет. find получает сущность или null в рамках обычного поиска."
+    category: "Сущности"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Почему derived query по имени метода подходит не для любого запроса?"
+    answer: "Для простого поиска он экономит код, но сложное имя становится трудным для чтения и контроля SQL. Для сложной фильтрации, агрегации или оптимизации лучше явный JPQL, SQL, Specification или отдельный query layer."
+    category: "Spring Data"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
+  - question: "Почему изменение JPA-сущности само по себе не является безопасной миграцией схемы БД?"
+    answer: "Существующие данные, индексы и параллельно работающие версии приложения требуют явного плана изменения схемы. Миграции фиксируют порядок и воспроизводимость DDL; на проде автогенерацию схемы обычно не используют как основной механизм выпуска."
+    category: "Миграции"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
