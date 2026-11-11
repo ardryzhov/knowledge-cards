@@ -1,0 +1,195 @@
+topic: "UML и поведение системы"
+cards:
+  - question: "Когда sequence diagram полезнее текстового описания интеграции?"
+    answer: "Когда важны порядок вызовов, участники, синхронность, альтернативы, таймауты и возвраты. Точные поля и бизнес-правила всё равно фиксируют отдельно."
+    category: "Sequence diagram"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Какие элементы обычно нужны на sequence diagram?"
+    answer: "Участники с lifeline, сообщения между ними, при необходимости activation, возвращаемые результаты и фрагменты ветвления или повторения."
+    category: "Sequence diagram"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что показывает lifeline на sequence diagram?"
+    answer: "Существование и участие конкретного объекта или системы во времени; вертикальное направление отражает порядок взаимодействий."
+    category: "Sequence diagram"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Чем синхронное сообщение отличается от асинхронного на sequence diagram?"
+    answer: "Синхронное предполагает ожидание завершения вызова перед продолжением вызывающей стороны; асинхронное не требует такого ожидания. Реальная гарантия доставки определяется контрактом отдельно."
+    category: "Sequence diagram"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Для чего нужны фрагменты alt, opt и loop?"
+    answer: "alt показывает взаимоисключающие ветви, opt — необязательную ветвь при условии, loop — повторение; условия указывают явно."
+    category: "Sequence diagram"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Как показать таймаут внешнего API на sequence diagram?"
+    answer: "Обозначить запрос и альтернативу с ограничением времени, затем реакцию сервиса: ошибка, повтор или компенсирующее действие. Диаграмма должна согласовываться с текстовым контрактом таймаута."
+    category: "Sequence diagram"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Почему нельзя показывать только успешный путь на sequence diagram интеграции?"
+    answer: "Пропадают важные варианты: отказ зависимости, пустой ответ, повтор и конкуренция. Именно они часто определяют корректность реализации."
+    category: "Sequence diagram"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Когда state machine diagram полезнее sequence diagram?"
+    answer: "Когда поведение объекта определяется его состояниями и допустимыми переходами, а не одной цепочкой вызовов. Например жизненный цикл заявки или платежа."
+    category: "State diagram"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что означают guard, trigger и action на переходе состояний?"
+    answer: "Trigger запускает рассмотрение перехода; guard — условие его допустимости; action — выполняемое действие. Их разделение делает правило проверяемым."
+    category: "State diagram"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Почему модель состояний должна определять реакцию на недопустимый переход?"
+    answer: "Иначе повтор, запоздалое событие или конкуренция приводят к неопределённому поведению. Нужны отказ, игнорирование или иной согласованный исход."
+    category: "State diagram"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Чем use case diagram отличается от подробного use case?"
+    answer: "Диаграмма показывает актёров и цели взаимодействия на обзорном уровне; текстовый use case раскрывает предусловия, шаги, альтернативы и результат."
+    category: "Use case diagram"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему use case diagram не заменяет описание прав доступа?"
+    answer: "Связь актёра с целью не задаёт условия доступа к конкретным данным, роли наследования и проверки на объекте."
+    category: "Use case diagram"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Когда activity diagram полезна системному аналитику?"
+    answer: "Для описания последовательности действий и ветвлений внутри сценария или алгоритма, особенно когда важен поток управления и параллельность."
+    category: "Activity diagram"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Чем activity diagram отличается от BPMN в прикладном использовании?"
+    answer: "Обе описывают поток действий, но BPMN ориентирована на бизнес-процесс, участников и обмен сообщениями; activity diagram — часть UML и часто удобна для поведения внутри системы."
+    category: "Выбор нотации"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что показывает component diagram?"
+    answer: "Крупные компоненты системы, предоставляемые и требуемые интерфейсы и зависимости между ними; детали конкретного запроса лучше показать sequence diagram."
+    category: "Component diagram"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Когда class diagram помогает аналитику, даже если он не проектирует Java-классы?"
+    answer: "Когда нужно согласовать сущности, атрибуты, связи и кратность. Её не следует автоматически считать физической схемой БД."
+    category: "Class diagram"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что означает кратность 0..1 и 1..* в UML-связи?"
+    answer: "0..1 — необязательная связь максимум с одним объектом; 1..* — обязательная связь минимум с одним. Нужно уточнять, к какому концу связи относится кратность."
+    category: "Class diagram"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Чем композиция отличается от агрегации в UML?"
+    answer: "Композиция задаёт сильное владение частью с общим жизненным циклом; агрегация — более слабое отношение целого и части. В прикладных схемах лучше не использовать их без ясной семантики."
+    category: "Class diagram"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Как выбрать между sequence, state и activity diagram для новой функции?"
+    answer: "Sequence — взаимодействие участников во времени, state — допустимые состояния и переходы объекта, activity — поток действий и решений. Выбирают диаграмму по вопросу, который нужно прояснить."
+    category: "Выбор нотации"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему диаграмма без подписи условий переходов может вводить в заблуждение?"
+    answer: "Она показывает возможный путь, но не определяет, когда он выбирается. Условия и бизнес-правила должны быть явными и согласованными с требованиями."
+    category: "Качество модели"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Как выявить несоответствие между UML-диаграммой и текстом требования?"
+    answer: "Сверить участников, действия, условия, состояния, ошибки и результаты; расхождение оформить как открытый вопрос и исправить оба артефакта после решения."
+    category: "Проверка модели"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что нужно показать на диаграмме для асинхронного подтверждения заявки?"
+    answer: "Отправку команды или события, независимую обработку, корреляционный идентификатор, возможную задержку и путь результата или ошибки. Не изображать асинхронный ответ как немедленный синхронный."
+    category: "Практический кейс"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Почему диаграмма не должна быть единственным источником API-контракта?"
+    answer: "Она обычно не фиксирует все поля, типы, обязательность, ошибки и правила совместимости. Для этого нужен отдельный контракт."
+    category: "Границы нотации"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Как избежать перегруженной UML-диаграммы?"
+    answer: "Выбрать один сценарий или уровень детализации, скрыть несущественные вызовы и вынести альтернативные случаи в отдельные фрагменты или схемы."
+    category: "Качество модели"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+

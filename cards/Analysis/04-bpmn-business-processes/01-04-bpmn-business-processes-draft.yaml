@@ -1,0 +1,195 @@
+topic: "BPMN и бизнес-процессы"
+cards:
+  - question: "Для чего используют BPMN при системном анализе?"
+    answer: "Чтобы согласованно показать участников, действия, события и развилки бизнес-процесса, выявить пропуски и границы ответственности. Диаграмма дополняет текстовые правила."
+    category: "Назначение"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Чем pool отличается от lane?"
+    answer: "Pool представляет участника взаимодействия, например организацию или отдельный процесс; lane делит работу внутри pool по ролям или подразделениям."
+    category: "Участники"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему sequence flow нельзя проводить между разными pool?"
+    answer: "Sequence flow задаёт порядок действий внутри одного процесса. Взаимодействие разных участников показывают message flow."
+    category: "Потоки"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Чем message flow отличается от sequence flow?"
+    answer: "Message flow показывает обмен сообщениями между участниками, sequence flow — порядок выполнения элементов внутри процесса."
+    category: "Потоки"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что обозначает start event?"
+    answer: "Событие, которое запускает экземпляр процесса. Его тип уточняет способ запуска: например сообщение или таймер; не всякий процесс начинается ручным действием."
+    category: "События"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Чем end event отличается от terminate end event?"
+    answer: "Обычный end завершает пришедшую ветку; terminate end прекращает весь соответствующий процесс или подпроцесс и активные ветви в его области."
+    category: "События"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Что означает intermediate event в процессе?"
+    answer: "Событие между началом и концом, которое отражает ожидание или наступление значимого факта, например сообщения, таймера или ошибки в применимой форме."
+    category: "События"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Когда использовать timer event?"
+    answer: "Когда процесс запускается или продолжает выполнение по времени либо после ожидания, например при истечении срока ответа. Нужно определить календарь и зону времени вне одной иконки."
+    category: "События"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Чем boundary event отличается от события внутри последовательного потока?"
+    answer: "Boundary event прикрепляют к задаче или подпроцессу для реакции на событие во время их выполнения; он может прервать активность или создать параллельную ветку."
+    category: "События"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "В чём разница между interrupting и non-interrupting boundary event?"
+    answer: "Interrupting прекращает выполняемую активность и переводит поток на обработку события; non-interrupting запускает дополнительную ветку, сохраняя основную."
+    category: "События"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Как работает exclusive gateway?"
+    answer: "Выбирает одну исходящую ветку по условиям, а при слиянии не синхронизирует параллельные токены. Важны взаимоисключающие условия и default-путь."
+    category: "Шлюзы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Как работает parallel gateway при разветвлении и слиянии?"
+    answer: "На разветвлении запускает все исходящие ветви; на слиянии ждёт требуемые входящие потоки. Ошибка в паре разветвления и слияния может привести к зависанию процесса."
+    category: "Шлюзы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Чем inclusive gateway отличается от exclusive?"
+    answer: "Inclusive может выбрать одну или несколько ветвей по истинным условиям; при слиянии синхронизирует активированные ветви. Exclusive выбирает одну."
+    category: "Шлюзы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Когда нужен event-based gateway?"
+    answer: "Когда дальнейшая ветка определяется тем, какое из ожидаемых событий наступит первым, например ответ клиента или таймаут, а не вычислением условий над данными."
+    category: "Шлюзы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Почему gateway не должен заменять описание бизнес-правила?"
+    answer: "Он показывает развилку, но критерии выбора, вычисления и исключения требуют явного текста или таблицы решений."
+    category: "Качество модели"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Чем task отличается от subprocess?"
+    answer: "Task — единичная работа на выбранном уровне детализации; subprocess группирует последовательность действий и позволяет раскрыть её отдельно."
+    category: "Декомпозиция процесса"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Когда полезен collapsed subprocess?"
+    answer: "Когда основная схема перегружена деталями. Свёрнутый подпроцесс сохраняет читаемость, а отдельная схема раскрывает внутренние шаги."
+    category: "Декомпозиция процесса"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Зачем явно показывать альтернативный путь при отказе внешней системы?"
+    answer: "Иначе модель описывает только идеальный сценарий и не даёт понять, кто реагирует на ошибку, сколько ждать и как завершается процесс."
+    category: "Ошибки"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Как из BPMN-схемы выявить интеграции?"
+    answer: "Искать границы pool, обмены сообщениями и задачи внешних систем; для каждого обмена уточнить контракт, корреляцию, таймаут, повтор и ошибку."
+    category: "Интеграции"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что такое token в объяснении выполнения BPMN?"
+    answer: "Это концептуальный маркер продвижения потока по процессу. Он помогает понять параллельные ветки и места ожидания, но не обязательно соответствует физическому объекту в приложении."
+    category: "Семантика"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему схема с одной lane «Система» часто недостаточна?"
+    answer: "Она скрывает владельцев действий и границы взаимодействия. Нужно отделить пользователя, сервисы и внешних участников там, где это существенно для процесса."
+    category: "Качество модели"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Как проверить BPMN-схему на неполные пути?"
+    answer: "Проследить каждый старт до допустимого завершения, проверить условия шлюзов, необработанные ошибки, таймауты и зависшие ветви."
+    category: "Проверка модели"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Чем BPMN полезнее обычной блок-схемы для межкомандного процесса?"
+    answer: "Единая нотация различает участников, порядок действий, сообщения и типы событий. Это облегчает проверку взаимодействий и исключений."
+    category: "Назначение"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Когда BPMN не стоит использовать как единственный артефакт требования?"
+    answer: "Когда важны точные поля API, правила расчёта, модель данных или требования к производительности. Для них нужны отдельные контракты и текстовые условия."
+    category: "Границы нотации"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+

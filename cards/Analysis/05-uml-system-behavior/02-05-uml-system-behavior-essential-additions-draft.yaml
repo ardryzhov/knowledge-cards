@@ -1,0 +1,19 @@
+topic: "UML и поведение системы"
+cards:
+  - question: "Чем include отличается от extend на use case diagram?"
+    answer: "include выделяет обязательное повторно используемое поведение, вызываемое базовым случаем; extend добавляет условное расширение в определённой точке базового случая. Для точной логики всё равно нужен текст сценария."
+    category: "Use case diagram"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Как показать параллельные действия на activity diagram?"
+    answer: "Использовать fork для разделения на параллельные потоки и join для синхронизации, если продолжение должно ждать их завершения. Нужно отдельно проверить отказ каждой ветви."
+    category: "Activity diagram"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+
