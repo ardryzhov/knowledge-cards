@@ -1,0 +1,11 @@
+topic: "Mockito и тестовые двойники"
+cards:
+  - question: "Когда verify(mock, never()) полезен?"
+    answer: "Когда отсутствие вызова — бизнес-инвариант, например при невалидном запросе нельзя отправлять платёж или событие. Он не должен фиксировать случайные внутренние детали."
+    category: "Verification"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+

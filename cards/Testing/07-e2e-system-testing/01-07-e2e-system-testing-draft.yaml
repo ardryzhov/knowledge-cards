@@ -1,0 +1,195 @@
+topic: "E2E и системное тестирование"
+cards:
+  - question: "Как выбрать сценарии для E2E-набора?"
+    answer: "Включить несколько критичных пользовательских путей, пересекающих важные компоненты; редкие комбинации правил дешевле проверять на нижних уровнях."
+    category: "Выбор сценариев"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему E2E-тестов обычно меньше, чем unit-тестов?"
+    answer: "Они медленнее, дороже в поддержке и сложнее в диагностике, поскольку зависят от многих компонентов и среды."
+    category: "Стратегия"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Чем E2E через браузер отличается от API E2E?"
+    answer: "Браузерный тест включает UI, навигацию и взаимодействие пользователя; API E2E проверяет полный backend-сценарий без интерфейса. Оба полезны для разных рисков."
+    category: "Границы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что считать успешным результатом E2E операции перевода?"
+    answer: "Не только сообщение в UI: нужно проверить итоговое состояние операции и согласованные изменения счётов или проводок через доступный контракт."
+    category: "Оракул"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Почему фиксированный sleep в браузерном тесте плох?"
+    answer: "На CI время ответа меняется; sleep бывает слишком коротким или зря замедляет прогон. Ждут конкретное состояние с timeout."
+    category: "Стабильность"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Как сделать locator UI-теста устойчивее к изменению оформления?"
+    answer: "Опираться на доступную роль, текст назначения или стабильный test id, а не на случайный CSS-класс и позицию элемента."
+    category: "UI"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему E2E-тесты не должны делить одну учётную запись при параллельном запуске?"
+    answer: "Параллельные сценарии меняют состояние и мешают друг другу. Нужны изолированные пользователи или явно управляемые данные."
+    category: "Данные"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что делать с внешним сервисом, недоступным в тестовой среде?"
+    answer: "Согласовать границу E2E и использовать управляемый stub для стабильного сценария; реальную межсистемную совместимость проверить отдельно на подходящей среде."
+    category: "Границы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Почему успешный E2E в тестовой среде не гарантирует production-релиз?"
+    answer: "Среды могут различаться данными, конфигурацией, нагрузкой и правами. После деплоя нужны smoke и мониторинг реального сценария."
+    category: "Среды"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Как тестировать асинхронный статус операции в E2E?"
+    answer: "Отправить действие, сохранить ID, опрашивать статус или ждать событие до ограниченного срока, затем проверить финальный результат и ошибочный путь."
+    category: "Асинхронность"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Что проверить в E2E при отмене пользователем операции?"
+    answer: "Право отмены, допустимое состояние, повторную отмену, итог в UI и backend, а также отсутствие лишнего побочного эффекта."
+    category: "Сценарии"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Когда тест в браузере должен проверять доступность UI?"
+    answer: "Когда пользовательский сценарий зависит от клавиатуры, фокуса, подписей и семантики элементов. Такая проверка дополняет функциональные assertions."
+    category: "Доступность"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Как отделить проблему UI от backend при падении E2E?"
+    answer: "Посмотреть сетевые запросы браузера, коды API, трассировку, логи и состояние данных; определить первый нарушенный контракт."
+    category: "Диагностика"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что сохранять как артефакты падения E2E?"
+    answer: "Скриншот, trace или видео, сетевые ошибки, логи приложения, тестовые данные и версию среды без секретов."
+    category: "Диагностика"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему E2E-тест, зависящий от текущей даты, может ломаться ночью?"
+    answer: "Смена суток и временной зоны меняет ожидаемые значения. Дату контролируют в тестовых данных или явно задают допустимый интервал."
+    category: "Время"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Как проверить сценарий с несколькими ролями?"
+    answer: "Создать независимые учётные записи, выполнить действие одной ролью и проверить наблюдаемый эффект и ограничения доступа другой."
+    category: "Авторизация"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Чем manual exploratory проверка дополняет автоматизированный E2E?"
+    answer: "Она помогает найти неожиданные сценарии и проблемы взаимодействия, которые не были заложены в сценарий автоматизации."
+    category: "Исследование"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Как не превратить E2E-тест в длинную цепочку зависимых бизнес-операций?"
+    answer: "Подготовить предпосылки через управляемый API или фикстуру, а через UI проверить только выбранный путь. Исключения нужны, если сама цепочка и есть цель теста."
+    category: "Дизайн"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Почему E2E часто падает при shared staging?"
+    answer: "Другие команды меняют версии, данные и конфигурацию. Нужны контроль версии, изоляция ключевых данных и метки среды в отчёте."
+    category: "Среды"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Как определить, что E2E-сценарий устарел после изменения требований?"
+    answer: "Сверить его цель и assertions с актуальным контрактом; отличить намеренное изменение поведения от регресса и обновить тест."
+    category: "Поддержка"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что проверять при завершении полного сценария через Kafka?"
+    answer: "Отправку события, обработку consumer, финальное состояние и отсутствие дубля при повторе, ожидая наблюдаемое условие с timeout."
+    category: "События"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Почему браузерный тест не должен проверять все комбинации серверной валидации?"
+    answer: "Это замедляет и усложняет suite; комбинации проверяют на уровне API или unit, а браузером — основные пользовательские пути и отображение ошибок."
+    category: "Стратегия"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Когда E2E-тест должен запускаться в pipeline?"
+    answer: "Критичный smoke — после развёртывания в подходящую среду; полный дорогой suite — по установленному графику или перед релизом, если его результат влияет на решение."
+    category: "CI/CD"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Как определить, что E2E-проверка действительно покрывает бизнес-цель?"
+    answer: "У неё есть связанный пользовательский сценарий, наблюдаемый результат и важные зависимости; простой проход по страницам без assertions цель не проверяет."
+    category: "Качество"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+

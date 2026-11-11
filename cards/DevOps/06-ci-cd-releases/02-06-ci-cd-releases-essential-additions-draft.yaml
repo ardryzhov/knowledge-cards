@@ -1,0 +1,27 @@
+topic: "CI/CD и выпуск изменений"
+cards:
+  - question: "Чем merge commit отличается от rebase в истории Git?"
+    answer: "Merge сохраняет ветвление и создаёт объединяющий коммит; rebase переносит коммиты на новую базу, меняя их идентификаторы. Публичную историю переписывают только по правилам команды."
+    category: "Git"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Зачем защищать основную ветку репозитория?"
+    answer: "Правила ревью, проверок и прав на запись снижают риск непроверенных изменений в источнике релизов. Важно понимать, какие проверки действительно блокируют merge."
+    category: "Git"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Как связать Git tag релиза с развернутым образом?"
+    answer: "Зафиксировать commit, версию и digest образа в артефактах pipeline и release metadata. Сам tag в Git не доказывает, что именно этот образ запущен."
+    category: "Прослеживаемость"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+

@@ -1,0 +1,211 @@
+topic: "Unit-тесты и JUnit"
+cards:
+  - question: "Какие три части обычно есть у понятного unit-теста?"
+    answer: "Подготовка условий, действие и проверка результата (Arrange–Act–Assert). Форма не обязательна, но помогает видеть цель теста."
+    category: "Структура"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что следует проверять в unit-тесте бизнес-метода?"
+    answer: "Наблюдаемое поведение: результат, исключение и значимые побочные эффекты. Внутренние вызовы проверяют только если они часть контракта."
+    category: "Структура"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Зачем тесту понятное имя?"
+    answer: "Оно должно описывать условие и ожидаемый результат, чтобы падение можно было понять без чтения всей реализации."
+    category: "Качество"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Чем JUnit Jupiter отличается от JUnit Platform?"
+    answer: "Jupiter предоставляет модель написания тестов и расширений; Platform запускает тестовые движки и интегрируется с IDE и сборкой."
+    category: "JUnit"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Для чего нужны @BeforeEach и @AfterEach?"
+    answer: "Они выполняют подготовку и очистку вокруг каждого тестового метода. Общие изменяемые данные всё равно могут создавать зависимость между тестами."
+    category: "Lifecycle"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Когда используют @BeforeAll?"
+    answer: "Для дорогой общей подготовки перед всеми тестами класса. По умолчанию метод обычно статический; при PER_CLASS возможен экземплярный вариант."
+    category: "Lifecycle"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему общий mutable fixture между тестами опасен?"
+    answer: "Один тест может изменить состояние для другого, вызвав зависимость от порядка и параллельного запуска."
+    category: "Lifecycle"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что делает assertThrows?"
+    answer: "Проверяет тип ожидаемого исключения и возвращает его для проверки сообщения или полей; нужно помещать внутрь только действие, которое должно бросить ошибку."
+    category: "Assertions"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему assertThrows только по типу может быть недостаточным?"
+    answer: "Один и тот же тип исключения может возникнуть раньше и по другой причине. Проверяют код или сообщение ошибки и состояние системы, если оно важно."
+    category: "Assertions"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Когда assertAll полезнее нескольких обычных assertions?"
+    answer: "Когда нужно увидеть все независимые нарушения в одном результате; он собирает ошибки сгруппированных проверок вместо остановки на первой."
+    category: "Assertions"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Чем assertEquals для объекта отличается от проверки его отдельных полей?"
+    answer: "Он опирается на equals; если equals не реализован или не выражает нужный контракт, лучше явно проверить значимые поля."
+    category: "Assertions"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Для чего нужен @ParameterizedTest?"
+    answer: "Для выполнения одного тестового сценария на разных входных данных с отдельным результатом на каждый набор аргументов."
+    category: "Параметризация"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Когда @CsvSource неудобен по сравнению с @MethodSource?"
+    answer: "Когда данные сложные, содержат объекты или нуждаются в отдельной подготовке; MethodSource даёт программно заданный поток аргументов."
+    category: "Параметризация"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Зачем тестировать null и пустую коллекцию отдельно?"
+    answer: "Они могут иметь разную семантику и вызывать разные ветви обработки; контракт должен определить ожидаемый результат для обоих."
+    category: "Границы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему тест даты с LocalDateTime.now() часто нестабилен?"
+    answer: "Результат зависит от текущего времени и границ суток. Внедрение Clock или явного времени делает тест воспроизводимым."
+    category: "Время"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Как тестировать случайную генерацию без привязки к конкретному случайному числу?"
+    answer: "Внедрить источник случайности или seed, либо проверять инвариант результата. Точный подход зависит от контракта функции."
+    category: "Детерминированность"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Когда @Nested помогает структуре тестов?"
+    answer: "Когда поведение удобно группировать по состояниям или методам, сохраняя контекст setup и понятные имена сценариев."
+    category: "Организация"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что делает @Tag в JUnit?"
+    answer: "Помечает тесты для выбора или исключения при запуске, например быстрые и интеграционные. Тег не меняет семантику самого теста."
+    category: "Организация"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему @Disabled не стоит использовать для долгосрочного скрытия падающего теста?"
+    answer: "Проверка перестаёт защищать поведение. Нужно устранить причину, а временное отключение сопровождать задачей и сроком."
+    category: "Организация"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что проверяет assertTimeout и чем опасен preemptive timeout для кода с транзакционным контекстом?"
+    answer: "Обычный timeout оценивает длительность после выполнения; preemptive запускает код в другом потоке и может потерять thread-bound контекст транзакции или security."
+    category: "Таймауты"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Что такое assumption в JUnit?"
+    answer: "Условие, при невыполнении которого тест считается пропущенным, а не проваленным. Подходит для условий среды, но не для маскировки дефектов."
+    category: "Организация"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему порядок выполнения тестов лучше не использовать как зависимость?"
+    answer: "Фреймворк и параллелизм могут изменить порядок; тесты должны самостоятельно готовить состояние. Явный ordered suite — редкое осознанное исключение."
+    category: "Независимость"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Чем unit-тест чистой функции проще теста Spring-сервиса?"
+    answer: "Чистая функция не зависит от контейнера, БД и времени; входы и выходы легко контролировать. Сервис требует управления зависимостями и побочными эффектами."
+    category: "Стратегия"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Зачем фиксировать регрессионный тест после исправления бага?"
+    answer: "Он воспроизводит прежний сбой и защищает от его повторного появления; важно проверить, что тест падал до исправления."
+    category: "Регресс"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что такое test fixture?"
+    answer: "Подготовленное состояние и данные, необходимые тесту. Хорошая фикстура минимальна, понятна и не скрывает существенные условия."
+    category: "Данные"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему тест не должен проверять только количество вызовов внутреннего метода?"
+    answer: "Рефакторинг может изменить вызовы без изменения поведения, а ошибочный результат остаться незамеченным. Проверка взаимодействия нужна, когда оно часть контракта."
+    category: "Качество"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+

@@ -1,0 +1,19 @@
+topic: "Наблюдаемость: метрики, логи и трассировка"
+cards:
+  - question: "Как Prometheus обычно получает метрики приложения?"
+    answer: "Он периодически опрашивает настроенные HTTP endpoints и сохраняет временные ряды; targets могут обнаруживаться динамически. Пропущенный scrape требует отдельной диагностики."
+    category: "Prometheus"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Какую роль обычно играет Grafana рядом с Prometheus?"
+    answer: "Grafana строит панели и запросы к источнику метрик, а Prometheus собирает и хранит временные ряды. Панель не заменяет настройку сбора и алертов."
+    category: "Дашборды"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+

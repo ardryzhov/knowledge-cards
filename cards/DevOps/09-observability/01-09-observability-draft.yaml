@@ -1,0 +1,227 @@
+topic: "Наблюдаемость: метрики, логи и трассировка"
+cards:
+  - question: "Чем метрики, логи и трассировка дополняют друг друга?"
+    answer: "Метрики показывают тенденции и масштаб, логи — конкретные события, трассировка — путь одного запроса через сервисы. Вместе они сокращают время поиска причины."
+    category: "Основы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Какие четыре показателя стоит видеть для HTTP-сервиса?"
+    answer: "Поток запросов, долю ошибок, задержку и насыщение ресурсов. Конкретные метрики и пороги связывают с пользовательским сценарием."
+    category: "Метрики"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Чем counter отличается от gauge?"
+    answer: "Counter только растёт между сбросами процесса и удобен для количества событий; gauge может расти и снижаться, отражая текущее состояние, например размер очереди."
+    category: "Prometheus"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Когда histogram полезнее одного среднего времени ответа?"
+    answer: "Когда нужно увидеть распределение задержек, хвосты и долю запросов ниже порога. Bucket-границы выбирают под SLO."
+    category: "Prometheus"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему percentile нельзя корректно усреднять между Pod?"
+    answer: "Процентили отдельных распределений не складываются напрямую. Для общей оценки используют исходные наблюдения или агрегируемые histogram buckets."
+    category: "Метрики"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Что такое label cardinality и почему userId опасен как label?"
+    answer: "Каждая комбинация labels создаёт отдельный временной ряд. Уникальный userId резко увеличит число рядов, память и стоимость хранения."
+    category: "Prometheus"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Для чего rate() применяют к counter?"
+    answer: "Он оценивает скорость роста счётчика за окно и учитывает сбросы в типичных сценариях. Прямое значение счётчика мало говорит о текущей интенсивности."
+    category: "PromQL"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Почему график среднего CPU не показывает все проблемы с задержкой?"
+    answer: "Запросы могут ждать БД, сеть, блокировки или испытывать CPU throttling короткими всплесками. Нужны метрики критического пути и ресурса."
+    category: "Диагностика"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что означает SLI?"
+    answer: "Измеряемый показатель качества сервиса, например доля успешных запросов или задержка определённой операции."
+    category: "SLO"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Чем SLO отличается от SLA?"
+    answer: "SLO — целевой уровень измеряемого качества, SLA — договорное обязательство с условиями. Внутренний SLO часто выбирают строже SLA."
+    category: "SLO"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что такое error budget?"
+    answer: "Допустимое отклонение от SLO за период. Его используют для решений о скорости релизов и работе над надёжностью."
+    category: "SLO"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Когда alert должен будить дежурного?"
+    answer: "Когда есть значимое воздействие на пользователей или близкое нарушение SLO и требуется немедленное действие. Алерт без понятного действия создаёт шум."
+    category: "Алертинг"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Почему алерт только по CPU часто шумный?"
+    answer: "Высокий CPU может быть нормой при нагрузке, а серьёзный отказ возможен при низком CPU. Порог надо связать с насыщением и пользовательским влиянием."
+    category: "Алертинг"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Какие метрики нужны для Kafka consumer?"
+    answer: "Lag и возраст необработанных сообщений, скорость обработки, ошибки и повторы; один lag не показывает, успевает ли бизнес-сценарий."
+    category: "Очереди"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Какие метрики нужны для Artemis-очереди?"
+    answer: "Число и возраст ожидающих сообщений, скорость поступления и обработки, redelivery, DLQ и состояние broker."
+    category: "Очереди"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему структурированные логи удобнее произвольного текста?"
+    answer: "Поля времени, уровня, сервиса, операции и traceId можно надёжно фильтровать и агрегировать без хрупкого парсинга строк."
+    category: "Логи"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что такое correlation ID и зачем он нужен?"
+    answer: "Идентификатор связывает события одного запроса или бизнес-операции между сервисами. Его передают через границы вызовов и сообщений по согласованному контракту."
+    category: "Логи"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Чем traceId отличается от spanId?"
+    answer: "TraceId объединяет весь путь запроса; spanId обозначает отдельный участок работы внутри trace. Связи parent-child показывают вложенность."
+    category: "Трассировка"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему трассировка может не показывать каждый запрос?"
+    answer: "Из-за sampling и ограничений экспорта. Для редких критических ошибок может потребоваться отдельная политика sampling и корректные логи."
+    category: "Трассировка"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Какие поля нельзя записывать в технический лог?"
+    answer: "Пароли, токены, ключи и избыточные персональные данные. Для диагностики нужны идентификаторы и безопасный контекст, соответствующий политике организации."
+    category: "Безопасность"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему высокие объёмы логов могут ухудшить работу сервиса?"
+    answer: "Формирование и отправка логов тратят CPU, диск и сеть; при синхронной записи могут увеличить задержку. Нужны уровни и лимиты."
+    category: "Логи"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Как проверить, что новый релиз не ухудшил качество?"
+    answer: "Сравнить ошибки, задержку, насыщение и бизнес-метрики с базой на сопоставимом трафике; учитывать прогрев и долю canary."
+    category: "Релиз"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Чем health check отличается от мониторинга пользовательского сценария?"
+    answer: "Health check показывает локальную способность процесса или Pod работать; синтетический или реальный пользовательский путь проверяет результат через несколько зависимостей."
+    category: "Мониторинг"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему метрика «сервис доступен» без определения успешного запроса неоднозначна?"
+    answer: "200 от health endpoint может сочетаться с ошибками основной операции. Нужны граница наблюдения, набор операций и правила успеха."
+    category: "SLO"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Как обнаружить CPU throttling контейнера?"
+    answer: "Сопоставить лимит CPU, метрики throttled periods/time, использование и задержку приложения. Высокая задержка при умеренном среднем CPU не исключает throttling."
+    category: "Ресурсы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Как отличить рост heap Java от утечки памяти по метрикам?"
+    answer: "Смотреть память после GC, частоту и длительность сборок, нагрузку и тренд во времени; устойчивый рост удерживаемых объектов требует heap dump и анализа ссылок."
+    category: "Java"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Что должен содержать полезный dashboard для релиза?"
+    answer: "Версию, ошибки и задержку ключевых операций, трафик, насыщение, состояние зависимостей и ссылки на логи или traces; графики должны отвечать на вопрос о пользовательском влиянии."
+    category: "Дашборды"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему отсутствие данных в графике нельзя считать нулём ошибок?"
+    answer: "Сбор метрик может не работать, target может исчезнуть или label измениться. Нужны проверки доступности источников наблюдения."
+    category: "Надёжность мониторинга"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+

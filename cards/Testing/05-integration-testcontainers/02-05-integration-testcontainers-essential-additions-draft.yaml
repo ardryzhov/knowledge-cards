@@ -1,0 +1,19 @@
+topic: "Интеграционные тесты и Testcontainers"
+cards:
+  - question: "Что проверяет @WebMvcTest и чего он обычно не поднимает?"
+    answer: "Он загружает web slice Spring MVC для проверки контроллера, маршрутизации, валидации и HTTP-ответов; полноценные сервисы и репозитории обычно не загружаются автоматически."
+    category: "Spring Web"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Когда @SpringBootTest с RANDOM_PORT полезнее MockMvc?"
+    answer: "Когда важно проверить реальный запуск встроенного HTTP-сервера и клиентский сетевой путь, а не только MVC-обработку внутри тестового контекста."
+    category: "Spring Web"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+

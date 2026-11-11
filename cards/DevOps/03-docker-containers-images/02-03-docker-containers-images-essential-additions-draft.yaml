@@ -1,0 +1,11 @@
+topic: "Docker и контейнерные образы"
+cards:
+  - question: "Когда Docker Compose полезен разработчику Java-сервиса?"
+    answer: "Для локального запуска нескольких связанных контейнеров, например приложения, PostgreSQL и брокера, с описанными сетями и томами. Он не воспроизводит автоматически поведение Kubernetes."
+    category: "Локальная среда"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+

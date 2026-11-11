@@ -1,0 +1,227 @@
+topic: "Диагностика, инциденты и восстановление"
+cards:
+  - question: "С чего начать расследование сообщения «сервис не работает»?"
+    answer: "Уточнить пользовательский симптом, время начала, масштаб и последние изменения; проверить ключевой сценарий и метрики, затем сузить проблему до клиента, сети, Pod или зависимости."
+    category: "Подход"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему сначала стоит оценить влияние инцидента, а не сразу искать root cause?"
+    answer: "Нужно понять приоритет, затронутых пользователей и необходимость быстрого смягчения. Корневую причину можно выяснять после восстановления сервиса."
+    category: "Инциденты"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Как отличить инцидент от проблемы в эксплуатации?"
+    answer: "Инцидент — нарушение или деградация сервиса, требующая восстановления; проблема — изучаемая первопричина одного или нескольких инцидентов."
+    category: "Инциденты"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что проверить, если Deployment обновился, но новые Pod не Ready?"
+    answer: "Смотреть rollout status, describe Pod и events, логи контейнера, probes, ресурсы, образ и зависимости. Проверить отличия от прежней версии."
+    category: "Kubernetes"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Как получить логи предыдущего запуска контейнера после рестарта?"
+    answer: "Использовать kubectl logs для Pod и контейнера с флагом --previous, пока предыдущие логи доступны на узле."
+    category: "Kubernetes"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Зачем kubectl describe pod, если уже есть application logs?"
+    answer: "Describe показывает состояние контейнера, причины завершения, probes, scheduling и события Kubernetes, которые приложение может не логировать."
+    category: "Kubernetes"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что означает OOMKilled и какие данные нужны до увеличения лимита?"
+    answer: "Контейнер превысил доступный memory limit и был завершён. Нужно проверить потребление процесса, heap и нативную память Java, нагрузку и тренд перед изменением лимита."
+    category: "Память"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Как действовать при CrashLoopBackOff нового релиза?"
+    answer: "Проверить код выхода, предыдущие логи, конфигурацию, секреты и ресурсы; если есть пользовательское влияние, оценить безопасный откат с учётом миграции данных."
+    category: "Kubernetes"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему рост 5xx после деплоя не всегда означает ошибку нового кода?"
+    answer: "Могли измениться конфигурация, нагрузка, upstream, сеть или схема данных. Сравнить версии, маршруты и временную корреляцию с метриками зависимостей."
+    category: "Диагностика"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что делать, если Pod Ready, но Service возвращает 503?"
+    answer: "Проверить endpoints, selector, port/targetPort, ingress и сеть; readiness Pod не гарантирует корректность всей цепочки маршрута."
+    category: "Сеть"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Как проверить доступность внешнего API из Kubernetes без утилит в образе приложения?"
+    answer: "Использовать разрешённый диагностический или ephemeral container в том же сетевом контексте, проверить DNS, TCP, TLS и HTTP; не изменять production-образ ради диагностики."
+    category: "Сеть"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что проверить, если DNS-имя работает локально, но не внутри Pod?"
+    answer: "Сравнить DNS-конфигурацию, namespace, CoreDNS, NetworkPolicy и выход к нужному резолверу из Pod; локальная машина использует другую сеть."
+    category: "Сеть"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Как отличить отказ БД от исчерпания пула соединений приложения?"
+    answer: "Сопоставить доступность БД напрямую, число активных и ожидающих соединений в пуле, задержку запросов и ошибки. БД может быть доступна, но соединения приложения заняты."
+    category: "База данных"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Почему внезапный рост задержки при низком CPU требует проверки зависимостей?"
+    answer: "Потоки могут ждать БД, брокер, внешнее API, блокировку или сетевой таймаут. Смотреть traces, pool и метрики зависимостей."
+    category: "Производительность"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что делать, если очередь сообщений растёт быстрее, чем обрабатывается?"
+    answer: "Сравнить скорость поступления и обработки, возраст сообщений, ошибки, redelivery и состояние потребителей; затем устранить узкое место или безопасно увеличить параллелизм."
+    category: "Очереди"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему увеличение числа consumers может не уменьшить Kafka lag?"
+    answer: "Параллелизм ограничен числом партиций в группе, а общая БД или внешний сервис может стать узким местом. Нужно измерить причину задержки."
+    category: "Kafka"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Как проверить, что инцидент вызван изменением конфигурации?"
+    answer: "Сравнить эффективные values и manifest с предыдущим релизом, время изменения и поведение до/после; учитывать дрейф и внешние секреты."
+    category: "Конфигурация"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Когда rollback быстрее и безопаснее исправления на месте?"
+    answer: "Когда проблема связана с новым релизом, старая версия совместима с данными и откат проверен; иначе нужен отдельный план восстановления."
+    category: "Восстановление"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Почему rollback образа не всегда возвращает систему в прежнее состояние?"
+    answer: "Миграции БД, события и внешние действия уже могли изменить данные. Нужно проверять совместимость и предусматривать компенсацию."
+    category: "Восстановление"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Что такое runbook и что в нём должно быть?"
+    answer: "Краткая инструкция по распознаванию симптома, проверкам, безопасным действиям, контактам и условиям эскалации и восстановления."
+    category: "Операционная готовность"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Чем RTO отличается от RPO при плане восстановления?"
+    answer: "RTO ограничивает допустимое время восстановления, RPO — допустимую потерю данных по времени. Резервные копии и процедура восстановления должны проверяться против обеих целей."
+    category: "Восстановление"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему наличие backup не доказывает возможность восстановить сервис?"
+    answer: "Копия может быть неполной, повреждённой, слишком старой или восстановление может не уложиться в RTO. Нужны регулярные тесты восстановления."
+    category: "Резервирование"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Какие факты фиксировать во время инцидента?"
+    answer: "Время симптомов и изменений, масштаб, гипотезы, проверки, действия и их результат, участников и ссылки на данные. Это помогает передаче смены и разбору."
+    category: "Инциденты"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что такое postmortem и какой результат от него полезен?"
+    answer: "Разбор хронологии, влияния, технических и процессных факторов с конкретными мерами предотвращения и обнаружения; цель — улучшить систему, а не назначить виновного."
+    category: "Инциденты"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Когда нужно эскалировать инцидент другой команде?"
+    answer: "Когда затронута их зона ответственности, не хватает полномочий или знаний, превышен срок реакции либо влияние растёт. Передать симптомы, проверки и текущий статус."
+    category: "Коммуникация"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему хаотичное изменение нескольких параметров мешает диагностике?"
+    answer: "После нескольких одновременных изменений нельзя определить, что повлияло на результат, и сложнее откатиться. Нужны гипотеза, один контролируемый шаг и измерение."
+    category: "Подход"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Как проверить восстановление после исправления?"
+    answer: "Проверить пользовательский сценарий, ошибки, задержку, очередь и зависимости на достаточном окне; убедиться, что временные обходы сняты или зафиксированы."
+    category: "Восстановление"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что делать, если причина неизвестна, но сервис деградирует?"
+    answer: "Снизить влияние безопасным обходом: ограничить трафик, отключить неисправную функцию или откатить совместимый релиз; параллельно сохранять диагностические данные и продолжать поиск."
+    category: "Инциденты"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+

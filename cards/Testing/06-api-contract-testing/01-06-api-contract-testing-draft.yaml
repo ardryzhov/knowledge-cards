@@ -1,0 +1,227 @@
+topic: "API и контрактное тестирование"
+cards:
+  - question: "Что проверяет API-тест кроме HTTP-статуса?"
+    answer: "Схему и смысл тела, заголовки, изменения состояния, права, ошибки и повторные запросы. Статус 200 сам по себе не доказывает бизнес-результат."
+    category: "API"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Чем MockMvc-тест отличается от теста через настоящий сетевой порт?"
+    answer: "MockMvc выполняет Spring MVC обработку без реального сетевого сервера; тест на порту дополнительно проверяет запуск сервера и часть сетевой конфигурации."
+    category: "Spring Web"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Когда использовать RestAssured или HTTP-клиент в тестах?"
+    answer: "Когда важно проверить API как внешний потребитель через HTTP, включая методы, заголовки, сериализацию и ошибки."
+    category: "API"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Зачем проверять 400 для невалидного тела запроса?"
+    answer: "Это подтверждает серверную валидацию и стабильный формат ошибки; UI-валидации недостаточно."
+    category: "Негативные сценарии"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Чем тест 401 отличается от теста 403?"
+    answer: "Первый проверяет отсутствие или неуспех аутентификации, второй — отказ уже распознанному субъекту с недостаточными правами."
+    category: "Безопасность"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему проверка доступа только по роли не покрывает чужой объект?"
+    answer: "Пользователь с той же ролью может не иметь права на ресурс другого владельца. Нужен тест объектного доступа."
+    category: "Безопасность"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Как проверить идемпотентность POST с Idempotency-Key?"
+    answer: "Отправить одинаковый запрос с тем же ключом повторно и проверить один бизнес-эффект и согласованный ответ; затем проверить конфликтное содержимое с тем же ключом по контракту."
+    category: "Повторы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Что нужно тестировать при пагинации API?"
+    answer: "Размер и порядок страниц, границы, пустой результат, стабильность сортировки и поведение при изменении набора между запросами."
+    category: "Пагинация"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Почему тест JSON-ответа только по полному текстовому совпадению хрупок?"
+    answer: "Порядок полей и форматирование могут измениться без изменения контракта. Лучше проверять структуру и важные значения; точное сравнение нужно только для точного формата."
+    category: "JSON"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Чем отсутствующее поле отличается от поля с null в контрактном тесте?"
+    answer: "Они могут иметь разную семантику и по-разному обрабатываться клиентом. Схема и тест должны фиксировать оба случая."
+    category: "JSON"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Зачем проверять формат даты и часовой пояс в API?"
+    answer: "Одинаковый текст без offset может обозначать разное время у клиентов. Контракт должен задавать формат и смысл поля."
+    category: "Данные"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что проверяет контрактный тест между producer и consumer?"
+    answer: "Что producer предоставляет формат и поведение, на которые рассчитывает consumer; это снижает риск несовместимости при независимых релизах."
+    category: "Контракты"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Чем consumer-driven contract отличается от проверки только OpenAPI-схемы?"
+    answer: "Consumer-driven контракт фиксирует реально используемые потребителем взаимодействия и проверяет их у provider; схема API описывает допустимый интерфейс, но не гарантирует нужный конкретный сценарий."
+    category: "Контракты"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Почему контрактный тест не заменяет E2E?"
+    answer: "Он проверяет согласованные границы, но не полный бизнес-сценарий, маршрутизацию и все зависимости в развёрнутой среде."
+    category: "Контракты"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Какие изменения JSON API чаще всего ломают клиентов?"
+    answer: "Удаление или переименование поля, изменение типа, обязательности, семантики или кода ошибки. Добавление поля тоже может ломать строгих клиентов, поэтому совместимость проверяют."
+    category: "Совместимость"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Как проверить обратную совместимость новой версии API?"
+    answer: "Прогнать контракты текущих потребителей и сценарии старых клиентов против новой реализации, сравнить схемы и правила обработки."
+    category: "Совместимость"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что важно проверить при ответе 202 Accepted?"
+    answer: "Операция действительно принята, есть способ узнать её состояние, а итоговая ошибка и завершение доступны по контракту."
+    category: "Асинхронность"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему тело ошибки должно проверяться как контракт?"
+    answer: "Клиент может опираться на код, детали и идентификатор запроса; неожиданный формат мешает обработке и диагностике."
+    category: "Ошибки"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Как тестировать ETag и If-Match при обновлении?"
+    answer: "Получить версию, выполнить успешное условное изменение, затем повторить со старой версией и проверить отказ без потери нового состояния."
+    category: "Конкуренция"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Что проверяет тест на повтор после сетевого таймаута?"
+    answer: "Что клиент не создаёт второй бизнес-эффект при неизвестном исходе первой попытки, если контракт обещает идемпотентность."
+    category: "Повторы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Как проверить endpoint загрузки файла?"
+    answer: "Проверить допустимый тип и размер, пустой и повреждённый файл, права, результат обработки и отказ на превышение лимита."
+    category: "Файлы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему нельзя считать mock внешнего API достаточным контрактным тестом?"
+    answer: "Mock может быть настроен по устаревшим предположениям и не проверяет реального provider. Нужна проверка опубликованного контракта у provider."
+    category: "Контракты"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Что проверять в контракте сообщения Kafka или Artemis?"
+    answer: "Структуру, обязательность, типы, ключ, версию и смысл события; отдельно порядок, повторы и ошибки обработки."
+    category: "События"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Как проверить совместимость нового события со старым consumer?"
+    answer: "Запустить контракт старого потребителя на новой схеме и проверить обработку старых и новых примеров с учётом retention и правил версионирования."
+    category: "События"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Почему тест API должен проверять не только happy path, но и недоступность зависимости?"
+    answer: "Ошибка БД или upstream может изменить код и тело ответа либо привести к утечке внутренней информации. Нужна согласованная деградация."
+    category: "Отказы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Чем схема JSON Schema отличается от бизнес-проверки?"
+    answer: "Схема проверяет структуру и типовые ограничения; правило вроде достаточности баланса зависит от состояния и требует отдельной проверки."
+    category: "Контракты"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Как тестировать 429 Too Many Requests?"
+    answer: "Создать нагрузку выше лимита в контролируемой среде, проверить статус, область лимита и заголовок Retry-After, если он предусмотрен контрактом."
+    category: "Ограничения"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что делать, если контрактный тест падает после намеренного изменения API?"
+    answer: "Определить затронутых потребителей, согласовать совместимый переход или версию и обновить контракт вместе с ними. Простое удаление проверки скрывает несовместимость."
+    category: "Управление"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+

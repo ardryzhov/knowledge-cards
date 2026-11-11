@@ -1,0 +1,211 @@
+topic: "CI/CD и выпуск изменений"
+cards:
+  - question: "Чем CI отличается от CD?"
+    answer: "CI часто объединяет изменения и проверяет их автоматической сборкой и тестами; CD автоматизирует доставку проверенного артефакта до среды, с возможным ручным решением о релизе."
+    category: "Основы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Какие этапы нужны типичному pipeline Java-сервиса?"
+    answer: "Сборка и тесты, проверки качества и безопасности, упаковка, публикация версионированного образа, развёртывание и проверка работоспособности. Порядок и gates зависят от риска."
+    category: "Pipeline"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Зачем связывать образ с commit SHA и результатом pipeline?"
+    answer: "Это позволяет восстановить исходники, проверки и точную версию работающего сервиса при инциденте и откате."
+    category: "Прослеживаемость"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему повторная сборка из того же commit не всегда даёт тот же артефакт?"
+    answer: "Зависимости, base image, репозитории и инструменты могут измениться. Воспроизводимость требует закреплённых версий и контролируемых входов."
+    category: "Воспроизводимость"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Чем кэш зависимостей отличается от артефакта сборки?"
+    answer: "Кэш ускоряет повторные шаги и может быть удалён без потери результата; артефакт — проверенный выход конкретной сборки, который публикуют и разворачивают."
+    category: "Pipeline"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему тесты должны выполняться до публикации образа в основной registry?"
+    answer: "Так снижается риск продвижения непроверенного артефакта. При необходимости образ сначала публикуют во временное место, а после gate продвигают без пересборки."
+    category: "Качество"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что значит «продвигать один и тот же артефакт между средами»?"
+    answer: "Тот же digest образа проходит test, stage и production; меняется только конфигурация среды. Это убирает различия из-за повторной сборки."
+    category: "Релиз"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Чем rolling update отличается от blue-green deployment?"
+    answer: "Rolling постепенно заменяет экземпляры; blue-green держит две полные версии и переключает трафик. Blue-green требует больше ресурсов и явного плана миграции данных."
+    category: "Стратегии"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Чем canary release отличается от rolling update?"
+    answer: "Canary сначала направляет ограниченную долю трафика на новую версию и сравнивает метрики перед расширением; rolling просто поэтапно меняет экземпляры по стратегии."
+    category: "Стратегии"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему успешный rollout не доказывает успешность релиза?"
+    answer: "Pod могут быть ready, но новый бизнес-сценарий ошибаться. Нужны smoke проверки, метрики ошибок, задержки и бизнес-результата."
+    category: "Проверка"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что проверить до отката релиза, в котором была миграция БД?"
+    answer: "Совместимость старой версии приложения с уже изменённой схемой и данными. Откат образа может не откатить миграцию или быть опасным для данных."
+    category: "Откат"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Зачем использовать expand-and-contract при изменении схемы?"
+    answer: "Сначала добавляют совместимую структуру, затем переключают чтение и запись, после проверки удаляют старую. Это поддерживает параллельную работу версий."
+    category: "Миграции"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Почему миграцию БД стоит выполнять контролируемым шагом, а не одновременно каждым Pod?"
+    answer: "Параллельные запуски могут конфликтовать, создавать блокировки и замедлять старт. Нужен один контролируемый исполнитель или механизм синхронизации."
+    category: "Миграции"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Что такое feature flag и чем он отличается от деплоя?"
+    answer: "Флаг позволяет включать поведение отдельно от доставки кода. Он помогает поэтапному запуску, но требует управления состоянием, сроком жизни и удалением старых веток."
+    category: "Флаги"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Как организовать rollback, если новая версия уже отправила события нового формата?"
+    answer: "Проверить, понимает ли старая версия новые события; при необходимости заранее поддерживать обе схемы или использовать совместимый переходный период."
+    category: "Откат"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Чем manual approval в pipeline полезен и чего он не заменяет?"
+    answer: "Он даёт точку решения перед рискованным шагом, но не заменяет автоматические проверки и критерии готовности релиза."
+    category: "Управление"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что означает GitOps в доставке Kubernetes-конфигурации?"
+    answer: "Желаемое состояние хранится в Git, а контроллер согласует с ним кластер. Важно понимать источник истины и процедуру экстренного изменения."
+    category: "GitOps"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему ручная правка объекта kubectl edit может потеряться в GitOps?"
+    answer: "Контроллер увидит дрейф от состояния в Git и вернёт описанную версию. Постоянное изменение нужно внести в источник истины."
+    category: "GitOps"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Как проверить, что pipeline использует именно протестированный образ?"
+    answer: "Сравнить digest образа в результате сборки и в развернутом workload; mutable tag может указывать на другое содержимое."
+    category: "Прослеживаемость"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Зачем разделять права pipeline на сборку и деплой в production?"
+    answer: "Компрометация build job не должна автоматически давать полный доступ к продуктивной среде. Нужны минимальные права и контроль критических шагов."
+    category: "Безопасность"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Как исключить секреты из журналов pipeline?"
+    answer: "Использовать защищённые переменные и механизмы выдачи, маскирование как дополнительную меру, не выводить окружение и командные аргументы с секретами."
+    category: "Безопасность"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что делать, если один тест нестабилен и периодически ломает pipeline?"
+    answer: "Выяснить причину, данные и зависимость от времени или окружения; временная изоляция с ответственным допустима, но бесконечный retry скрывает дефект."
+    category: "Качество"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему параллельные деплои одного сервиса в одну среду опасны?"
+    answer: "Они могут перетирать конфигурацию и создавать гонку версий. Нужна сериализация или управление конкурентностью по среде."
+    category: "Управление"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что такое smoke test после деплоя?"
+    answer: "Короткая проверка жизненно важного пути на развернутой версии и среде. Она не заменяет полный набор тестов, но быстро выявляет грубый сбой релиза."
+    category: "Проверка"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Как выбрать между автоматическим и ручным откатом?"
+    answer: "Зависит от измеримых сигналов, скорости обнаружения, риска ложного срабатывания и совместимости данных. Автооткат подходит при надёжных условиях и заранее проверенном плане."
+    category: "Откат"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Как понять, что pipeline стал слишком медленным?"
+    answer: "Измерить время до первой обратной связи и длительность стадий, найти повторные сборки и сериализацию; оптимизировать узкие места без удаления полезных проверок."
+    category: "Производительность"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+

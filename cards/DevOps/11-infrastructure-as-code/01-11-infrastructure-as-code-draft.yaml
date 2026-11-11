@@ -1,0 +1,179 @@
+topic: "Infrastructure as Code и автоматизация"
+cards:
+  - question: "Что означает Infrastructure as Code?"
+    answer: "Инфраструктуру описывают в версиях кода и меняют через повторяемый процесс с ревью и проверкой плана. Это улучшает прослеживаемость, но не отменяет проверки результата."
+    category: "Основы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Чем декларативное описание отличается от императивного скрипта?"
+    answer: "Декларативное задаёт желаемое состояние, а инструмент вычисляет необходимые действия; императивное перечисляет шаги. Оба подхода требуют контроля побочных эффектов."
+    category: "Основы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что делает terraform plan?"
+    answer: "Сравнивает конфигурацию, состояние и доступные сведения о реальных ресурсах, показывая ожидаемые действия до apply. План нужно читать, особенно удаления и замены."
+    category: "Terraform"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что хранит Terraform state?"
+    answer: "Соответствие между ресурсами конфигурации и управляемыми объектами, а также их атрибуты. State может содержать чувствительные значения и требует защищённого хранения."
+    category: "Terraform"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему локальный Terraform state плохо подходит для общей команды?"
+    answer: "Он может потеряться и не обеспечивает удобной блокировки и общего источника истины. Обычно нужен remote backend с контролем доступа и безопасным хранением."
+    category: "Terraform"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Что такое drift инфраструктуры?"
+    answer: "Фактическое состояние отличается от описанного в коде или state, например после ручной правки. Его выявляют планом и разрешают осознанно."
+    category: "Terraform"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему terraform apply без просмотра плана рискован?"
+    answer: "Незамеченная замена ресурса или удаление может вызвать простой и потерю данных. Нужны ревью изменений и контроль среды, к которой применяют план."
+    category: "Terraform"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Когда Terraform resource нужно импортировать, а не создавать заново?"
+    answer: "Когда объект уже существует и его надо взять под управление конфигурацией. Перед импортом сверяют идентичность, параметры и план, чтобы не изменить ресурс неожиданно."
+    category: "Terraform"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Зачем Terraform modules?"
+    answer: "Они позволяют повторно использовать согласованную конфигурацию ресурсов с входами и выходами. Важно закреплять версии и не скрывать критичные настройки."
+    category: "Terraform"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему секрет нельзя считать безопасным только из-за пометки sensitive в Terraform?"
+    answer: "Пометка скрывает значение в некоторых выводах, но оно может оставаться в state. Нужны защищённый backend, доступ и по возможности отдельная выдача секрета."
+    category: "Terraform"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Что такое Ansible inventory?"
+    answer: "Набор управляемых узлов и групп с параметрами подключения и переменными. Он определяет, где playbook выполнит действия."
+    category: "Ansible"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что такое Ansible playbook?"
+    answer: "Описание последовательности plays и tasks для настройки узлов. Обычно используется YAML и модули, обеспечивающие желаемое состояние."
+    category: "Ansible"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что означает идемпотентность задачи Ansible?"
+    answer: "Повторное выполнение при неизменном входе не должно вносить новые изменения. Нужно проверять конкретный модуль и команду: shell-скрипт не становится идемпотентным автоматически."
+    category: "Ansible"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Для чего нужен Ansible handler?"
+    answer: "Он выполняет действие после уведомления от изменившейся задачи, например перезапускает сервис при изменении конфигурации. Это избегает ненужных рестартов."
+    category: "Ansible"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Чем Terraform и Ansible обычно различаются по типовым задачам?"
+    answer: "Terraform часто управляет жизненным циклом инфраструктурных ресурсов через state; Ansible настраивает системы и приложения через inventory и tasks. Граница зависит от платформы и практик команды."
+    category: "Выбор инструмента"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему Bash-скрипт деплоя должен завершаться ненулевым кодом при ошибке?"
+    answer: "Иначе pipeline может считать неуспешный шаг успешным и продолжить публикацию или релиз. Нужно явно проверять критичные команды и итог."
+    category: "Shell"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Чем pipefail полезен в shell pipeline?"
+    answer: "С ним ошибка команды внутри конвейера может сделать весь pipeline неуспешным, а не скрыться за успешным кодом последней команды. Поведение зависит от оболочки."
+    category: "Shell"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему set -e не заменяет явную обработку ошибок в Bash?"
+    answer: "Его поведение имеет исключения в условных выражениях, конвейерах и функциях. Критичные шаги требуют понятной проверки результата и восстановления."
+    category: "Shell"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Как избежать применения IaC к неправильной среде?"
+    answer: "Проверять контекст, backend или workspace, credentials, параметры среды и план в pipeline; ограничивать права и требовать ревью критичных изменений."
+    category: "Среды"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Зачем проверять IaC в CI до apply?"
+    answer: "Форматирование, валидация, анализ плана и политики помогают обнаружить ошибки и опасные изменения до применения. Они не доказывают отсутствие runtime-ошибок."
+    category: "CI/CD"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что делать, если Terraform plan предлагает удалить production БД неожиданно?"
+    answer: "Остановить применение, проверить изменения конфигурации, state, workspace и реальные ресурсы; выяснить причину и согласовать безопасный план, не маскируя удаление механически."
+    category: "Практический кейс"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Почему ручное исправление инфраструктуры во время инцидента нужно затем отразить в IaC?"
+    answer: "Иначе следующий apply может вернуть старое состояние или уничтожить временное исправление. После восстановления нужно согласовать код, state и фактический ресурс."
+    category: "Drift"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+

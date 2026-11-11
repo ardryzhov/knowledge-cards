@@ -1,0 +1,195 @@
+topic: "Сети, HTTP, DNS и TLS"
+cards:
+  - question: "Что происходит при обращении клиента к https URL на уровне основных сетевых шагов?"
+    answer: "Клиент получает IP через DNS, устанавливает TCP-соединение, согласует TLS и отправляет HTTP-запрос; прокси и балансировщики могут добавлять промежуточные шаги."
+    category: "Основы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Чем IP-адрес отличается от TCP-порта?"
+    answer: "IP указывает сетевой интерфейс узла, порт — приложение или сокет на этом узле в рамках протокола. Для соединения нужны адреса и порты обеих сторон."
+    category: "Основы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Зачем TCP нужен three-way handshake?"
+    answer: "Стороны согласуют начальные номера последовательности и подтверждают взаимную достижимость перед передачей данных."
+    category: "TCP"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Чем TCP отличается от UDP для приложения?"
+    answer: "TCP предоставляет упорядоченный поток байтов с подтверждениями и повторами; UDP передаёт датаграммы без встроенной гарантии доставки и порядка. Приложение выбирает нужную семантику."
+    category: "Транспорт"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что означает состояние TCP TIME_WAIT?"
+    answer: "Сторона, активно закрывшая соединение, временно сохраняет информацию о нём для корректной обработки запоздалых сегментов и завершения закрытия. Большое число TIME_WAIT не всегда ошибка."
+    category: "TCP"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Почему успешный ping не доказывает доступность HTTP API?"
+    answer: "ICMP отвечает только на отдельную сетевую проверку; TCP-порт, TLS, балансировщик и приложение могут быть недоступны. И наоборот, ICMP может быть запрещён при работающем API."
+    category: "Диагностика"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Чем DNS A-запись отличается от CNAME?"
+    answer: "A связывает имя с IPv4-адресом; CNAME задаёт алиас другого имени. Дальнейшее разрешение зависит от DNS и кэшей."
+    category: "DNS"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Почему изменение DNS-записи не становится мгновенно видимым всем клиентам?"
+    answer: "Рекурсивные резолверы и клиенты кэшируют ответы по TTL и локальным правилам. Старые адреса могут использоваться до истечения кэша."
+    category: "DNS"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что проверить при ошибке «UnknownHost» внутри Pod?"
+    answer: "Имя и namespace, DNS-конфигурацию Pod, наличие Service, CoreDNS, сетевые политики и состояние DNS-запросов; сначала сравнить поведение из того же Pod."
+    category: "DNS"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Чем 127.0.0.1 внутри контейнера отличается от адреса хоста?"
+    answer: "Loopback относится к сетевому namespace контейнера или Pod. Он указывает на процессы внутри этого namespace, а не автоматически на машину-хост."
+    category: "Контейнерная сеть"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что такое NAT и где он может встретиться при выходе Pod во внешнюю сеть?"
+    answer: "NAT меняет адреса или порты в пакетах на сетевом пути. В Kubernetes исходящий трафик Pod может маскироваться адресом узла или шлюза в зависимости от CNI и инфраструктуры."
+    category: "Маршрутизация"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Чем L4-балансировка отличается от L7?"
+    answer: "L4 маршрутизирует по сетевым адресам и портам, L7 понимает протокол приложения, например HTTP path или заголовки. Возможности и стоимость зависят от реализации."
+    category: "Балансировка"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что TLS проверяет при подключении к HTTPS-сервису?"
+    answer: "Клиент проверяет цепочку доверия сертификата, имя сервера и срок действия; затем стороны устанавливают защищённое соединение. Отключение проверки сертификата убирает важную защиту."
+    category: "TLS"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Что такое mTLS?"
+    answer: "Обе стороны предъявляют и проверяют сертификаты, поэтому сервер аутентифицирует клиента на транспортном уровне. Авторизацию конкретной операции всё равно нужно определить отдельно."
+    category: "TLS"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему сертификат может быть действительным по сроку, но соединение всё равно отклоняется?"
+    answer: "Возможны несовпадение имени, недоверенный издатель, неполная цепочка, неподходящее использование ключа или ограничения протокола."
+    category: "TLS"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Чем connect timeout отличается от read timeout?"
+    answer: "Connect timeout ограничивает установление соединения; read timeout ограничивает ожидание данных после соединения. Общий deadline охватывает всю операцию, включая повторы."
+    category: "Таймауты"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Как отличить HTTP 502 от 504 при проблеме upstream?"
+    answer: "502 означает, что шлюз получил некорректный ответ от upstream; 504 — что не дождался его вовремя. Нужно изучить логи шлюза и зависимого сервиса."
+    category: "HTTP ошибки"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Зачем использовать curl -v при диагностике API?"
+    answer: "Он показывает этапы соединения, TLS и HTTP-обмена; нужно не выводить секретные заголовки в общие журналы."
+    category: "Диагностика"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что проверять, если запрос из Pod проходит по IP, но не по имени?"
+    answer: "DNS-разрешение, search domains, имя Service, CoreDNS и кэш. Сетевая доступность по IP сужает область поиска."
+    category: "Диагностика"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему открытый TCP-порт не доказывает готовность приложения?"
+    answer: "Сокет может принимать соединения, но приложение не закончило инициализацию или зависимая БД недоступна. Нужна проверка прикладного сценария или readiness."
+    category: "Готовность"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Что означает CIDR-нотация /24 для IPv4-сети?"
+    answer: "Первые 24 бита адреса задают сетевой префикс; остаётся 8 бит для адресов внутри блока. Реально доступные адреса зависят от сети и её правил."
+    category: "IP"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: easy
+    code: null
+  - question: "Как понять, что проблема в прокси, а не в приложении?"
+    answer: "Сравнить запрос напрямую и через прокси, коды и логи обоих уровней, адрес назначения и заголовки. При этом прямой путь может быть запрещён политикой сети."
+    category: "Диагностика"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+  - question: "Чем HTTP Keep-Alive полезен сервису с частыми запросами?"
+    answer: "Повторное использование соединения уменьшает стоимость установления TCP и TLS. Нужны настройки пула, таймаутов и поведения при закрытии соединения сервером."
+    category: "HTTP"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null
+  - question: "Почему retry сетевого вызова после таймаута требует понимания идемпотентности?"
+    answer: "Таймаут не сообщает, выполнена ли операция на сервере. Повтор может создать дубль, если контракт не предусматривает ключ операции или проверку результата."
+    category: "Повторы"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: hard
+    code: null
+
