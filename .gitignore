@@ -10,3 +10,4 @@ supabase/.temp/
 supabase/.branches/
 
 .env.local
+*_REPORT.md

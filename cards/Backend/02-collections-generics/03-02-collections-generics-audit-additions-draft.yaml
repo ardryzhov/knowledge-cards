@@ -1,0 +1,10 @@
+topic: "Collections and Generics"
+cards:
+  - question: "Как сравнить стоимость поиска, вставки и удаления для ArrayList, LinkedList, HashMap и TreeMap?"
+    answer: "У ArrayList поиск по значению и вставка или удаление со сдвигом обычно O(n), доступ по индексу O(1). У LinkedList поиск позиции O(n), а изменение через уже установленный ListIterator — O(1). У HashMap операции по ключу в среднем O(1), у TreeMap — O(log n); худшие случаи оценивают отдельно."
+    category: "Сложность операций"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null

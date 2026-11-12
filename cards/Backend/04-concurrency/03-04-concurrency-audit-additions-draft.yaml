@@ -1,0 +1,10 @@
+topic: "Java Concurrency"
+cards:
+  - question: "Когда ArrayBlockingQueue полезна между producer и consumer?"
+    answer: "Когда нужна потокобезопасная очередь фиксированной ёмкости с блокирующим ожиданием. Лимит ёмкости не даёт производителям бесконтрольно заполнять память; при полной очереди put ждёт, а offer может отказать или ждать заданное время."
+    category: "Очереди и нагрузка"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null

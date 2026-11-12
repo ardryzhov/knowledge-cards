@@ -44,9 +44,9 @@ cards:
           Arrays.sort(sorted, Comparator.comparingInt(x -> x[0]));
           List<int[]> out = new ArrayList<>();
           for (int[] p : sorted) {
-              if (out.isEmpty() || out.getLast()[1] < p[0])
+              if (out.isEmpty() || out.get(out.size() - 1)[1] < p[0])
                   out.add(new int[]{p[0], p[1]});
-              else out.getLast()[1] = Math.max(out.getLast()[1], p[1]);
+              else out.get(out.size() - 1)[1] = Math.max(out.get(out.size() - 1)[1], p[1]);
           }
           return out.toArray(int[][]::new);
       }

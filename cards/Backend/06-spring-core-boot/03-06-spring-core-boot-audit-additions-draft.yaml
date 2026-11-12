@@ -1,0 +1,10 @@
+topic: "Spring Core and Boot"
+cards:
+  - question: "Нужна ли @Autowired на единственном конструкторе Spring-бина?"
+    answer: "В современных версиях Spring Framework единственный конструктор бина используется для внедрения зависимостей и без @Autowired. При нескольких конструкторах выбор требует явного правила; наличие зависимости всё равно должно проверяться контейнером."
+    category: "Внедрение зависимостей"
+    context: null
+    hint_1: null
+    hint_2: null
+    difficulty: medium
+    code: null

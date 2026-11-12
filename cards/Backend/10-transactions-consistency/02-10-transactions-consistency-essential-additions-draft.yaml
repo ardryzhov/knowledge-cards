@@ -1,4 +1,4 @@
-topic: "Transactions Consistency"
+topic: "Transactions and Consistency"
 cards:
   - question: "Чем NESTED отличается от REQUIRES_NEW в Spring при наличии внешней транзакции?"
     answer: "NESTED обычно использует savepoint внутри той же физической транзакции: внутреннюю часть можно откатить до точки сохранения, но общий commit остаётся за внешней транзакцией. REQUIRES_NEW приостанавливает внешнюю и открывает отдельную физическую транзакцию; поддержка NESTED зависит от transaction manager и ресурса."
