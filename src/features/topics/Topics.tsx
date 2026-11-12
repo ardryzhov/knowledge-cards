@@ -3,7 +3,8 @@ import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import {
-  categoryName, difficultyNames, readTrainingFilters, sectionName, sectionTitle,
+  categoryName, difficultyNames, readTrainingFilters, sectionName, sectionSelection,
+  sectionTitle, selectedSections,
   topicHash, trainingHash, type Difficulty, type TrainingFilters,
 } from '@/lib/training-filters'
 import { loadCards, type CardRecord, type TopicSummary } from '@/lib/supabase/data'
@@ -60,9 +61,13 @@ export function Topics({ topicId, topicItems }: { topicId?: string; topicItems: 
     sections.set(name, (sections.get(name) ?? 0) + 1)
   }
   const sortedSections = [...sections.entries()].sort(([a], [b]) => compareNames(a, b))
+  const chosenSections = selectedSections(filters)
   const sectionCards = cards.filter(card => filters.section_mode === 'all'
     || (filters.section_mode === 'unsectioned'
-      ? sectionName(card.section) === null : sectionName(card.section) === filters.section))
+      ? sectionName(card.section) === null
+      : filters.section_mode === 'multi'
+        ? chosenSections.includes(sectionName(card.section) ?? '')
+        : sectionName(card.section) === filters.section))
   const groups = new Map<string | null, number>()
   if (filters.section_mode !== 'all') for (const card of sectionCards) {
     const name = categoryName(card.category)
@@ -93,24 +98,31 @@ export function Topics({ topicId, topicItems }: { topicId?: string; topicItems: 
     <Card className="db-topic-overview">
       <div><strong>{state === 'ready' ? cards.length : topic.cardCount}</strong><span>активных карточек</span></div>
       <div className="db-topic-filters">
-        <div className="db-subtopic-heading"><strong>Разделы</strong><span>Выберите раздел или тренируйте всё направление</span></div>
+        <div className="db-subtopic-heading"><strong>Разделы</strong><span>Можно выбрать несколько разделов</span></div>
         <div className="db-subtopic-list" aria-label="Разделы">
           <button type="button" aria-pressed={filters.section_mode === 'all'} onClick={() =>
             chooseFilters({ ...filters, section_mode: 'all', section: null, category_mode: 'all', category: null })}>
             Все разделы <span>{cards.length}</span>
           </button>
+          <button type="button" aria-pressed={filters.section_mode === 'multi' && chosenSections.length === 0}
+            onClick={() => chooseFilters({ ...filters, ...sectionSelection([]), category_mode: 'all', category: null })}>
+            Сбросить выбор
+          </button>
           {sortedSections.map(([name, count]) => <button key={name ?? '__unsectioned__'} type="button"
-            aria-pressed={name === null ? filters.section_mode === 'unsectioned'
-              : filters.section_mode === 'named' && filters.section === name}
-            onClick={() => chooseFilters({ ...filters,
-              section_mode: name === null ? 'unsectioned' : 'named', section: name,
+            aria-pressed={filters.section_mode === 'all' || chosenSections.includes(name ?? '')}
+            onClick={() => {
+              const key = name ?? ''
+              const next = filters.section_mode === 'all' ? [key]
+                : chosenSections.includes(key) ? chosenSections.filter(value => value !== key) : [...chosenSections, key]
+              chooseFilters({ ...filters, ...sectionSelection(next),
               category_mode: 'all', category: null,
-            })}>
+              })
+            }}>
             {sectionTitle(name)} <span>{count}</span>
           </button>)}
         </div>
-        {filters.section_mode !== 'all' && <>
-          <div className="db-subtopic-heading"><strong>Группы вопросов</strong><span>{filters.section_mode === 'named' ? filters.section : 'Карточки без раздела'}</span></div>
+        {filters.section_mode !== 'all' && chosenSections.length > 0 && <>
+          <div className="db-subtopic-heading"><strong>Группы вопросов</strong><span>{filters.section_mode === 'named' ? filters.section : filters.section_mode === 'unsectioned' ? 'Карточки без раздела' : `Выбрано разделов: ${chosenSections.length}`}</span></div>
           <div className="db-subtopic-list" aria-label="Группы вопросов">
             <button type="button" aria-pressed={filters.category_mode === 'all'} onClick={() =>
               chooseFilters({ ...filters, category_mode: 'all', category: null })}>

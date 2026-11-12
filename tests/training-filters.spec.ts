@@ -21,9 +21,9 @@ test('раздел, группа и сложность выбираются по
   await expect(page.getByRole('button', { name: 'Concurrency 2' })).toBeVisible()
   await expect(page.getByRole('button', { name: 'Без раздела 3' })).toBeVisible()
   const sectionButtons = page.getByLabel('Разделы').getByRole('button')
-  await expect(sectionButtons.nth(1)).toContainText('Stream Api Functional')
-  await expect(sectionButtons.nth(2)).toContainText('Concurrency')
-  await expect(sectionButtons.nth(3)).toContainText('Без раздела')
+  await expect(sectionButtons.nth(2)).toContainText('Stream Api Functional')
+  await expect(sectionButtons.nth(3)).toContainText('Concurrency')
+  await expect(sectionButtons.nth(4)).toContainText('Без раздела')
   await page.getByRole('button', { name: 'Concurrency 2' }).click()
   await expect(page.getByRole('button', { name: 'Многопоточность 2' })).toBeVisible()
   await page.getByRole('button', { name: 'Многопоточность 2' }).click()
@@ -50,6 +50,40 @@ test('раздел, группа и сложность выбираются по
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320)
 })
 
+test('несколько разделов можно выбрать, сбросить и тренировать вместе', async ({ page }) => {
+  const cards: MockCard[] = [
+    card('33000000-0000-4000-8000-000000000101', 'Общие вопросы', 'hard', 'Java?', '01-java-core'),
+    card('33000000-0000-4000-8000-000000000102', 'Общие вопросы', 'hard', 'Collections?', '02-collections-generics'),
+    card('33000000-0000-4000-8000-000000000103', 'Общие вопросы', 'hard', 'JVM?', '03-jvm'),
+  ]
+  await mockOwnerSignIn(page, { topics: sampleTopics, cards })
+  const server = await mockTrainingApi(page, cards)
+  await page.goto(`/#topics/${topicId}`)
+  await page.getByRole('button', { name: 'Java Core 1' }).click()
+  await page.getByRole('button', { name: 'Collections Generics 1' }).click()
+  await expect(page.getByRole('button', { name: 'Java Core 1' })).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.getByRole('button', { name: 'Collections Generics 1' })).toHaveAttribute('aria-pressed', 'true')
+  await expect(page.getByText('Карточки · 2')).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Общие вопросы 2' })).toBeVisible()
+  await page.getByRole('link', { name: 'Тренироваться' }).click()
+  await expect(page.getByText('Разделы (2): Java Core, Collections Generics · Все группы · Все сложности')).toBeVisible()
+  await page.getByRole('button', { name: 'Продолжить' }).click()
+  await expect(page.getByRole('heading', { name: 'Java?' })).toBeVisible()
+  expect(server.sessions[0]?.attempts.map(item => item.card.question)).toEqual(['Java?', 'Collections?'])
+  await page.reload()
+  expect(server.sessions).toHaveLength(1)
+  await expect(page.getByRole('heading', { name: 'Java?' })).toBeVisible()
+  await page.getByRole('link', { name: 'К выбору раздела' }).click()
+  await expect(page.getByText('Карточки · 2')).toBeVisible()
+  await page.getByRole('button', { name: 'Сбросить выбор' }).click()
+  await expect(page.getByText('Карточки · 0')).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Нет карточек для тренировки' })).toBeDisabled()
+  await page.getByRole('button', { name: 'Все разделы 3' }).click()
+  await expect(page.getByText('Карточки · 3')).toBeVisible()
+  await page.setViewportSize({ width: 320, height: 844 })
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320)
+})
+
 test('смена фильтров предлагает продолжить текущую сессию или завершить её', async ({ page }) => {
   const cards: MockCard[] = [
     card('33000000-0000-4000-8000-000000000066', 'Многопоточность', 'hard', 'Hard?', '01-java-core'),
@@ -66,6 +100,7 @@ test('смена фильтров предлагает продолжить те
   await page.getByRole('button', { name: 'Продолжить' }).click()
   await expect(page.getByRole('heading', { name: 'Hard?' })).toBeVisible()
   await page.getByRole('link', { name: 'К выбору раздела' }).click()
+  await page.getByRole('button', { name: 'Java Core 1' }).click()
   await page.getByRole('button', { name: 'Collections Generics 1' }).click()
   await page.getByRole('button', { name: 'Многопоточность 1' }).click()
   await page.getByLabel('Сложность').selectOption('easy')
@@ -78,6 +113,7 @@ test('смена фильтров предлагает продолжить те
   await expect(page.getByRole('heading', { name: 'Hard?' })).toBeVisible()
   expect(server.sessions).toHaveLength(1)
   await page.getByRole('link', { name: 'К выбору раздела' }).click()
+  await page.getByRole('button', { name: 'Java Core 1' }).click()
   await page.getByRole('button', { name: 'Collections Generics 1' }).click()
   await page.getByRole('button', { name: 'Многопоточность 1' }).click()
   await page.getByLabel('Сложность').selectOption('easy')

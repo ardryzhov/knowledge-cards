@@ -14,9 +14,13 @@ export async function mockTrainingApi(page: Page, cards: Card[] = sampleCards) {
   const progress = new Map<string, { correct: number; incorrect: number; due: boolean }>()
   let failAnswerResponse = false
   const activeCards = () => cards.filter(card => !card.deleted_at)
+  const sectionMatches = (card: Card, filters: TrainingFilters) =>
+    filters.section_mode === 'all' || (filters.section_mode === 'unsectioned'
+      ? !card.section?.trim() : filters.section_mode === 'multi'
+        ? (JSON.parse(filters.section ?? '[]') as string[]).includes(card.section?.trim() ?? '')
+        : card.section?.trim() === filters.section)
   const matches = (card: Card, filters: TrainingFilters) =>
-    (filters.section_mode === 'all' || (filters.section_mode === 'unsectioned'
-      ? !card.section?.trim() : card.section?.trim() === filters.section))
+    sectionMatches(card, filters)
     && (filters.category_mode === 'all' || (filters.category_mode === 'uncategorized'
       ? !card.category?.trim() : card.category?.trim() === filters.category))
     && (!filters.difficulty || card.difficulty === filters.difficulty)
@@ -50,11 +54,13 @@ export async function mockTrainingApi(page: Page, cards: Card[] = sampleCards) {
       const existing = sessions.find(session => session.topicId === topicId && session.mode === mode && session.status === 'active')
       if (existing) return route.fulfill({ json: { session_id: existing.id, filters: existing.filters,
         conflict: JSON.stringify(existing.filters) !== JSON.stringify(filters) } })
-      if (filters.section_mode !== 'all' && !activeCards().some(card => card.topic_id === topicId &&
-        (filters.section_mode === 'named' ? card.section?.trim() === filters.section : !card.section?.trim())))
+      if (filters.section_mode === 'multi' && !(JSON.parse(filters.section ?? '[]') as string[]).every(section =>
+        activeCards().some(card => card.topic_id === topicId && (card.section?.trim() ?? '') === section)))
+        return route.fulfill(jsonError('Active section not found'))
+      if (filters.section_mode !== 'all' && filters.section_mode !== 'multi' && !activeCards().some(card => card.topic_id === topicId && sectionMatches(card, filters)))
         return route.fulfill(jsonError('Active section not found'))
       if (filters.category_mode !== 'all' && !activeCards().some(card => card.topic_id === topicId &&
-        (filters.section_mode === 'all' || (filters.section_mode === 'named' ? card.section?.trim() === filters.section : !card.section?.trim())) &&
+        sectionMatches(card, filters) &&
         (filters.category_mode === 'named' ? card.category?.trim() === filters.category : !card.category?.trim())))
         return route.fulfill(jsonError('Active category not found'))
       const eligible = activeCards().filter(card => card.topic_id === topicId && matches(card, filters) && (

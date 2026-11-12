@@ -1,6 +1,6 @@
 export type Difficulty = 'easy' | 'medium' | 'hard'
 export type CategoryMode = 'all' | 'named' | 'uncategorized'
-export type SectionMode = 'all' | 'named' | 'unsectioned'
+export type SectionMode = 'all' | 'named' | 'unsectioned' | 'multi'
 
 export interface TrainingFilters {
   section_mode: SectionMode
@@ -39,11 +39,33 @@ export function sectionTitle(value: string | null): string {
     part ? part[0]!.toLocaleUpperCase('ru') + part.slice(1) : '').join(' ')
 }
 
+export function selectedSections(filters: TrainingFilters): string[] {
+  if (filters.section_mode === 'named') return filters.section ? [filters.section] : []
+  if (filters.section_mode === 'unsectioned') return ['']
+  if (filters.section_mode !== 'multi') return []
+  try {
+    const values: unknown = JSON.parse(filters.section ?? '[]')
+    return Array.isArray(values) && values.every(value => typeof value === 'string')
+      ? [...new Set(values.map(value => value.trim()))].sort() : []
+  } catch { return [] }
+}
+
+export function sectionSelection(values: string[]): Pick<TrainingFilters, 'section_mode' | 'section'> {
+  const names = [...new Set(values.map(value => value.trim()))].sort()
+  if (names.length === 1) return names[0] === ''
+    ? { section_mode: 'unsectioned', section: null }
+    : { section_mode: 'named', section: names[0]! }
+  return { section_mode: 'multi', section: JSON.stringify(names) }
+}
+
 export function readTrainingFilters(params: URLSearchParams): TrainingFilters {
   const rawSectionMode = params.get('section_mode')
   const section = sectionName(params.get('section'))
   const section_mode: SectionMode = rawSectionMode === 'unsectioned' ? 'unsectioned'
-    : rawSectionMode === 'named' && section ? 'named' : 'all'
+    : rawSectionMode === 'named' && section ? 'named'
+      : rawSectionMode === 'multi' ? 'multi' : 'all'
+  const multi = section_mode === 'multi'
+    ? sectionSelection(selectedSections({ ...allFilters, section_mode, section: params.get('section') })) : null
   const rawMode = params.get('category_mode')
   const category = categoryName(params.get('category'))
   const category_mode: CategoryMode =
@@ -52,7 +74,8 @@ export function readTrainingFilters(params: URLSearchParams): TrainingFilters {
   const rawDifficulty = params.get('difficulty')
   const difficulty = rawDifficulty === 'easy' || rawDifficulty === 'medium' || rawDifficulty === 'hard'
     ? rawDifficulty : null
-  return { section_mode, section: section_mode === 'named' ? section : null,
+  return { section_mode: multi?.section_mode ?? section_mode,
+    section: multi?.section ?? (section_mode === 'named' ? section : null),
     category_mode, category: category_mode === 'named' ? category : null, difficulty }
 }
 
@@ -61,7 +84,7 @@ export function filterQuery(topicId: string, filters: TrainingFilters, mode?: st
   if (mode) params.set('mode', mode)
   if (filters.section_mode !== 'all') {
     params.set('section_mode', filters.section_mode)
-    if (filters.section_mode === 'named' && filters.section) params.set('section', filters.section)
+    if ((filters.section_mode === 'named' || filters.section_mode === 'multi') && filters.section) params.set('section', filters.section)
   }
   if (filters.category_mode !== 'all') {
     params.set('category_mode', filters.category_mode)
@@ -79,7 +102,7 @@ export function topicHash(topicId: string, filters: TrainingFilters): string {
   const params = new URLSearchParams()
   if (filters.section_mode !== 'all') {
     params.set('section_mode', filters.section_mode)
-    if (filters.section_mode === 'named' && filters.section) params.set('section', filters.section)
+    if ((filters.section_mode === 'named' || filters.section_mode === 'multi') && filters.section) params.set('section', filters.section)
   }
   if (filters.category_mode !== 'all') {
     params.set('category_mode', filters.category_mode)
@@ -91,9 +114,13 @@ export function topicHash(topicId: string, filters: TrainingFilters): string {
 }
 
 export function filterLabels(filters: TrainingFilters): string[] {
+  const chosen = selectedSections(filters)
   return [
     filters.section_mode === 'named' ? sectionTitle(filters.section)
-      : filters.section_mode === 'unsectioned' ? 'Без раздела' : 'Все разделы',
+      : filters.section_mode === 'unsectioned' ? 'Без раздела'
+        : filters.section_mode === 'multi' ? (chosen.length
+          ? `Разделы (${chosen.length}): ${chosen.slice(0, 3).map(name => sectionTitle(name || null)).join(', ')}${chosen.length > 3 ? ` +${chosen.length - 3}` : ''}`
+          : 'Разделы не выбраны') : 'Все разделы',
     filters.category_mode === 'named' ? filters.category ?? 'Все группы'
       : filters.category_mode === 'uncategorized' ? 'Без группы' : 'Все группы',
     filters.difficulty ? difficultyNames[filters.difficulty] : 'Все сложности',
