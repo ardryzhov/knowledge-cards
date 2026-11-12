@@ -1,0 +1,302 @@
+---
+topic: Stream API and Functional Style
+cards:
+- id: 8c42eddd-2b29-48f3-8097-11b03ce2c5f6
+  question: Чем Stream отличается от коллекции?
+  answer: Коллекция хранит элементы, а Stream описывает последовательность вычислений
+    над источником. Stream обычно не хранит данные и после терминальной операции считается
+    использованным; для нового прохода создают новый Stream.
+  category: Основы Stream
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: bc761d4a-9387-483f-ba7c-49a4359bfdb6
+  question: Когда начинают выполняться промежуточные операции Stream?
+  answer: 'Промежуточные операции, такие как map и filter, ленивы: они строят конвейер.
+    Обработка элементов начинается при терминальной операции, например collect, count
+    или forEach. Поэтому без терминальной операции побочные эффекты внутри map могут
+    вообще не произойти.'
+  category: Основы Stream
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 356fc306-675f-4ba2-bb4b-69c0a4e306a4
+  question: Можно ли повторно выполнить терминальную операцию над тем же Stream?
+  answer: Нет. После терминальной операции Stream закрыт для повторного использования;
+    повторный вызов обычно приводит к IllegalStateException. Нужно заново получить
+    Stream от источника или создать Supplier<Stream<T>>.
+  category: Основы Stream
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 30b8bb07-1ea3-44cf-83c2-53d0599d79bd
+  question: Чем map отличается от flatMap?
+  answer: map преобразует каждый элемент в один результат, в том числе в контейнер.
+    flatMap преобразует элемент в поток результатов и объединяет вложенные потоки
+    в один. Это удобно для списков списков или цепочек Optional.
+  category: Преобразования
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 585aff4e-90df-493a-9b72-48f7f7106dfd
+  question: Как filter влияет на элементы и исходную коллекцию?
+  answer: filter пропускает только элементы, удовлетворяющие Predicate, и сам по себе
+    не меняет исходную коллекцию. Его результат — новый Stream. Если предикат имеет
+    побочные эффекты, поведение становится труднее понимать и распараллеливать.
+  category: Преобразования
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 6415afc9-55e4-4e4d-bffd-7c896df91d19
+  question: По какому правилу Stream.distinct определяет дубликаты?
+  answer: distinct использует равенство элементов по equals, а для хеш-структур также
+    важен согласованный hashCode. Если класс нарушает контракт равенства, результат
+    удаления дубликатов может быть неверным. Для иной семантики уникальности надо
+    явно выбрать ключ.
+  category: Преобразования
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 9d83e5b1-fa97-44e2-8d5f-4d8cc38cc68c
+  question: Как Stream.sorted выбирает порядок элементов?
+  answer: 'Без аргумента требуется естественный порядок Comparable; с Comparator используется
+    переданное правило. sorted является stateful-операцией: ей нужно учитывать множество
+    элементов, поэтому на больших или бесконечных потоках её стоимость существенна.'
+  category: Преобразования
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: a7aa6f6f-fea1-43a6-8202-cfc9a36cbd32
+  question: Чем reduce отличается от collect?
+  answer: reduce сворачивает элементы ассоциативной операцией в итоговое значение.
+    collect предназначен для накопления в изменяемый результат через Collector или
+    поставщик, аккумулятор и объединитель. Для списка или карты обычно выбирают collect,
+    а для суммы — reduce или примитивный sum.
+  category: Терминальные операции
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 29969704-d1d5-4aea-a08e-8d24c85e6141
+  question: Почему функция объединения в параллельном reduce должна быть ассоциативной?
+  answer: Параллельный Stream разбивает данные и объединяет частичные результаты в
+    разном порядке. Если операция не ассоциативна, например вычитание, итог может
+    зависеть от разбиения и порядка выполнения. Нейтральный элемент также должен соответствовать
+    операции.
+  category: Терминальные операции
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 8b3c870f-b8da-4b68-8770-d947270cfcfa
+  question: Что произойдёт при Collectors.toMap, если два элемента дают одинаковый
+    ключ?
+  answer: 'Перегрузка без merge-функции выбросит IllegalStateException при дублирующемся
+    ключе. Нужно заранее определить правило: отвергнуть дубликат, оставить первое
+    или последнее значение либо объединить значения, и передать подходящую merge-функцию.'
+  category: Collectors
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: babf2f38-2c0e-4d95-9d9d-dd235c1bdcc2
+  question: Чем groupingBy отличается от partitioningBy?
+  answer: groupingBy группирует элементы по произвольному ключу классификатора. partitioningBy
+    делит элементы на две группы по boolean-предикату с ключами true и false. Выбор
+    зависит от числа и типа групп.
+  category: Collectors
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 8a7db94a-63ff-44a1-a0ab-ef70fb6c89ef
+  question: Гарантирует ли Collectors.toList конкретный тип или изменяемость полученного
+    списка?
+  answer: Нет. Контракт Collectors.toList не обещает конкретную реализацию, изменяемость
+    или потокобезопасность. Если нужен конкретный тип, используют toCollection; если
+    нужна неизменяемая структура, выбирают API с явной гарантией.
+  category: Collectors
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: ffc395ce-bf82-4bb3-ac90-4d35332e9898
+  question: Чем Stream.toList отличается от collect(Collectors.toList())?
+  answer: Stream.toList возвращает неизменяемый по структуре список. collect(Collectors.toList())
+    не гарантирует ни изменяемость, ни конкретный тип результата. Нельзя полагаться
+    на случайное поведение текущей реализации.
+  category: Collectors
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 78205584-8882-4b69-9fb9-b32569276465
+  question: Почему peek не стоит использовать для обязательной бизнес-логики?
+  answer: peek предназначен прежде всего для наблюдения элементов. Из-за ленивости
+    и оптимизаций Stream вызов peek может не происходить так, как ожидается, если
+    терминальная операция не требует обхода элементов. Значимые действия лучше выполнять
+    явно.
+  category: Поведение конвейера
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 2c3ba564-7766-4812-9178-4b8d3f46234d
+  question: Чем findFirst отличается от findAny?
+  answer: findFirst сохраняет семантику первого элемента при наличии encounter order.
+    findAny может вернуть любой подходящий элемент, что позволяет больше свободы параллельному
+    выполнению. На неупорядоченном источнике ожидать определённый первый элемент нельзя.
+  category: Поведение конвейера
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 3bcd312d-c742-41f5-b62c-d5bee87c4e38
+  question: Какие операции Stream могут завершиться без обхода всех элементов?
+  answer: Короткозамыкающие терминальные операции вроде anyMatch, findFirst и limit
+    при подходящих условиях могут завершиться раньше конца источника. Поэтому нельзя
+    рассчитывать, что побочный эффект в промежуточной операции выполнится для каждого
+    элемента.
+  category: Поведение конвейера
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: f87f4f60-245b-486a-9a39-bf56d0f23d44
+  question: Когда parallelStream может ухудшить производительность?
+  answer: Распараллеливание имеет накладные расходы на разбиение, координацию и объединение.
+    Для малых коллекций, дешёвых операций, блокирующего I/O или общей изменяемой структуры
+    оно может быть медленнее и опаснее. Решение принимают по измерениям.
+  category: Параллелизм
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: ecf6d04d-ea57-4aaa-834a-796a67e5da54
+  question: Почему изменяемый общий список внутри parallelStream.forEach — плохой
+    способ собирать результат?
+  answer: Несколько потоков могут одновременно менять список, вызывая гонки и повреждение
+    данных. Даже синхронизация может убрать выгоду параллелизма. Для накопления используют
+    корректный Collector с определённой семантикой объединения.
+  category: Параллелизм
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 9be3c5aa-e63b-491e-986a-2135656245bf
+  question: Зачем нужны IntStream, LongStream и DoubleStream?
+  answer: Они обрабатывают примитивные значения без упаковки каждого элемента в обёртку
+    и предоставляют операции вроде sum и average. Это может уменьшить расходы памяти
+    и CPU; для перехода от Stream<T> используют mapToInt и аналогичные методы.
+  category: Примитивные потоки
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 43de678b-16c9-4130-afbd-c2125eb7205c
+  question: Что делает Stream.ofNullable(value)?
+  answer: Если value равен null, создаётся пустой Stream; иначе Stream из одного элемента.
+    Это удобно для включения необязательного значения в конвейер. При этом обычный
+    Stream может содержать null, что требует осторожности в операциях, которые его
+    не допускают.
+  category: Примитивные потоки
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 6dea14e3-2651-4019-b536-f58af76e5924
+  question: Почему бесконечный Stream.generate требует осторожности с терминальной
+    операцией?
+  answer: Операция, которой нужен весь поток, например collect в список или count,
+    никогда не завершится на бесконечном источнике. Для ограниченной обработки используют
+    limit или короткозамыкающую терминальную операцию с подходящим условием.
+  category: Основы Stream
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 9ce72a90-0521-48b1-b022-50811db789f2
+  question: Как посчитать число элементов по каждому ключу через groupingBy?
+  answer: 'Использовать downstream collector: groupingBy(classifier, counting()).
+    Обычный groupingBy собирает списки элементов и тратит на них память, хотя для
+    счётчиков сами элементы после классификации не нужны.'
+  category: Collectors
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 78dae0ab-a781-4fe6-a8ae-8017a40681c9
+  question: Чем forEachOrdered отличается от forEach в параллельном Stream?
+  answer: forEach не обязан соблюдать порядок encounter order при параллельном выполнении.
+    forEachOrdered сохраняет этот порядок для источника с определённым порядком, но
+    может уменьшить выигрыш от параллелизма.
+  category: Поведение конвейера
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: d1c2b142-e7cb-4a43-83c5-114a0564633e
+  question: Почему Stream из файла нужно закрывать, а Stream из List обычно нет?
+  answer: Files.lines держит открытый файловый ресурс, который закрывается через Stream.close
+    или try-with-resources. Stream из памяти обычно не владеет внешним ресурсом. Терминальная
+    операция сама по себе не обещает закрыть файловый поток.
+  category: Поведение конвейера
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 0b8b5aed-4da1-4bbc-b5f4-4cdb9151a0ee
+  question: Что произойдёт, если map вернёт null, а затем вызвать findFirst?
+  answer: Stream допускает null в некоторых конвейерах, но findFirst возвращает Optional
+    и не может представить присутствующий null; при встрече такого элемента возникнет
+    NullPointerException. Отсутствие результата лучше моделировать через flatMap(Stream::ofNullable)
+    или фильтрацию.
+  category: Преобразования
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: ec7ff647-d9ba-4e1f-938e-5f3f929d267f
+  question: Почему параллельный Stream над блокирующими HTTP-вызовами может мешать
+    другим задачам?
+  answer: Типичный parallelStream использует общий ForkJoinPool. Блокирующие вызовы
+    удерживают его рабочие потоки, влияя на другие параллельные операции. Для сетевого
+    I/O лучше выбрать контролируемый executor и явные ограничения конкурентности.
+  category: Параллелизм
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 

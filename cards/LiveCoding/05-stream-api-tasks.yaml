@@ -1,0 +1,251 @@
+---
+topic: 'Stream API: практические задачи'
+cards:
+- id: 4cf9a0d2-bdaf-4c36-b9aa-6622f8e64785
+  question: Дан List<String> с null. Верни непустые имена в верхнем регистре, сохранив
+    порядок.
+  answer: 1) Отфильтровать null и пустые. 2) Преобразовать. 3) Собрать в список. O(n)
+    времени и памяти результата.
+  category: filter/map
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: |
+    List<String> upperNames(List<String> names) {
+        return names.stream().filter(Objects::nonNull)
+            .filter(s -> !s.isBlank())
+            .map(s -> s.toUpperCase(Locale.ROOT)).toList();
+    }
+- id: ac9a9d88-d282-45f4-ab26-57ac9b7f7b90
+  question: Дан List<List<Integer>> без null. Верни один List<Integer> всех элементов
+    по порядку.
+  answer: 1) Для каждого вложенного списка получить stream. 2) flatMap объединяет
+    потоки. 3) Собрать. O(n) времени и памяти результата.
+  category: flatMap
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: |
+    List<Integer> flatten(List<List<Integer>> lists) {
+        return lists.stream().flatMap(List::stream).toList();
+    }
+- id: efefccf2-ccc9-43c9-afad-3c660d267c60
+  question: Дан List<String> без null. Верни частоту каждого имени через Stream.
+  answer: 1) Группировать по самому имени. 2) На группе применить counting. O(n) ожидаемого
+    времени и O(u) памяти.
+  category: groupingBy
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    Map<String, Long> frequencies(List<String> names) {
+        return names.stream().collect(
+            Collectors.groupingBy(Function.identity(), Collectors.counting()));
+    }
+- id: fc69a82b-c9dd-4d26-a7e8-3b9e581a7af9
+  question: Дан List<Person>, где record Person(String name, int age), name не null.
+    Получи Map<String,Integer> возраста; имена могут повторяться — сохрани максимальный
+    возраст.
+  answer: 1) toMap строит ключ и значение. 2) Для повторов применяем Integer::max.
+    O(n) ожидаемого времени и O(u) памяти.
+  category: toMap
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    Map<String, Integer> maxAge(List<Person> people) {
+        return people.stream().collect(Collectors.toMap(
+            Person::name, Person::age, Integer::max));
+    }
+- id: 2659b9c7-fd68-447b-b9b4-cc0975d82062
+  question: Дан List<Integer>. Раздели значения на чётные и нечётные через Stream.
+  answer: 1) Использовать partitioningBy с предикатом чётности. 2) Получить map boolean
+    → list. O(n) времени и памяти.
+  category: partitioningBy
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: |
+    Map<Boolean, List<Integer>> byEven(List<Integer> a) {
+        return a.stream().collect(Collectors.partitioningBy(x -> x % 2 == 0));
+    }
+- id: 52c054e1-d20c-470e-8d09-a8e068fd636b
+  question: Дан List<String> без null. Верни строки по возрастанию длины, затем лексикографически.
+  answer: 1) Отсортировать компаратором из двух критериев. 2) Собрать результат. O(n
+    log n) времени, O(n) памяти результата.
+  category: sorted
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    List<String> sorted(List<String> a) {
+        return a.stream().sorted(Comparator.comparingInt(String::length)
+            .thenComparing(Comparator.naturalOrder())).toList();
+    }
+- id: 5f564550-e368-4f0a-ac4e-6ca1d3e9d34d
+  question: Дан List<Integer>. Верни сумму квадратов чётных чисел как long; переполнение
+    long не рассматриваем.
+  answer: 1) Отфильтровать чётные. 2) Преобразовать к long до умножения. 3) Суммировать.
+    O(n) времени, O(1) памяти без учёта источника.
+  category: mapToLong
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    long evenSquares(List<Integer> a) {
+        return a.stream().filter(x -> x % 2 == 0)
+            .mapToLong(x -> (long) x * x).sum();
+    }
+- id: d5925add-5451-4343-b58e-34a5c0c8cfa0
+  question: Дан List<String> с null. Верни первую строку длиной ≥ 5.
+  answer: 1) Отфильтровать null. 2) Найти первое совпадение. 3) Вернуть Optional.
+    В худшем O(n) времени, O(1) памяти для последовательного потока.
+  category: findFirst
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: |
+    Optional<String> firstLong(List<String> a) {
+        return a.stream().filter(Objects::nonNull)
+            .filter(s -> s.length() >= 5).findFirst();
+    }
+- id: 38928ca8-29bc-4701-9ea2-14806cffc7f2
+  question: Дан List<Integer>. Верни максимальное значение как Optional<Integer>,
+    если список может быть пустым.
+  answer: 1) Вычислить max с компаратором. 2) Не вызывать get без проверки присутствия.
+    O(n) времени, O(1) памяти.
+  category: max
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: |
+    Optional<Integer> max(List<Integer> a) {
+        return a.stream().max(Integer::compareTo);
+    }
+- id: d434ff45-183e-4e0c-bcbb-a89858e3391e
+  question: Дан List<Order>, где record Order(String user, long amount), user не null.
+    Верни сумму amount по user; переполнение long не рассматриваем.
+  answer: 1) Группировать по user. 2) Внутри группы применить summingLong. O(n) ожидаемого
+    времени, O(u) памяти.
+  category: groupingBy
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    Map<String, Long> totals(List<Order> orders) {
+        return orders.stream().collect(Collectors.groupingBy(
+            Order::user, Collectors.summingLong(Order::amount)));
+    }
+- id: 7c39f8cb-d8aa-43c0-9185-5d958f7ccbfb
+  question: Дан List<String> без null. Собери через запятую только непустые строки.
+  answer: 1) Отфильтровать пустые. 2) Collectors.joining добавит разделитель между
+    оставшимися строками. O(n+L) времени, O(L) памяти результата.
+  category: joining
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: |
+    String csv(List<String> a) {
+        return a.stream().filter(s -> !s.isEmpty())
+            .collect(Collectors.joining(","));
+    }
+- id: dd4e7ebb-c7e1-4080-bae8-f8f3db9f1d0f
+  question: Дан List<Optional<String>> без null. Верни список присутствующих значений.
+  answer: 1) Каждый Optional превращаем в stream из 0 или 1 значения. 2) flatMap объединяет.
+    O(n) времени и O(k) памяти результата.
+  category: Optional.stream
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    List<String> present(List<Optional<String>> a) {
+        return a.stream().flatMap(Optional::stream).toList();
+    }
+- id: eb6a4f4f-29ed-44cc-abd5-21342711faea
+  question: Дан List<Integer>. Удали дубликаты через Stream, сохранив порядок первого
+    появления.
+  answer: 1) Для упорядоченного последовательного stream distinct оставляет первое
+    появление. 2) Собрать результат. Обычно O(n) времени и O(u) памяти; зависит от
+    equals/hashCode.
+  category: distinct
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    List<Integer> unique(List<Integer> a) {
+        return a.stream().distinct().toList();
+    }
+- id: a86c6dda-1c47-4515-8d91-ba89aba6fd07
+  question: Дан List<String>. Почему Collectors.toMap(String::length, Function.identity())
+    может упасть?
+  answer: 1) Две разные строки могут иметь одинаковую длину. 2) toMap без merge-функции
+    выбросит IllegalStateException при дублирующемся ключе. 3) Надо определить правило
+    слияния или groupingBy.
+  category: toMap
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: b252ae92-dd23-45b7-8b47-0a8959b81cbb
+  question: Дан Stream<Integer>. Почему после вызова count() нельзя вызвать на нём
+    findFirst()?
+  answer: Терминальная операция потребляет stream. Для нового прохода нужен новый
+    stream от источника или заранее собранные данные.
+  category: Жизненный цикл
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: d276520e-9251-49af-ade1-b1c1d69904f5
+  question: Дан List<Integer>. Нужно увеличить счётчик для каждого элемента. Почему
+    peek для обязательного побочного эффекта ненадёжен?
+  answer: Промежуточная операция может не выполниться для части элементов из-за short-circuit
+    или оптимизаций. Бизнес-действие нужно выражать явной терминальной операцией или
+    циклом.
+  category: peek
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 10d4cd18-f66e-4d35-a77f-97cea742533c
+  question: Дан List<Integer> с миллионом элементов. Стоит ли автоматически заменить
+    stream() на parallelStream()?
+  answer: Нет. Нужно оценить CPU-стоимость элемента, overhead распараллеливания, порядок,
+    общие ресурсы и измерить результат. Для дешёвой операции parallel часто медленнее.
+  category: parallel
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 981d65b8-d4d2-4488-8c4d-9956d9ba21c6
+  question: Дан List<Order>, где Order имеет метод amount(), нужен только первый заказ
+    с amount > 100. Почему findFirst лучше collect(...).get(0)?
+  answer: findFirst может завершить обход на первом совпадении и возвращает Optional
+    для отсутствия результата. collect обходит всё и выделяет список.
+  category: short-circuit
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    Optional<Order> firstBig(List<Order> orders) {
+        return orders.stream().filter(o -> o.amount() > 100)
+            .findFirst();
+    }

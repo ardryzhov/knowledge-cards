@@ -1,0 +1,285 @@
+---
+topic: Mockito и тестовые двойники
+cards:
+- id: 333cee80-d9c7-4848-ae0d-4e5cabca6d40
+  question: Чем stub, mock и fake отличаются по роли в тесте?
+  answer: Stub возвращает подготовленные ответы, mock позволяет проверять взаимодействия,
+    fake имеет упрощённую рабочую реализацию. На практике один объект может сочетать
+    роли.
+  category: Тестовые двойники
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: dbef4e39-1a19-4ee4-8bb7-7fccae797817
+  question: Когда зависимость стоит заменить mock?
+  answer: Когда она внешняя, медленная или нестабильная и цель теста — логика текущего
+    компонента. Реальный контракт этой зависимости проверяют отдельно.
+  category: Выбор двойника
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 0bc0073c-99f9-495c-9283-cfc36bfdbde2
+  question: Почему не стоит mock-ировать объект с простой бизнес-логикой, который
+    и проверяется?
+  answer: Тест начнёт проверять настроенные ответы mock вместо поведения настоящего
+    кода. Лучше создать реальный объект и контролировать его входы.
+  category: Выбор двойника
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 1aadf925-9d48-412d-af20-77b99ef43bed
+  question: Что делает when(...).thenReturn(...) в Mockito?
+  answer: Настраивает ответ mock на вызов метода с подходящими аргументами. Неиспользованный
+    stub может сигнализировать о неверном тесте.
+  category: Stubbing
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: aef76da5-6e4a-4908-b941-a1d314b90818
+  question: Как настроить исключение зависимости в Mockito?
+  answer: Для метода с результатом используют thenThrow, для void — doThrow(...).when(mock).method(...).
+    После действия проверяют реакцию тестируемого кода.
+  category: Stubbing
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: aff31c90-5781-4867-94c1-ba8707791ce9
+  question: Чем verify отличается от stubbing?
+  answer: Stubbing задаёт поведение зависимости, verify проверяет факт её вызова после
+    действия. Использовать verify нужно для значимых взаимодействий.
+  category: Verification
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 1711c765-abfa-4667-b136-50eaced36986
+  question: Почему verify(mock).save(any()) может быть слишком слабой проверкой?
+  answer: Он не доказывает правильность переданных данных. Лучше проверить важные
+    поля через eq, argThat или ArgumentCaptor.
+  category: Verification
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 1d4de7f5-077c-43ed-9c0c-c3db49fae018
+  question: Когда ArgumentCaptor полезен?
+  answer: Когда нужно проверить объект, который тестируемый код передал в зависимость,
+    особенно если аргумент создаётся внутри метода.
+  category: Verification
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 075ad078-a987-4658-8320-d369d86fbf2a
+  question: Почему при использовании matcher для одного аргумента остальные аргументы
+    тоже должны быть matcher?
+  answer: Mockito сопоставляет вызов по общей системе matcher; смешение с обычным
+    литералом в том же вызове приводит к ошибке настройки. Для точного значения используют
+    eq(...).
+  category: Matchers
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 2666bcb0-ccc2-4b67-a11e-a6b5c183bd22
+  question: Чем any() отличается от eq(value)?
+  answer: any() принимает подходящий аргумент без проверки значения, eq сравнивает
+    его с ожидаемым через equals; для null есть отдельные нюансы matcher.
+  category: Matchers
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 4160ffc0-472c-4258-bf21-5ef946719238
+  question: Что такое spy и чем он отличается от mock?
+  answer: Spy оборачивает реальный объект и по умолчанию вызывает настоящие методы;
+    mock по умолчанию возвращает пустые значения. Spy требует осторожности с побочными
+    эффектами.
+  category: Spy
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 165b21cb-6851-4859-b625-c4ad2f5badf6
+  question: Почему для spy часто используют doReturn(...).when(spy) вместо when(spy.method())?
+  answer: Во второй форме вызов метода spy происходит уже при настройке, а реальный
+    метод может выполнить побочный эффект или упасть. doReturn откладывает этот вызов.
+  category: Spy
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 1dd762cf-3caa-4641-9729-11560aa953c0
+  question: Что делает @InjectMocks и чего он не гарантирует?
+  answer: Mockito пытается создать тестируемый объект и внедрить в него mocks доступными
+    способами. Это не Spring DI и не доказывает корректность production-конфигурации.
+  category: Аннотации
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 8d236b55-a5e0-438a-8a4f-7fe3e23ae7e3
+  question: Чем @Mock отличается от @MockBean или актуального аналога в Spring-тесте?
+  answer: "@Mock создаёт Mockito-объект для обычного теста; Spring-аннотация заменяет
+    bean в тестовом ApplicationContext. Название Spring-аннотации зависит от версии
+    Spring Boot."
+  category: Аннотации
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: c5e23d92-6176-4d89-8262-c1bf08b666ba
+  question: Зачем MockitoExtension в JUnit Jupiter?
+  answer: Он инициализирует аннотированные mocks и интегрирует управление ими и проверки
+    stubbing в жизненный цикл теста.
+  category: Аннотации
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: ad7f5714-d0a4-4f79-a687-191e10ca2a10
+  question: Что означает unnecessary stubbing?
+  answer: Тест настраивает вызов, который сценарий не использует; это может быть устаревшая
+    настройка, неверная ветка или общий setup со скрытыми зависимостями.
+  category: Strictness
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: d74c5e5f-1e05-4389-9400-a978c3708003
+  question: Почему lenient stubbing не стоит использовать для подавления всех ошибок
+    Mockito?
+  answer: Он скрывает неиспользуемые настройки и затрудняет обнаружение тестов, которые
+    проверяют не ту ветку. Сначала нужно убрать лишнее или разделить fixture.
+  category: Strictness
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 17a93fec-c237-41f0-84ff-f1db91641f61
+  question: Когда verifyNoMoreInteractions ухудшает тест?
+  answer: Если запрещает любые внутренние вызовы без бизнес-причины, тест становится
+    хрупким к рефакторингу. Его применяют только когда отсутствие дополнительных взаимодействий
+    — важный инвариант.
+  category: Verification
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 84a69c00-07f7-4ec2-b11c-acb5ea600526
+  question: Почему mock внешнего HTTP-клиента не проверяет сериализацию JSON?
+  answer: Mock перехватывает Java-вызов до сетевого слоя; формат тела, заголовки и
+    HTTP-ошибки требуют отдельного теста клиента или интеграции.
+  category: Границы теста
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 447958b5-5104-4eaf-8e60-452f4ba57eda
+  question: Почему mock repository не обнаружит неверный JPQL-запрос?
+  answer: Mock не выполняет SQL и маппинг. Для запроса нужна проверка с настоящей
+    БД или подходящим интеграционным контекстом.
+  category: Границы теста
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: bff0eb94-063d-4bc3-8f72-74ffe7cb5f00
+  question: Можно ли mock-ировать final-класс или static-метод в Mockito?
+  answer: Современные версии Mockito поддерживают эти сценарии при соответствующей
+    конфигурации, но тест становится сильнее привязан к реализации. Сначала стоит
+    рассмотреть выделение зависимости.
+  category: Ограничения
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 9e6cbba0-a095-4d4b-a0b6-e414cc57fb1b
+  question: Почему reset(mock) внутри тестового класса часто запах?
+  answer: Он указывает на переиспользование mutable fixture и зависимость тестов.
+    Проще создавать свежий mock для каждого сценария.
+  category: Качество
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: e632c4aa-6a0f-405c-8d01-ac2a7a8281ad
+  question: Чем проверка результата предпочтительнее проверки последовательности всех
+    вызовов?
+  answer: Результат описывает внешний контракт и переживает рефакторинг; порядок внутренних
+    вызовов важен только если от него зависит корректность.
+  category: Качество
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 3117d4a0-b3bf-4ca2-a028-076130f0e2b1
+  question: Как проверить, что сервис не публикует событие при ошибке валидации?
+  answer: Создать невалидный вход, вызвать сервис, проверить ожидаемую ошибку и отсутствие
+    вызова publisher; важно не подменять этим проверку реального outbox-контракта.
+  category: Практический кейс
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: c91c3230-1d23-494e-bd35-709e1040ad63
+  question: Почему mock брокера не доказывает идемпотентность consumer?
+  answer: Он не воспроизводит повторную доставку и commit/ack. Нужно интеграционно
+    отправить дубликат или повторно вызвать обработчик с реальным хранилищем дедупликации.
+  category: Практический кейс
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 14fb9adc-523d-4670-b06b-a4f28ba00b61
+  question: Когда deep stubs создают опасную иллюзию рабочего теста?
+  answer: Когда длинную цепочку вызовов mock настраивает автоматически, тест закрепляет
+    внутреннюю структуру и не проверяет реальные границы. Лучше упростить интерфейс
+    зависимости.
+  category: Качество
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 2a52bdd0-bee8-41d0-a805-53d9eb883dc7
+  question: Когда verify(mock, never()) полезен?
+  answer: Когда отсутствие вызова — бизнес-инвариант, например при невалидном запросе
+    нельзя отправлять платёж или событие. Он не должен фиксировать случайные внутренние
+    детали.
+  category: Verification
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 

@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'node:fs/promises'
+import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import process from 'node:process'
 import { Console } from 'node:console'
@@ -6,7 +6,7 @@ import { parseDocument } from 'yaml'
 
 const console = new Console(process.stdout, process.stderr)
 
-const sourcePath = resolve('cards/Backend/01-java-core/01-java-core-draft.yaml')
+const sourcePath = resolve('cards/Backend/01-java-core.yaml')
 const migrationPath = resolve('supabase/migrations/20261112000100_java_core_content.sql')
 const ownerId = '7d53c0ee-fd2b-401a-ae4d-e6c0caa32a70'
 const backendId = '4535e892-4d68-41c2-a5a8-87935d2f5134'
@@ -16,9 +16,10 @@ const requiredKeys = ['id', 'question', 'answer', 'category', 'context', 'hint_1
 const document = parseDocument(await readFile(sourcePath, 'utf8'), { uniqueKeys: true })
 if (document.errors.length) throw new Error(document.errors.map(String).join('\n'))
 const source = document.toJS()
-if (source?.topic !== 'Java Core' || !Array.isArray(source.cards) || source.cards.length !== 20) {
-  throw new Error('Expected Java Core source with exactly 20 cards')
+if (source?.topic !== 'Java Core' || !Array.isArray(source.cards) || source.cards.length < 20) {
+  throw new Error('Expected Java Core source with at least the original 20 cards')
 }
+source.cards = source.cards.slice(0, 20)
 const ids = new Set()
 const questions = new Set()
 for (const [index, card] of source.cards.entries()) {
@@ -161,6 +162,5 @@ if (process.argv.includes('--check')) {
   if (current !== sql) throw new Error('Java Core SQL migration differs from source')
   console.log('Java Core source and SQL migration match: 20 stable UUIDs')
 } else {
-  await writeFile(migrationPath, sql)
-  console.log(`Wrote ${migrationPath}: 20 cards`)
+  throw new Error('The original migration is immutable; use --check or generate-content-migrations.mjs')
 }

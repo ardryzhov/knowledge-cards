@@ -1,0 +1,253 @@
+---
+topic: 'Многопоточность: задачи по коду'
+cards:
+- id: 45088d0d-c09e-496c-94ab-697be71f2e6b
+  question: Два потока по 100 раз выполняют count++ над общим int, затем main делает
+    join. Гарантирован ли результат 200? Как исправить?
+  answer: 1) count++ состоит из чтения, сложения и записи; обновления теряются. 2)
+    join лишь ждёт завершения. 3) Используем AtomicInteger или общий lock. Итог после
+    join — 200.
+  category: Race condition
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    AtomicInteger count = new AtomicInteger();
+    Runnable increment100 = () -> {
+        for (int i = 0; i < 100; i++) {
+            count.incrementAndGet();
+        }
+    };
+    Thread a = new Thread(increment100);
+    Thread b = new Thread(increment100);
+    a.start();
+    b.start();
+    a.join();
+    b.join();
+    System.out.println(count.get());
+- id: 9255329e-24a6-40ff-9f02-e48759d647ee
+  question: Как сделать инкремент общего счётчика с synchronized без AtomicInteger?
+  answer: 1) Все записи и чтения должны использовать один монитор. 2) Метод инкремента
+    синхронизируем; чтение после join видит итог. O(1) на операцию, но потоки конкурируют
+    за lock.
+  category: Блокировка
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    private int count;
+    synchronized void increment() {
+        count++;
+    }
+    synchronized int value() {
+        return count;
+    }
+- id: 7e0c8b53-2674-4294-93c2-c3d66c1c8205
+  question: Два потока захватывают lockA и lockB в обратном порядке. Как убрать риск
+    deadlock?
+  answer: 1) Задать общий порядок захвата. 2) Оба потока всегда берут A, затем B.
+    3) Убедиться, что другие пути соблюдают тот же порядок.
+  category: Deadlock
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    synchronized (lockA) {
+        synchronized (lockB) {
+            update();
+        }
+    }
+- id: 0cdc2965-207a-413b-9eb7-db5a14ddd603
+  question: Почему volatile int count не исправляет count++?
+  answer: volatile обеспечивает видимость отдельного чтения и записи, но не делает
+    их общую последовательность атомарной. Нужны atomic class или lock.
+  category: volatile
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 9dfab56f-ea43-4c57-8768-16f181a4e614
+  question: Нужно атомарно увеличить счётчик в ConcurrentHashMap<String,Integer>.
+    Почему get/put нельзя, и что написать?
+  answer: 1) get и put отдельно потокобезопасны, вместе — нет. 2) merge выполняет
+    обновление ключа атомарно по контракту Map implementation. 3) Для высокой конкуренции
+    можно хранить LongAdder.
+  category: ConcurrentHashMap
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    ConcurrentHashMap<String, Integer> counts = new ConcurrentHashMap<>();
+    counts.merge(key, 1, Integer::sum);
+- id: 929bdbed-139e-474b-b0b2-c3f059ceaa5a
+  question: Нужно ограничить одновременные вызовы внешнего API до пяти. Какой примитив
+    выбрать?
+  answer: 1) Создать Semaphore на 5 permits. 2) acquire перед вызовом, release в finally.
+    3) Добавить timeout/interrupt по контракту. Память O(1).
+  category: Semaphore
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    Semaphore limit = new Semaphore(5);
+    limit.acquire();
+    try {
+        callExternal();
+    } finally {
+        limit.release();
+    }
+- id: 241d9880-c7b4-42fc-93a8-664357b280bd
+  question: Как дождаться завершения двух задач ExecutorService и получить результаты,
+    не теряя исключений?
+  answer: 1) Submit возвращает Future. 2) get ждёт и передаёт ошибку через ExecutionException.
+    3) Пул закрыть в finally или управляемом жизненном цикле.
+  category: Executor
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    Future<Integer> a = pool.submit(this::first);
+    Future<Integer> b = pool.submit(this::second);
+    int total = a.get() + b.get();
+- id: 6520fd3d-25b8-45ee-9095-b0839d159417
+  question: Чем CompletableFuture.thenApply отличается от thenCompose при асинхронном
+    запросе?
+  answer: thenApply преобразует результат и с асинхронной функцией даст вложенный
+    future; thenCompose разворачивает его в один future. Выбираем compose при зависимом
+    async-шаге.
+  category: CompletableFuture
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    CompletableFuture<User> user = loadId()
+        .thenCompose(this::loadUser);
+- id: f346e7dd-be5d-45ac-b6e9-19c27ef2340a
+  question: Почему ThreadLocal с userId может передать чужой контекст следующей задаче
+    пула?
+  answer: Поток переиспользуется, а ThreadLocal остаётся, если его не очистить. 1)
+    Устанавливать контекст перед задачей. 2) Удалять в finally. Предпочтительнее явная
+    передача данных.
+  category: ThreadLocal
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: |
+    USER_ID.set(userId);
+    try {
+        process();
+    } finally {
+        USER_ID.remove();
+    }
+- id: c274eac4-244b-4040-8c62-90fd8984b4df
+  question: Как безопасно остановить цикл worker после InterruptedException?
+  answer: 1) Если нельзя пробросить исключение, восстановить флаг прерывания. 2) Завершить
+    цикл и выполнить очистку. Нельзя просто проглотить interrupt.
+  category: Interrupt
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    try { queue.take(); }
+    catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        return;
+    }
+- id: a1f3add4-9cdc-4b4a-821f-c1be7d8e48a5
+  question: Почему wait() нужно вызывать внутри цикла проверки условия?
+  answer: Пробуждение может быть ложным или другой поток успеет забрать ресурс. После
+    возврата из wait проверяют условие снова под тем же монитором.
+  category: wait/notify
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    synchronized (lock) {
+        while (queue.isEmpty()) lock.wait();
+        item = queue.remove();
+    }
+- id: 7f20f86b-3b70-42b9-b1da-f8ebd7136521
+  question: Нужно дождаться запуска трёх worker перед продолжением main. Что использовать?
+  answer: 1) CountDownLatch(3). 2) Каждый worker делает countDown после готовности.
+    3) main вызывает await с timeout. Латч одноразовый.
+  category: CountDownLatch
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: |
+    CountDownLatch ready = new CountDownLatch(3);
+    // каждый worker после старта:
+    ready.countDown();
+    // main:
+    ready.await();
+- id: eac4b0b4-0ad6-4a39-9ae8-b7f79bf751c5
+  question: Как проверить, что исправление race condition работает, если один прогон
+    всегда выдаёт 200?
+  answer: 1) Построить повторяемый конкурентный тест с барьером старта и многими итерациями.
+    2) Проверить итоговый инвариант. 3) Рассуждать о happens-before; успешные прогоны
+    не доказывают отсутствие гонки.
+  category: Тестирование
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 5cc59a68-3fec-49df-a757-90078d39d2b0
+  question: Почему newFixedThreadPool с неограниченной очередью может привести к росту
+    памяти?
+  answer: При поступлении задач быстрее обработки очередь растёт без ограничения.
+    Нужно выбрать bounded queue, политику отказа и лимит нагрузки.
+  category: Executor
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 7117fb53-e9b1-4124-8918-73be9153eabb
+  question: Как выбрать между synchronized и AtomicInteger для простого счётчика?
+  answer: Для одного атомарного числа подходит AtomicInteger; если вместе нужно менять
+    несколько полей с общим инвариантом, нужен единый lock или иной согласованный
+    механизм.
+  category: Атомарность
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: bab7252b-685d-4a0d-911a-fd9608e84908
+  question: Можно ли ускорить CPU-bound задачу виртуальными потоками?
+  answer: 'Обычно нет: виртуальные потоки уменьшают стоимость большого числа блокирующих
+    задач, но не добавляют CPU. Для вычислений ограничивают параллелизм числом доступных
+    ядер.'
+  category: Virtual threads
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 94ce79c9-6c49-4b64-9592-2dac7fcc1902
+  question: Почему результат parallelStream().forEach(list::add) с обычным ArrayList
+    некорректен?
+  answer: ArrayList не потокобезопасен; параллельные add могут потерять элементы или
+    нарушить структуру. Использовать collect или потокобезопасную стратегию сбора.
+  category: Parallel stream
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: |
+    List<Integer> result = input.parallelStream()
+        .map(this::transform)
+        .toList();

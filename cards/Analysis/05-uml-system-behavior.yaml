@@ -1,0 +1,282 @@
+---
+topic: UML и поведение системы
+cards:
+- id: 0a348e8b-1fa6-4bb9-94c5-e0a0d77a2acf
+  question: Когда sequence diagram полезнее текстового описания интеграции?
+  answer: Когда важны порядок вызовов, участники, синхронность, альтернативы, таймауты
+    и возвраты. Точные поля и бизнес-правила всё равно фиксируют отдельно.
+  category: Sequence diagram
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 7f32c853-3fb5-4d95-9548-589151aed2eb
+  question: Какие элементы обычно нужны на sequence diagram?
+  answer: Участники с lifeline, сообщения между ними, при необходимости activation,
+    возвращаемые результаты и фрагменты ветвления или повторения.
+  category: Sequence diagram
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 6e65c6e5-e2ad-49ba-81e7-c6c30a57bf90
+  question: Что показывает lifeline на sequence diagram?
+  answer: Существование и участие конкретного объекта или системы во времени; вертикальное
+    направление отражает порядок взаимодействий.
+  category: Sequence diagram
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: ee60b92a-542d-4276-bd9d-c577e3ed6f4b
+  question: Чем синхронное сообщение отличается от асинхронного на sequence diagram?
+  answer: Синхронное предполагает ожидание завершения вызова перед продолжением вызывающей
+    стороны; асинхронное не требует такого ожидания. Реальная гарантия доставки определяется
+    контрактом отдельно.
+  category: Sequence diagram
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 9e3b1b47-9d96-4c67-9efa-5917fc486bf0
+  question: Для чего нужны фрагменты alt, opt и loop?
+  answer: alt показывает взаимоисключающие ветви, opt — необязательную ветвь при условии,
+    loop — повторение; условия указывают явно.
+  category: Sequence diagram
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 4ce52a4f-1aee-49dc-9926-ee5e20ff71c2
+  question: Как показать таймаут внешнего API на sequence diagram?
+  answer: 'Обозначить запрос и альтернативу с ограничением времени, затем реакцию
+    сервиса: ошибка, повтор или компенсирующее действие. Диаграмма должна согласовываться
+    с текстовым контрактом таймаута.'
+  category: Sequence diagram
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: a82dabeb-a993-42ab-bb06-5abad8866e19
+  question: Почему нельзя показывать только успешный путь на sequence diagram интеграции?
+  answer: 'Пропадают важные варианты: отказ зависимости, пустой ответ, повтор и конкуренция.
+    Именно они часто определяют корректность реализации.'
+  category: Sequence diagram
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 6e5ebbce-d911-41d5-a682-85ff9ecd100d
+  question: Когда state machine diagram полезнее sequence diagram?
+  answer: Когда поведение объекта определяется его состояниями и допустимыми переходами,
+    а не одной цепочкой вызовов. Например жизненный цикл заявки или платежа.
+  category: State diagram
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 93922c44-7b10-470d-ad9c-5e3a6e97e3d8
+  question: Что означают guard, trigger и action на переходе состояний?
+  answer: Trigger запускает рассмотрение перехода; guard — условие его допустимости;
+    action — выполняемое действие. Их разделение делает правило проверяемым.
+  category: State diagram
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 78a198cf-0aac-45bb-8aaa-88796c97a251
+  question: Почему модель состояний должна определять реакцию на недопустимый переход?
+  answer: Иначе повтор, запоздалое событие или конкуренция приводят к неопределённому
+    поведению. Нужны отказ, игнорирование или иной согласованный исход.
+  category: State diagram
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 4b56e027-db70-4c56-801f-943b6aca2e67
+  question: Чем use case diagram отличается от подробного use case?
+  answer: Диаграмма показывает актёров и цели взаимодействия на обзорном уровне; текстовый
+    use case раскрывает предусловия, шаги, альтернативы и результат.
+  category: Use case diagram
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 2a38a239-dfbd-4f59-9770-daf74a876ab7
+  question: Почему use case diagram не заменяет описание прав доступа?
+  answer: Связь актёра с целью не задаёт условия доступа к конкретным данным, роли
+    наследования и проверки на объекте.
+  category: Use case diagram
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 9259d968-6d14-4b49-b8ca-df8f61af2953
+  question: Когда activity diagram полезна системному аналитику?
+  answer: Для описания последовательности действий и ветвлений внутри сценария или
+    алгоритма, особенно когда важен поток управления и параллельность.
+  category: Activity diagram
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: bb24cbe1-0f1b-4f44-bafb-fe005f1c8bcc
+  question: Чем activity diagram отличается от BPMN в прикладном использовании?
+  answer: Обе описывают поток действий, но BPMN ориентирована на бизнес-процесс, участников
+    и обмен сообщениями; activity diagram — часть UML и часто удобна для поведения
+    внутри системы.
+  category: Выбор нотации
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 247cee55-73f9-4277-b3e7-2b94b8af5f67
+  question: Что показывает component diagram?
+  answer: Крупные компоненты системы, предоставляемые и требуемые интерфейсы и зависимости
+    между ними; детали конкретного запроса лучше показать sequence diagram.
+  category: Component diagram
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 8a7473e9-8178-4898-9cd8-de32272e5c6f
+  question: Когда class diagram помогает аналитику, даже если он не проектирует Java-классы?
+  answer: Когда нужно согласовать сущности, атрибуты, связи и кратность. Её не следует
+    автоматически считать физической схемой БД.
+  category: Class diagram
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 57b9f9cc-b0f5-44fb-8cd2-9ff672aff0dc
+  question: Что означает кратность 0..1 и 1..* в UML-связи?
+  answer: 0..1 — необязательная связь максимум с одним объектом; 1..* — обязательная
+    связь минимум с одним. Нужно уточнять, к какому концу связи относится кратность.
+  category: Class diagram
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 038a55ce-a240-45db-af19-e8db9aa38f56
+  question: Чем композиция отличается от агрегации в UML?
+  answer: Композиция задаёт сильное владение частью с общим жизненным циклом; агрегация
+    — более слабое отношение целого и части. В прикладных схемах лучше не использовать
+    их без ясной семантики.
+  category: Class diagram
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: d7715575-7d06-4b07-b45d-2bcda1ff31fe
+  question: Как выбрать между sequence, state и activity diagram для новой функции?
+  answer: Sequence — взаимодействие участников во времени, state — допустимые состояния
+    и переходы объекта, activity — поток действий и решений. Выбирают диаграмму по
+    вопросу, который нужно прояснить.
+  category: Выбор нотации
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: ddc1775e-ee06-4ec9-b0ad-48f97b9ab198
+  question: Почему диаграмма без подписи условий переходов может вводить в заблуждение?
+  answer: Она показывает возможный путь, но не определяет, когда он выбирается. Условия
+    и бизнес-правила должны быть явными и согласованными с требованиями.
+  category: Качество модели
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 4c818857-9ea7-4b5c-b2d9-1b8ea191f2cb
+  question: Как выявить несоответствие между UML-диаграммой и текстом требования?
+  answer: Сверить участников, действия, условия, состояния, ошибки и результаты; расхождение
+    оформить как открытый вопрос и исправить оба артефакта после решения.
+  category: Проверка модели
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: fd5132d8-5a06-4619-ba8d-4caa5131fe04
+  question: Что нужно показать на диаграмме для асинхронного подтверждения заявки?
+  answer: Отправку команды или события, независимую обработку, корреляционный идентификатор,
+    возможную задержку и путь результата или ошибки. Не изображать асинхронный ответ
+    как немедленный синхронный.
+  category: Практический кейс
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: d889883e-e312-4265-8bdd-bdbbe9388eb3
+  question: Почему диаграмма не должна быть единственным источником API-контракта?
+  answer: Она обычно не фиксирует все поля, типы, обязательность, ошибки и правила
+    совместимости. Для этого нужен отдельный контракт.
+  category: Границы нотации
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 794f09d2-acb4-43f3-ac60-30a54fbaa5ae
+  question: Как избежать перегруженной UML-диаграммы?
+  answer: Выбрать один сценарий или уровень детализации, скрыть несущественные вызовы
+    и вынести альтернативные случаи в отдельные фрагменты или схемы.
+  category: Качество модели
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: ebfc6e3d-6535-461f-bed4-37f063389025
+  question: Чем include отличается от extend на use case diagram?
+  answer: include выделяет обязательное повторно используемое поведение, вызываемое
+    базовым случаем; extend добавляет условное расширение в определённой точке базового
+    случая. Для точной логики всё равно нужен текст сценария.
+  category: Use case diagram
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 800e0357-2b7a-4b78-9a08-ab23d640d1f8
+  question: Как показать параллельные действия на activity diagram?
+  answer: Использовать fork для разделения на параллельные потоки и join для синхронизации,
+    если продолжение должно ждать их завершения. Нужно отдельно проверить отказ каждой
+    ветви.
+  category: Activity diagram
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 79995c39-28d5-4bdd-9505-96d8968b7579
+  question: Чем class diagram отличается от ER-диаграммы?
+  answer: Class diagram моделирует классы, их атрибуты, операции и отношения в программной
+    модели; ER-диаграмма моделирует сущности, атрибуты и связи данных. Они не обязаны
+    совпадать один к одному.
+  category: Выбор нотации
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 

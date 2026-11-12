@@ -1,0 +1,312 @@
+---
+topic: SQL-задачи PostgreSQL
+cards:
+- id: 2a76d306-c4b8-49be-ac4c-bc29c0c6a4c9
+  question: Таблица person(name text, age int). Выведи максимальный age для каждого
+    name.
+  answer: 1) Группируем по имени. 2) Вычисляем MAX(age) в группе. O-план зависит от
+    индекса и данных.
+  category: GROUP BY
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: |
+    SELECT name, MAX(age) AS max_age
+    FROM person
+    GROUP BY name;
+- id: 7ebbfa2c-9df0-455b-be2b-650ddcbc4fcf
+  question: Таблица person(name text, age int). Найди пары (name, age), встречающиеся
+    более одного раза; NULL считаем отдельным значением группы.
+  answer: 1) Сгруппировать по обоим полям. 2) Оставить группы с COUNT(*) > 1. GROUP
+    BY объединяет NULL в одну группу.
+  category: Дубликаты
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: |
+    SELECT name, age, COUNT(*) AS copies
+    FROM person
+    GROUP BY name, age
+    HAVING COUNT(*) > 1;
+- id: 40a15b64-5cf0-445c-af06-75b123d15a5e
+  question: Таблица operations(user_name text, amount numeric). Найди пользователей
+    с более чем двумя операциями amount > 100.
+  answer: 1) Отфильтровать нужные операции до группировки. 2) Группировать по пользователю.
+    3) HAVING COUNT(*) > 2.
+  category: GROUP BY
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    SELECT user_name
+    FROM operations
+    WHERE amount > 100
+    GROUP BY user_name
+    HAVING COUNT(*) > 2;
+- id: d65719ec-e74a-4ab9-978b-b4355be1983b
+  question: Таблицы users(id, name) и orders(id PRIMARY KEY, user_id). Найди пользователей
+    без заказов.
+  answer: 1) LEFT JOIN сохраняет всех users. 2) Оставить строки, где совпадения нет.
+    Альтернатива — NOT EXISTS.
+  category: JOIN
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    SELECT u.id, u.name
+    FROM users u
+    LEFT JOIN orders o ON o.user_id = u.id
+    WHERE o.id IS NULL;
+- id: defbe55a-031d-4425-b693-a05ee89c7ff1
+  question: Таблицы users(id) и orders(id, user_id). Найди пользователей хотя бы с
+    одним заказом без повторов.
+  answer: 1) EXISTS проверяет наличие связанной строки. 2) Не соединяем все заказы,
+    поэтому пользователи не размножаются.
+  category: EXISTS
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    SELECT u.id
+    FROM users u
+    WHERE EXISTS (
+        SELECT 1 FROM orders o WHERE o.user_id = u.id
+    );
+- id: ebe765b1-01f9-4929-9925-41d9d3f5989f
+  question: Таблица orders(id PRIMARY KEY, user_id, created_at NOT NULL). Найди последний
+    заказ каждого пользователя; при равном времени выбери больший id.
+  answer: 1) Разбить строки по user_id. 2) Упорядочить по created_at DESC, id DESC.
+    3) Взять row_number=1.
+  category: Оконные функции
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    SELECT id, user_id, created_at
+    FROM (
+        SELECT o.*, ROW_NUMBER() OVER (
+            PARTITION BY user_id ORDER BY created_at DESC, id DESC
+        ) AS rn FROM orders o
+    ) x
+    WHERE rn = 1;
+- id: 05606d4d-e392-49cb-99ea-655771f2a1c8
+  question: Таблица orders(id PRIMARY KEY, user_id, amount NOT NULL). Найди три самых
+    дорогих заказа каждого пользователя; равные суммы разрули по id.
+  answer: 1) Нумеруем заказы внутри user_id по amount DESC, id. 2) Оставляем rn≤3.
+    ROW_NUMBER даёт ровно до трёх строк на группу.
+  category: Оконные функции
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    SELECT id, user_id, amount
+    FROM (
+        SELECT o.*, ROW_NUMBER() OVER (
+            PARTITION BY user_id ORDER BY amount DESC, id
+        ) rn FROM orders o
+    ) x WHERE rn <= 3;
+- id: 148a8860-7092-4095-b4a5-5488bb6f30b7
+  question: Таблица operations(id, user_id, amount). Выведи сумму amount по каждому
+    user_id, включая группы с NULL user_id.
+  answer: 1) Группировать по user_id. 2) SUM игнорирует NULL amount; если все значения
+    NULL, результат NULL. Это нужно учитывать при контракте.
+  category: Агрегация
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: |
+    SELECT user_id, SUM(amount) AS total
+    FROM operations
+    GROUP BY user_id;
+- id: 83f26cd0-34f3-4e71-8b7b-f1e56b05295e
+  question: Таблица operations(id, user_id, amount). Посчитай число всех операций
+    и число операций amount > 100 по каждому user_id.
+  answer: 1) Группировать по user_id. 2) COUNT(*) считает все строки. 3) FILTER считает
+    только удовлетворяющие условию.
+  category: Условная агрегация
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    SELECT user_id, COUNT(*) AS all_count,
+           COUNT(*) FILTER (WHERE amount > 100) AS big_count
+    FROM operations
+    GROUP BY user_id;
+- id: c9607b13-03a0-42b1-abde-5b0792b3c70c
+  question: Таблица payments(id, status). Посчитай число платежей по статусам, включая
+    NULL статус.
+  answer: 1) GROUP BY объединит NULL в группу. 2) COUNT(*) посчитает строки этой группы.
+    Не использовать COUNT(status), если нужны NULL.
+  category: 'NULL'
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    SELECT status, COUNT(*) AS cnt
+    FROM payments
+    GROUP BY status;
+- id: dba89ed6-5041-4607-8291-02706bcd7705
+  question: Таблица events(id, created_at). Выведи число событий по календарным дням
+    в UTC; created_at имеет тип timestamptz.
+  answer: 1) Перевести момент в UTC. 2) Взять date. 3) Группировать по полученной
+    дате.
+  category: Даты
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    SELECT (created_at AT TIME ZONE 'UTC')::date AS day,
+           COUNT(*) AS cnt
+    FROM events
+    GROUP BY day
+    ORDER BY day;
+- id: 90b7846b-ad04-4f9e-9108-aedc23610ef6
+  question: Таблица orders(id, user_id, amount). Найди пользователей с общей суммой
+    заказов > 1000.
+  answer: 1) Группировать по user_id. 2) Фильтровать агрегат через HAVING, а не WHERE.
+  category: HAVING
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: |
+    SELECT user_id
+    FROM orders
+    GROUP BY user_id
+    HAVING SUM(amount) > 1000;
+- id: 818a0d2d-3275-46f9-b182-434391a38ea5
+  question: Таблица orders(id, user_id, amount). Покажи каждый заказ и суммарную amount
+    его пользователя.
+  answer: 1) Оконная SUM разбивается по user_id, сохраняя каждую исходную строку.
+    2) GROUP BY здесь потерял бы детализацию.
+  category: Оконные функции
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    SELECT id, user_id, amount,
+           SUM(amount) OVER (PARTITION BY user_id) AS user_total
+    FROM orders;
+- id: 8e53640c-9c93-479b-b30a-9e938ffb6545
+  question: Таблица orders(id PRIMARY KEY, user_id, created_at NOT NULL). Для каждого
+    заказа покажи дату предыдущего заказа того же пользователя по created_at, id.
+  answer: 1) Разбить по user_id. 2) Упорядочить по created_at и id. 3) Применить LAG.
+  category: Оконные функции
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    SELECT id, user_id, created_at,
+           LAG(created_at) OVER (
+               PARTITION BY user_id ORDER BY created_at, id
+           ) AS prev_at
+    FROM orders;
+- id: e50df251-12df-4554-87d1-e029c7b1e1c9
+  question: Таблица orders(id PRIMARY KEY, created_at NOT NULL). Получи следующую
+    страницу после пары (created_at, id), сортировка по возрастанию.
+  answer: 1) Использовать составную границу того же порядка, что ORDER BY. 2) Взять
+    LIMIT. Это keyset-pagination.
+  category: Пагинация
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    SELECT id, created_at
+    FROM orders
+    WHERE (created_at, id) > (:last_at, :last_id)
+    ORDER BY created_at, id
+    LIMIT :page_size;
+- id: 16ca0b1b-320f-4e85-b217-e4ddb5d58006
+  question: Таблица users(id) и payments(user_id, amount). Выведи пользователей и
+    сумму платежей, включая тех, у кого платежей нет; amount может быть NULL.
+  answer: 1) LEFT JOIN сохраняет users. 2) GROUP BY. 3) COALESCE превращает NULL суммы
+    в 0.
+  category: JOIN
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    SELECT u.id, COALESCE(SUM(p.amount), 0) AS total
+    FROM users u
+    LEFT JOIN payments p ON p.user_id = u.id
+    GROUP BY u.id;
+- id: d2f1166d-0233-4792-bce8-987eaa3fe5d9
+  question: Таблица orders(id, user_id). Удали повторные строки с одинаковым user_id,
+    оставив минимальный id; user_id может быть NULL.
+  answer: 1) Нумеруем строки внутри user_id по id. 2) Удаляем rn>1 по id. Сначала
+    проверить SELECT и требования к данным.
+  category: Удаление дублей
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: |
+    WITH ranked AS (
+        SELECT id, ROW_NUMBER() OVER (
+            PARTITION BY user_id ORDER BY id
+        ) rn FROM orders
+    )
+    DELETE FROM orders o
+    USING ranked r
+    WHERE o.id = r.id AND r.rn > 1;
+- id: 32cc20b7-2561-4a38-be3e-e80ebf2246b6
+  question: Таблица users(id PRIMARY KEY, email). Вставь пользователя или обнови email
+    при конфликте id.
+  answer: 1) INSERT. 2) ON CONFLICT по уникальному id. 3) EXCLUDED содержит предлагаемое
+    значение.
+  category: UPSERT
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    INSERT INTO users(id, email)
+    VALUES (:id, :email)
+    ON CONFLICT (id)
+    DO UPDATE SET email = EXCLUDED.email;
+- id: b261b05d-53d5-499e-8686-d05587f561b8
+  question: Таблица payments(id, user_id, amount). Найди второй по величине уникальный
+    amount для каждого user_id; при отсутствии верни без строки.
+  answer: 1) DENSE_RANK по сумме DESC внутри пользователя. 2) Оставить ранг 2. NULL
+    amount исключить, чтобы не считать его суммой.
+  category: Оконные функции
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: |
+    SELECT DISTINCT user_id, amount
+    FROM (
+        SELECT user_id, amount, DENSE_RANK() OVER (
+            PARTITION BY user_id ORDER BY amount DESC
+        ) AS r FROM payments WHERE amount IS NOT NULL
+    ) x WHERE r = 2;
+- id: e782f45e-5e85-4c6d-8d8b-870bf86ddd7d
+  question: Таблица events(id, created_at). Найди число событий за последние 24 часа
+    относительно текущего момента.
+  answer: 1) Сравнить timestamp с текущим моментом минус interval. 2) Не приводить
+    столбец к date, чтобы сохранить точность времени.
+  category: Даты
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: |
+    SELECT COUNT(*)
+    FROM events
+    WHERE created_at >= now() - INTERVAL '24 hours';

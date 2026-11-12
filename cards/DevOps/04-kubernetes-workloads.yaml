@@ -1,0 +1,290 @@
+---
+topic: 'Kubernetes: workloads и жизненный цикл'
+cards:
+- id: 5c98ccab-9c20-46a5-b470-f1cee5bd4900
+  question: Из каких компонентов состоит Kubernetes control plane на базовом уровне?
+  answer: API server принимает изменения, etcd хранит состояние, scheduler выбирает
+    узлы для Pod, controllers приводят фактическое состояние к желаемому.
+  category: Архитектура
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: d9286752-36cc-432a-be06-b0bc2d617220
+  question: Что делает kubelet на worker node?
+  answer: Следит за Pod, назначенными узлу, и взаимодействует с container runtime
+    для запуска и контроля контейнеров; сообщает состояние в API.
+  category: Архитектура
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 8829e081-2740-47a0-9092-4925f661b8d6
+  question: Чем Pod отличается от container?
+  answer: Pod — минимальная единица размещения Kubernetes; его контейнеры разделяют
+    сеть и некоторые ресурсы, но остаются отдельными процессами и образами.
+  category: Pod
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: a5960355-d97d-4183-bbb5-ac6d9222ad31
+  question: Почему Pod обычно не создают вручную для продакшен-сервиса?
+  answer: Сам по себе Pod не обеспечивает желаемое число реплик и замену при удалении.
+    Для сервиса используют контроллер, например Deployment.
+  category: Pod
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 0c0e094a-24a0-480d-93c7-c8f63debc4e1
+  question: Что обеспечивает Deployment?
+  answer: Управляет желаемым числом реплик и обновлением Pod через ReplicaSet. Его
+    задача — поддерживать указанное состояние приложения.
+  category: Контроллеры
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 33e59e59-df3c-41f6-a082-e654a4ee2772
+  question: Чем ReplicaSet отличается от Deployment?
+  answer: ReplicaSet поддерживает число Pod с заданным шаблоном; Deployment управляет
+    ReplicaSet и стратегией обновления версий.
+  category: Контроллеры
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 80aac36a-6cee-4a00-9891-d481089c5ec5
+  question: Когда StatefulSet уместнее Deployment?
+  answer: Когда экземплярам нужны устойчивые имена, порядок создания или собственные
+    постоянные тома, например для stateful-системы. Сам StatefulSet не заменяет проектирование
+    консистентности данных.
+  category: Контроллеры
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 302b544e-9a63-4ec9-b3ad-687ce372e85c
+  question: Чем Job отличается от CronJob?
+  answer: Job выполняет конечную работу до завершения; CronJob создаёт Job по расписанию.
+    Приложение должно учитывать возможные повторы.
+  category: Контроллеры
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: a2cf94b5-9e81-4711-80f3-2b30d3971591
+  question: Что делает scheduler, когда у Pod заданы resource requests?
+  answer: Ищет узел с достаточными доступными по учёту запрошенными ресурсами и учитывает
+    прочие правила размещения. Requests не гарантируют реальную скорость выполнения.
+  category: Ресурсы
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 7c132932-ceef-41ce-87a3-b4bbba3fa3f9
+  question: Чем CPU request отличается от CPU limit?
+  answer: Request влияет на планирование и долю ресурса, limit ограничивает использование;
+    при достижении CPU limit возможен throttling и рост задержки.
+  category: Ресурсы
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: a8f166c7-229e-4993-9951-798d55ec7730
+  question: Что происходит при превышении memory limit контейнером?
+  answer: Контейнер может быть завершён из-за OOM и перезапущен согласно политике
+    Pod. Нужно смотреть фактическое потребление, лимит и причины роста памяти.
+  category: Ресурсы
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 436338af-4442-40c2-a5d9-8c47bba27cac
+  question: Почему Xmx Java-приложения не должен автоматически равняться memory limit
+    Pod?
+  answer: Кроме heap память занимают metaspace, стеки, direct buffers и нативные структуры.
+    Нужен запас для всего процесса и проверки под нагрузкой.
+  category: Java в Kubernetes
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 7cd1f370-52b1-4d68-b7c1-08acedf3ce93
+  question: Чем liveness probe отличается от readiness probe?
+  answer: Liveness выявляет необходимость перезапуска контейнера; readiness определяет,
+    может ли Pod получать новый сервисный трафик. Плохая readiness не должна без причины
+    приводить к рестарту.
+  category: Probes
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: c4cfc106-2bff-470f-be75-f50e99300464
+  question: Зачем startup probe приложению с долгой инициализацией?
+  answer: Она даёт отдельное окно для старта; пока она не стала успешной, liveness
+    и readiness не выполняются. Это предотвращает преждевременные рестарты.
+  category: Probes
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: fc9ff9b6-8410-4f5e-bf2d-370191ed5b16
+  question: Почему readiness, проверяющая каждую внешнюю зависимость, может усилить
+    аварию?
+  answer: При общей проблеме все Pod могут стать неготовыми, хотя часть запросов могла
+    бы обслуживаться в деградированном режиме. Проверка должна отражать реальную способность
+    принимать трафик.
+  category: Probes
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 95020dea-9efc-4148-8d27-606c8bcb6892
+  question: Что делает RollingUpdate Deployment?
+  answer: Постепенно заменяет старые Pod новыми, управляя доступностью и дополнительными
+    Pod через maxUnavailable и maxSurge. Без правильной readiness бесшовность не гарантирована.
+  category: Релиз
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: b674741e-34fb-442f-a700-90cec4a6be5c
+  question: Как maxUnavailable и maxSurge влияют на обновление?
+  answer: Первый ограничивает число недоступных реплик, второй — число дополнительных
+    сверх желаемого. Значения влияют на скорость и запас ресурсов при rollout.
+  category: Релиз
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: bbc02872-43a8-4c8a-b319-c1d810123853
+  question: Почему сервис может прерывать запросы при rolling update даже с несколькими
+    репликами?
+  answer: Pod может завершиться до дренирования трафика и активных соединений. Нужны
+    корректный SIGTERM, graceful shutdown, достаточное время и согласованная readiness.
+  category: Остановка
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 22017079-2cbc-41e1-a80f-83e703a1ff22
+  question: Что означает terminationGracePeriodSeconds?
+  answer: Срок, который Kubernetes даёт Pod на корректное завершение после запроса
+    остановки, прежде чем принудительно завершить оставшиеся процессы.
+  category: Остановка
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 7d5d9ed2-2099-4814-8f60-47fd45835db6
+  question: Как проверить текущий статус rollout Deployment?
+  answer: Смотреть kubectl rollout status, доступные реплики, Pod и events; затем
+    сверить образ, probes и ресурсы. Успешное применение манифеста ещё не означает
+    успешный rollout.
+  category: Релиз
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: d61ad175-c90f-4e10-98cd-f00a838202a3
+  question: Что такое CrashLoopBackOff?
+  answer: Это задержка между повторными запусками контейнера, который быстро завершается;
+    это симптом, а не первопричина. Нужны предыдущие логи и причина завершения.
+  category: Диагностика
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 558156b3-3aad-4786-8296-b22636f922b5
+  question: Что означает ImagePullBackOff?
+  answer: Кластер не смог получить образ и увеличивает паузы между попытками. Проверяют
+    имя и tag/digest, доступ к registry, credentials и события Pod.
+  category: Диагностика
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: e154787d-b04b-47c4-adb0-7029779b1f53
+  question: Почему Pod может оставаться Pending?
+  answer: Возможны нехватка ресурсов, ограничения размещения, отсутствие подходящего
+    тома или другие условия scheduling. Причину ищут в events и описании Pod.
+  category: Диагностика
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 9c2c0858-a924-4238-a508-d60babf8c51f
+  question: Зачем нужны labels и selectors?
+  answer: Labels помечают объекты; selectors выбирают Pod для контроллеров и Service.
+    Несовпадение selector может оставить сервис без endpoints.
+  category: Метаданные
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: ee30eb2e-64e2-4b3a-ad06-0c04e9e7fc86
+  question: Чем namespace отличается от отдельного кластера?
+  answer: Namespace логически группирует и ограничивает область имён и часть политик
+    внутри кластера; он не создаёт самостоятельную физическую изоляцию.
+  category: Организация
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: ef71615b-77bc-47f8-87b9-26d6a75a03c3
+  question: Как HPA решает, менять ли число реплик?
+  answer: Сопоставляет наблюдаемую метрику с целевой и рассчитывает желаемое число
+    реплик с учётом своих правил. Для CPU-процента важны корректные requests.
+  category: Масштабирование
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: eb467ae8-4fb5-40e9-b39d-b3bd43751908
+  question: Почему HPA не исправит медленный SQL-запрос автоматически?
+  answer: Дополнительные реплики могут увеличить конкуренцию за БД и ухудшить ситуацию.
+    Нужно определить узкое место и пределы зависимостей.
+  category: Масштабирование
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: a8712c2f-b1b2-4b9b-85a0-216eb29324ee
+  question: Зачем PodDisruptionBudget при плановом обслуживании узлов?
+  answer: Он ограничивает число одновременно добровольно вытесненных Pod, сохраняя
+    заданную доступность. Он не защищает от всех видов отказов или неверного приложения.
+  category: Доступность
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 

@@ -1,0 +1,273 @@
+---
+topic: Docker и контейнерные образы
+cards:
+- id: 7d105e4f-d55c-481f-a073-2131bf5e45e5
+  question: Чем контейнер отличается от виртуальной машины?
+  answer: Контейнер изолирует процессы с помощью механизмов ядра и обычно разделяет
+    ядро хоста; виртуальная машина запускает гостевую ОС на виртуализированном оборудовании.
+  category: Основы
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 7da9bf04-20d2-4462-986f-e080fac7c848
+  question: Чем image отличается от container?
+  answer: Image — неизменяемый шаблон файловой системы и метаданных; container — запущенный
+    или остановленный экземпляр image с собственным изменяемым слоем и состоянием.
+  category: Основы
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: fd46d802-a8f7-40c7-88cd-fd07eaca6cc1
+  question: Как namespaces и cgroups участвуют в работе контейнера?
+  answer: Namespaces изолируют видимость процессов, сети и других ресурсов; cgroups
+    учитывают и ограничивают потребление ресурсов. Контейнер не является полноценной
+    границей безопасности сам по себе.
+  category: Изоляция
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 331f276a-0338-42e5-865c-979bf947a83c
+  question: Почему данные в writable layer контейнера не стоит использовать как постоянное
+    хранилище?
+  answer: Этот слой привязан к экземпляру и теряется при его замене. Постоянные данные
+    размещают в volume или внешнем хранилище с понятным резервированием.
+  category: Хранение
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 55950194-77d8-4cd1-bd1e-5eb9270a42dd
+  question: Для чего нужен Dockerfile?
+  answer: 'Он описывает шаги сборки образа: базу, копирование файлов, зависимости,
+    пользователя и запуск. Это делает сборку повторяемой при закреплённых входах.'
+  category: Сборка
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 93667115-9820-4328-8209-4f536fdcc1fb
+  question: Чем ENTRYPOINT отличается от CMD?
+  answer: ENTRYPOINT задаёт основную исполняемую команду, CMD — её аргументы по умолчанию
+    либо команду, если ENTRYPOINT нет. Фактическое поведение зависит от exec или shell
+    формы.
+  category: Запуск
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: cb89783f-eb2a-4c64-87f3-5e68e595bed3
+  question: Почему exec-форма команды запуска полезна для Java-приложения?
+  answer: Она запускает Java как основной процесс без лишней оболочки, что упрощает
+    передачу сигналов и корректное завершение контейнера.
+  category: Запуск
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 146457b0-8efd-4594-95b8-2d58d42be633
+  question: Почему PID 1 в контейнере требует внимания?
+  answer: Главный процесс получает сигналы остановки и отвечает за жизненный цикл;
+    оболочка, которая не передаёт сигнал, может помешать graceful shutdown. При дочерних
+    процессах нужен корректный reaping.
+  category: Запуск
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: cf1c8a5b-29ae-4996-81ca-7f3f9cc58340
+  question: Для чего нужен multi-stage build?
+  answer: Сборка выполняется в одном этапе с инструментами, а в итоговый образ копируют
+    только нужные артефакты. Это уменьшает размер и поверхность атаки.
+  category: Сборка
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 128bde2c-d04e-4f32-b0ca-342319cbacfe
+  question: Почему COPY исходников до загрузки зависимостей может замедлить повторную
+    сборку?
+  answer: Изменение исходников инвалидирует кэш последующих слоёв. Если сначала скопировать
+    файлы зависимостей и выполнить их загрузку, пересборка кода чаще использует кэш.
+  category: Слои
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 15fd5590-a917-4540-bbc7-55e9f24ea35b
+  question: Что делает .dockerignore?
+  answer: Исключает ненужные файлы из build context, уменьшая передачу данных и риск
+    попадания секретов в сборку. Он не удаляет секреты, уже включённые в слои.
+  category: Сборка
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 43e37c33-3edd-4f2b-b210-419cfe7685a3
+  question: Почему нельзя хранить пароль в ARG или RUN Dockerfile?
+  answer: Значение может попасть в метаданные, историю или слои образа и журналы сборки.
+    Для доступа на этапе сборки применяют механизм временных build secrets.
+  category: Секреты
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 97844fa4-96cf-46f3-9f82-1244d1b6fbe8
+  question: Чем tag образа отличается от digest?
+  answer: Tag — изменяемая метка; digest — идентификатор конкретного содержимого.
+    Для воспроизводимого развёртывания надёжнее закреплять digest или неизменяемую
+    политику тегов.
+  category: Версии
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 2b5d81a7-d2de-481f-8894-b8077fd5bfe7
+  question: Почему тег latest опасен для релиза?
+  answer: Он не говорит, какой именно образ запущен, и может указывать на новое содержимое.
+    Это затрудняет воспроизведение и откат.
+  category: Версии
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 6fbada85-adfb-4fa6-8dc5-29b9e61a360c
+  question: Что происходит при docker build с точки зрения слоёв?
+  answer: Инструкции формируют слои и метаданные образа; изменённый вход инвалидирует
+    зависимую часть кэша. Не каждая инструкция соответствует одному файловому слою
+    в современном builder.
+  category: Слои
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 476ef03f-ad7c-4f24-b510-7015a463fbd3
+  question: Как проверить, под каким пользователем работает процесс в контейнере?
+  answer: Посмотреть USER в образе, параметры запуска и фактический uid процесса.
+    Наличие USER в Dockerfile может быть переопределено при запуске.
+  category: Безопасность
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: b2d624a2-0077-4875-8a18-59dae4a2479e
+  question: Зачем запускать контейнер без root там, где возможно?
+  answer: Это уменьшает последствия компрометации и случайных изменений в контейнере,
+    хотя права хоста и политика runtime всё равно важны.
+  category: Безопасность
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 091849e4-7028-45e4-86ff-f124b3b6ba77
+  question: Чем publish порта отличается от EXPOSE в Dockerfile?
+  answer: EXPOSE документирует ожидаемый порт приложения; publish создаёт доступ к
+    порту контейнера через хост. Сам EXPOSE не публикует порт наружу.
+  category: Сеть
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: ac0f234d-21f9-42e3-ab8e-5d45e6edf19a
+  question: Как контейнеры одной Docker-сети находят друг друга?
+  answer: Обычно по имени или alias через встроенное разрешение имён в пользовательской
+    сети; доступность зависит от сети и настроек контейнеров.
+  category: Сеть
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 8df31605-14a2-461a-ac83-d662b763770f
+  question: Что нужно проверить, если контейнер сразу завершился?
+  answer: Код выхода, docker logs, команду запуска, переменные, доступность файлов,
+    права и ограничения памяти. Контейнер живёт, пока работает его главный процесс.
+  category: Диагностика
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 42ae5d35-3b54-4349-afba-4ceea4901ccf
+  question: Почему локально работающий Docker-образ может не запускаться в Kubernetes?
+  answer: В кластере могут отличаться права, архитектура узла, настройки сети, секреты,
+    ресурсы, writable filesystem и команда запуска.
+  category: Совместимость
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 9c752d80-3216-449c-9d88-9136806c468d
+  question: Чем volume отличается от bind mount?
+  answer: Volume управляется Docker и обычно отделён от конкретного пути хоста; bind
+    mount подключает явный путь хоста. Правила хранения и доступа различаются.
+  category: Хранение
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: f009d09e-e9d7-4286-8b40-e83ebadb757f
+  question: Что означает HEALTHCHECK в Dockerfile и равен ли он readiness в Kubernetes?
+  answer: HEALTHCHECK задаёт проверку состояния контейнера для Docker; Kubernetes
+    использует собственные probes. Наличие HEALTHCHECK не создаёт автоматически корректный
+    readiness для Pod.
+  category: Готовность
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 0e6d12a8-8ae2-4af7-9a53-9db7af8dd8f0
+  question: Зачем сканировать базовый образ и зависимости перед релизом?
+  answer: Образ может содержать уязвимые системные пакеты и библиотеки, даже если
+    собственный код не изменился. Результаты нужно оценивать с учётом реальной применимости.
+  category: Безопасность
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: aa818d65-1573-4fa0-a5f3-925cdbded01b
+  question: Как уменьшить размер Java-образа без потери диагностируемости?
+  answer: Использовать подходящий runtime-образ или multi-stage сборку, исключить
+    сборочные инструменты и лишние файлы, но сохранить необходимые CA-сертификаты
+    и возможность диагностики.
+  category: Java в контейнере
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 845d4f2a-e13a-43a8-8f0f-94ee7fd04ec9
+  question: Когда Docker Compose полезен разработчику Java-сервиса?
+  answer: Для локального запуска нескольких связанных контейнеров, например приложения,
+    PostgreSQL и брокера, с описанными сетями и томами. Он не воспроизводит автоматически
+    поведение Kubernetes.
+  category: Локальная среда
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 

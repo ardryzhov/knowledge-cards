@@ -1,0 +1,331 @@
+---
+topic: Интеграционные тесты и Testcontainers
+cards:
+- id: de5f42d2-3df7-40e6-9748-2618cdfabbc9
+  question: Какой риск проверяет интеграционный тест, которого не видит unit-тест
+    сервиса с mocks?
+  answer: 'Совместную работу реальных компонентов: конфигурацию Spring, SQL, транзакции,
+    сериализацию и взаимодействие с брокером.'
+  category: Границы
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 6e39affb-dd80-4bea-8891-17a6ec681f86
+  question: Чем @SpringBootTest отличается от узкого Spring test slice?
+  answer: "@SpringBootTest поднимает широкий ApplicationContext; slice загружает часть
+    приложения под конкретный слой. Выбирают минимальный контекст, достаточный для
+    тестируемого риска."
+  category: Spring
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: c081965a-3834-44cb-ab0c-2b2aa2e336f5
+  question: Что обычно проверяет @DataJpaTest?
+  answer: JPA-сущности, repositories и запросы в ограниченном контексте. Встроенная
+    тестовая БД или откат транзакций по умолчанию могут отличаться от production-сценария.
+  category: Spring Data
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 04628b45-bf0f-4ab4-ab3a-6a7d9e96103f
+  question: Почему H2 не всегда подходит для тестирования PostgreSQL-запросов?
+  answer: Синтаксис, типы, блокировки и функции БД различаются. Для PostgreSQL-специфичного
+    поведения лучше использовать реальный PostgreSQL в тестовом контейнере.
+  category: БД
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: d39fe9fe-533f-4d23-9c1e-d56416fa895f
+  question: Что даёт PostgreSQLContainer из Testcontainers?
+  answer: Поднимает изолированный экземпляр PostgreSQL нужной версии для тестов, позволяя
+    проверять схему, SQL и интеграцию без общей ручной БД.
+  category: Testcontainers
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: a03a9e3d-5fad-40c5-8171-bb14bd6f4459
+  question: Как передать JDBC URL контейнера в Spring-тест?
+  answer: Через поддерживаемую интеграцию Spring Boot/Testcontainers или DynamicPropertySource,
+    чтобы тестовый контекст использовал адрес запущенного контейнера.
+  category: Testcontainers
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: d69febda-ea20-4f17-8b90-116d2748fd55
+  question: Почему тест схемы БД должен применять реальные миграции?
+  answer: Иначе тестовая схема может расходиться с production; миграции проверяют
+    порядок изменений, ограничения и совместимость сущностей.
+  category: БД
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: e5ca5249-5987-4d68-bf25-92cf5bae9acd
+  question: Как проверить unique constraint при конкурирующих вставках?
+  answer: Запустить независимые транзакции с одним бизнес-ключом и проверить, что
+    одна операция отклонена БД и приложение корректно преобразует ошибку.
+  category: Конкуренция
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: acabbe40-5bee-46ca-ab59-813f24d53dd4
+  question: Почему @Transactional на тесте может скрыть ошибку в production-транзакции?
+  answer: Тест сам открывает транзакцию и может объединить вызовы, которые в приложении
+    выполняются отдельно; rollback после теста также меняет наблюдаемое поведение.
+  category: Транзакции
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 34db9a3e-4171-484c-bfee-23b65f733415
+  question: Чем flush отличается от commit в проверке JPA-операции?
+  answer: Flush отправляет SQL в БД внутри текущей транзакции, commit фиксирует её.
+    Ограничения могут сработать при flush, но проверка поведения после commit требует
+    отдельной границы.
+  category: Транзакции
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: cc39ba16-e176-4b92-bd3c-0b24ca91e968
+  question: Как интеграционно проверить optimistic locking через @Version?
+  answer: Загрузить одну сущность в двух независимых контекстах или транзакциях, сохранить
+    первое изменение, затем проверить конфликт второго при flush/commit.
+  category: Конкуренция
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 505c9be5-2ad0-43f1-a0c1-cca2ff63097c
+  question: Зачем тестировать запрос при реальном объёме и структуре данных?
+  answer: Маленькая фикстура может скрыть N+1, плохой план и поведение пагинации.
+    Для производительности нужен отдельный репрезентативный сценарий.
+  category: Производительность
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 0c601d17-6f19-4327-a0d1-d06ba2c456b9
+  question: Когда достаточно mock внешнего сервиса, а когда нужен запущенный stub
+    server?
+  answer: Mock подходит для логики вызывающего метода; stub server проверяет HTTP-клиент,
+    URL, заголовки, сериализацию, таймауты и обработку статусов.
+  category: Внешний HTTP
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 21b7d135-d761-4318-b5ca-6d9831e194b9
+  question: Что проверяет тест обработки HTTP 500 от внешней зависимости?
+  answer: Политику таймаута, ограниченного повтора, логирование и итог для бизнес-операции;
+    нельзя считать любой 500 безопасным для бесконечного retry.
+  category: Внешний HTTP
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 7022bb6d-4e39-4631-b70f-640d62267e16
+  question: Зачем Testcontainers wait strategy?
+  answer: Чтобы дождаться реальной готовности сервиса контейнера, а не только факта
+    запуска процесса. Условие готовности выбирают по протоколу и сценарию.
+  category: Testcontainers
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 498048c7-94ad-4e51-9291-f3c6825251f0
+  question: Почему фиксированный Thread.sleep в интеграционном тесте ненадёжен?
+  answer: На медленном CI он может быть слишком коротким, а локально зря замедляет
+    тест. Лучше ждать конкретное условие с timeout и диагностикой.
+  category: Асинхронность
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 88f81522-881b-41dd-894f-8d7a3c926a47
+  question: Как тестировать Kafka consumer с реальным брокером?
+  answer: Отправить событие, дождаться наблюдаемого изменения в БД или выходного события,
+    проверить offset/повторы в нужном сценарии; не зависеть от произвольного sleep.
+  category: Kafka
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 107552a8-171a-4c7a-aaac-4fae2512e77f
+  question: Как проверить идемпотентность consumer при повторной доставке?
+  answer: Доставить событие с тем же устойчивым идентификатором повторно и проверить,
+    что бизнес-эффект и запись дедупликации не удвоились.
+  category: Kafka и Artemis
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: bc16cee3-7a8b-44a9-8962-ae49fc1ba036
+  question: Как тестировать порядок событий Kafka по одному ключу?
+  answer: Отправить последовательность с одинаковым ключом в выбранный топик и проверить
+    порядок наблюдаемого эффекта при конфигурации consumer; не переносить вывод на
+    разные партиции.
+  category: Kafka
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 11bdd6a1-cb5d-448c-ae16-35f88f47526a
+  question: Что проверить в интеграционном тесте Artemis redelivery?
+  answer: Сбой обработки до ack, повторную доставку, задержку, предел попыток и DLQ
+    по конфигурации. Проверить, что бизнес-эффект не дублируется.
+  category: Artemis
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: d0f53216-73af-4e27-9cb4-26018295b6fc
+  question: Почему отправку события и запись в БД нельзя считать атомарной только
+    из-за одного Spring-теста?
+  answer: Тестовая транзакция может откатить БД, но не внешнего брокера. Нужен отдельный
+    тест outbox или согласованного механизма.
+  category: Транзакции
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: f46807c9-ab43-4b1b-9622-e485fd67e0cd
+  question: Как проверить Transactional Outbox?
+  answer: Сохранить бизнес-изменение и outbox-запись в одной транзакции, проверить
+    откат обеих при ошибке, затем публикацию и возможный повтор без потери события.
+  category: Outbox
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 6c604199-1163-43d8-8b2f-df9e6bb248e6
+  question: Зачем изолировать данные интеграционных тестов?
+  answer: Параллельные запуски и повторные прогоны не должны влиять друг на друга.
+    Используют отдельные схемы, ключи, транзакции или очистку согласно характеру теста.
+  category: Данные
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 6a734a58-03da-42b6-90b5-1d6e60b74e3d
+  question: Когда общая статическая база-контейнер ускоряет suite и какой риск даёт?
+  answer: Один контейнер на класс или suite уменьшает время запуска, но повышает риск
+    загрязнения состояния между тестами. Нужна явная изоляция данных.
+  category: Testcontainers
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 25f3c3dd-0fee-4355-abea-91a3b9d9e2ee
+  question: Почему тест с Testcontainers может работать локально и падать в CI?
+  answer: В CI могут отличаться доступность container runtime, архитектура, сеть,
+    ресурсы и политика registry. Логи контейнера и окружения помогают найти причину.
+  category: CI
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 5851be15-97d8-4613-a3ca-a92fde8ecdbe
+  question: Как проверить, что тест реально использует контейнер, а не локальную БД?
+  answer: Посмотреть эффективный JDBC URL и источник свойств в тестовом контексте,
+    затем намеренно изолировать локальные настройки.
+  category: Диагностика
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: ab9d67dd-3432-4764-b884-bcbafe9d2b37
+  question: Что должен проверять интеграционный тест миграции при старых данных?
+  answer: Применение миграции к предыдущей схеме с представительной выборкой и сохранение
+    инвариантов, а не только создание пустой новой БД.
+  category: Миграции
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 0599f9ba-0b79-46fa-bc1a-7842a159677a
+  question: Почему тест, который публикует событие, не должен завершаться сразу после
+    send?
+  answer: Отправка асинхронна; нужно дождаться подтверждения или наблюдаемого эффекта
+    и проверить результат с timeout.
+  category: Асинхронность
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 45789061-3fc2-401b-affd-62f9541d7f2d
+  question: Как различать интеграцию с реальным брокером и mock listener?
+  answer: Реальный брокер проверяет маршрутизацию, сериализацию, ack и повторы; mock
+    listener проверяет лишь вызов обработчика и его локальную логику.
+  category: Границы
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: bf099d4a-8569-4335-bd54-0283670b5697
+  question: Что проверить при тестировании rollback Spring-транзакции?
+  answer: Создать ситуацию с исключением нужного типа, завершить транзакционную границу
+    и проверить в новой транзакции, какие записи действительно сохранились.
+  category: Транзакции
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: e109f6cb-bf60-4ee0-b037-0d94314dfda6
+  question: Что проверяет @WebMvcTest и чего он обычно не поднимает?
+  answer: Он загружает web slice Spring MVC для проверки контроллера, маршрутизации,
+    валидации и HTTP-ответов; полноценные сервисы и репозитории обычно не загружаются
+    автоматически.
+  category: Spring Web
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 373e5064-47d8-4477-8355-c72bb2d8b764
+  question: Когда @SpringBootTest с RANDOM_PORT полезнее MockMvc?
+  answer: Когда важно проверить реальный запуск встроенного HTTP-сервера и клиентский
+    сетевой путь, а не только MVC-обработку внутри тестового контекста.
+  category: Spring Web
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 

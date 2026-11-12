@@ -1,0 +1,278 @@
+---
+topic: Unit-тесты и JUnit
+cards:
+- id: 6dd86bc3-9ab4-4415-97e2-01253cf5807e
+  question: Какие три части обычно есть у понятного unit-теста?
+  answer: Подготовка условий, действие и проверка результата (Arrange–Act–Assert).
+    Форма не обязательна, но помогает видеть цель теста.
+  category: Структура
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 00b0aa89-4d43-4c08-b265-81ee894bf17f
+  question: Что следует проверять в unit-тесте бизнес-метода?
+  answer: 'Наблюдаемое поведение: результат, исключение и значимые побочные эффекты.
+    Внутренние вызовы проверяют только если они часть контракта.'
+  category: Структура
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 3b8bfd56-09e2-4f5f-8694-d89687cfbb12
+  question: Зачем тесту понятное имя?
+  answer: Оно должно описывать условие и ожидаемый результат, чтобы падение можно
+    было понять без чтения всей реализации.
+  category: Качество
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: c314d6d9-d7d8-48ef-b46c-2a25019a5592
+  question: Чем JUnit Jupiter отличается от JUnit Platform?
+  answer: Jupiter предоставляет модель написания тестов и расширений; Platform запускает
+    тестовые движки и интегрируется с IDE и сборкой.
+  category: JUnit
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 5f32c448-4cb9-4529-a699-f017e62583fe
+  question: Для чего нужны @BeforeEach и @AfterEach?
+  answer: Они выполняют подготовку и очистку вокруг каждого тестового метода. Общие
+    изменяемые данные всё равно могут создавать зависимость между тестами.
+  category: Lifecycle
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 81488f29-7d9a-4f44-a89f-c93d0b646ffb
+  question: Когда используют @BeforeAll?
+  answer: Для дорогой общей подготовки перед всеми тестами класса. По умолчанию метод
+    обычно статический; при PER_CLASS возможен экземплярный вариант.
+  category: Lifecycle
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 9bbfe9c8-1079-4e13-b353-d2c66eed63c8
+  question: Почему общий mutable fixture между тестами опасен?
+  answer: Один тест может изменить состояние для другого, вызвав зависимость от порядка
+    и параллельного запуска.
+  category: Lifecycle
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: beea51fd-a594-4921-b402-270d9687af2e
+  question: Что делает assertThrows?
+  answer: Проверяет тип ожидаемого исключения и возвращает его для проверки сообщения
+    или полей; нужно помещать внутрь только действие, которое должно бросить ошибку.
+  category: Assertions
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: dcf98693-bde3-41b5-90e8-3d2aeb1c2716
+  question: Почему assertThrows только по типу может быть недостаточным?
+  answer: Один и тот же тип исключения может возникнуть раньше и по другой причине.
+    Проверяют код или сообщение ошибки и состояние системы, если оно важно.
+  category: Assertions
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: d7e6035a-a700-4d3e-9370-f36634daf328
+  question: Когда assertAll полезнее нескольких обычных assertions?
+  answer: Когда нужно увидеть все независимые нарушения в одном результате; он собирает
+    ошибки сгруппированных проверок вместо остановки на первой.
+  category: Assertions
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: c06c17ab-af29-41c9-b366-35e6eeec034c
+  question: Чем assertEquals для объекта отличается от проверки его отдельных полей?
+  answer: Он опирается на equals; если equals не реализован или не выражает нужный
+    контракт, лучше явно проверить значимые поля.
+  category: Assertions
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 0c98f2d7-fb29-4a5b-9a47-b9fade1bdbdc
+  question: Для чего нужен @ParameterizedTest?
+  answer: Для выполнения одного тестового сценария на разных входных данных с отдельным
+    результатом на каждый набор аргументов.
+  category: Параметризация
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 505cf1f3-bfea-47b2-b94a-9ceb48d4ecdb
+  question: Когда @CsvSource неудобен по сравнению с @MethodSource?
+  answer: Когда данные сложные, содержат объекты или нуждаются в отдельной подготовке;
+    MethodSource даёт программно заданный поток аргументов.
+  category: Параметризация
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 53ac2d8a-92d5-420e-a365-689973871292
+  question: Зачем тестировать null и пустую коллекцию отдельно?
+  answer: Они могут иметь разную семантику и вызывать разные ветви обработки; контракт
+    должен определить ожидаемый результат для обоих.
+  category: Границы
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: daa51234-fd6a-4016-bb18-4e966a2df26b
+  question: Почему тест даты с LocalDateTime.now() часто нестабилен?
+  answer: Результат зависит от текущего времени и границ суток. Внедрение Clock или
+    явного времени делает тест воспроизводимым.
+  category: Время
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 60c03e8e-b232-4ccb-924c-50a98cc4974b
+  question: Как тестировать случайную генерацию без привязки к конкретному случайному
+    числу?
+  answer: Внедрить источник случайности или seed, либо проверять инвариант результата.
+    Точный подход зависит от контракта функции.
+  category: Детерминированность
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 1f8cddd7-0805-4389-9588-931f72889c4a
+  question: Когда @Nested помогает структуре тестов?
+  answer: Когда поведение удобно группировать по состояниям или методам, сохраняя
+    контекст setup и понятные имена сценариев.
+  category: Организация
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 862b3786-5f4c-4f1c-bf20-e97b8f742335
+  question: Что делает @Tag в JUnit?
+  answer: Помечает тесты для выбора или исключения при запуске, например быстрые и
+    интеграционные. Тег не меняет семантику самого теста.
+  category: Организация
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 416e8571-c020-4e49-bed8-efe72578ac96
+  question: Почему @Disabled не стоит использовать для долгосрочного скрытия падающего
+    теста?
+  answer: Проверка перестаёт защищать поведение. Нужно устранить причину, а временное
+    отключение сопровождать задачей и сроком.
+  category: Организация
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 65f7ee19-1f1a-449a-bdfa-98f361441eed
+  question: Что проверяет assertTimeout и чем опасен preemptive timeout для кода с
+    транзакционным контекстом?
+  answer: Обычный timeout оценивает длительность после выполнения; preemptive запускает
+    код в другом потоке и может потерять thread-bound контекст транзакции или security.
+  category: Таймауты
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 6eab92bd-378e-4ece-9f4e-2a8e141dc8cb
+  question: Что такое assumption в JUnit?
+  answer: Условие, при невыполнении которого тест считается пропущенным, а не проваленным.
+    Подходит для условий среды, но не для маскировки дефектов.
+  category: Организация
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 7f1c7144-f8d0-4051-96cd-fb07dc633674
+  question: Почему порядок выполнения тестов лучше не использовать как зависимость?
+  answer: Фреймворк и параллелизм могут изменить порядок; тесты должны самостоятельно
+    готовить состояние. Явный ordered suite — редкое осознанное исключение.
+  category: Независимость
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: b82b9496-2399-41e6-b585-a235aeda3ba7
+  question: Чем unit-тест чистой функции проще теста Spring-сервиса?
+  answer: Чистая функция не зависит от контейнера, БД и времени; входы и выходы легко
+    контролировать. Сервис требует управления зависимостями и побочными эффектами.
+  category: Стратегия
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: cc122063-bfab-46da-9604-86b4c7130a7e
+  question: Зачем фиксировать регрессионный тест после исправления бага?
+  answer: Он воспроизводит прежний сбой и защищает от его повторного появления; важно
+    проверить, что тест падал до исправления.
+  category: Регресс
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 87790088-ac25-4e13-8243-cb88ad876cf9
+  question: Что такое test fixture?
+  answer: Подготовленное состояние и данные, необходимые тесту. Хорошая фикстура минимальна,
+    понятна и не скрывает существенные условия.
+  category: Данные
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 67c99f93-5c49-4cc8-96a9-b9305ac44235
+  question: Почему тест не должен проверять только количество вызовов внутреннего
+    метода?
+  answer: Рефакторинг может изменить вызовы без изменения поведения, а ошибочный результат
+    остаться незамеченным. Проверка взаимодействия нужна, когда оно часть контракта.
+  category: Качество
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: df121c1e-093d-4966-a00f-da9afc8005ad
+  question: Что меняет @TestInstance(PER_CLASS) в JUnit Jupiter?
+  answer: Один экземпляр тестового класса используется для всех методов, поэтому @BeforeAll
+    может быть нестатическим. При этом изменяемые поля легко создают зависимость между
+    тестами.
+  category: Lifecycle
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 

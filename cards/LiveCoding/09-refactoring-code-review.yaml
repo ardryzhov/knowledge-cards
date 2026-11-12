@@ -1,0 +1,238 @@
+---
+topic: Рефакторинг и code review
+cards:
+- id: 79e3faab-bb27-4c4c-ad52-60f9cdb3a27a
+  question: В проверке `if (age < 18 && age > 65)` пытаются отклонить возраст вне
+    диапазона 18–65. Что исправить?
+  answer: 1) Условия не могут быть истинными одновременно. 2) Для значений вне диапазона
+    нужен OR. 3) Проверить 17,18,65,66.
+  category: Логика
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: |
+    if (age < 18 || age > 65) {
+        throw new IllegalArgumentException("age");
+    }
+- id: 9966ba0e-c4d7-4b54-91c4-c73045e6baf7
+  question: Код `name.charAt(0)` проверяет первую букву. Какой крайний случай пропущен?
+  answer: Пустая строка вызывает StringIndexOutOfBoundsException, null — NPE. Сначала
+    явно проверить обязательность и непустоту, затем первый символ.
+  category: Валидация
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: |
+    if (name == null || name.isEmpty())
+        throw new IllegalArgumentException("name");
+    if (name.charAt(0) == 'Ы')
+        throw new IllegalArgumentException("first letter");
+- id: 19a18784-df0a-4548-98ce-42fe352de837
+  question: В record Person(String name, int age, String rank) метод пишет `person.rank
+    = "X"`. Что исправить?
+  answer: record не позволяет присваивать полю. Вычислить новое звание и вернуть новый
+    Person; контракт метода должен предусматривать возврат значения.
+  category: Records
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    Person withRank(Person p, String rank) {
+        return new Person(p.name(), p.age(), rank);
+    }
+- id: ad45c2e9-efda-4c95-be63-bd8a59831eac
+  question: В сервисе внешний HTTP-вызов выполняется внутри @Transactional. Как уменьшить
+    риск?
+  answer: 1) Оценить, нужна ли сеть внутри атомарной границы. 2) Сократить транзакцию
+    до операций БД, а интеграцию вынести или использовать outbox/saga. 3) Определить
+    неизвестный исход.
+  category: Транзакции
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: e2a2cdd8-57d9-4234-a3b1-719df02148fa
+  question: В цикле по 1000 элементам вызывают метод с REQUIRES_NEW для каждой записи.
+    Что проверить и изменить?
+  answer: 1000 отдельных транзакций и возможное удержание внешнего соединения. Проверить
+    нужную атомарность; при массовой записи рассмотреть batch и ограниченные транзакционные
+    чанки.
+  category: Транзакции
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 0f0a9015-41f5-4798-8117-0649d1386d54
+  question: Контроллер возвращает JPA Entity напрямую. Какие риски в review?
+  answer: Утечка полей и структуры БД, lazy-загрузка и нестабильный API-контракт.
+    Выделить DTO с явно выбранными полями и маппингом.
+  category: API
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: da38dab8-526a-4579-9cc8-066ec7409767
+  question: В коде вызывают Optional.get() без проверки. Как улучшить?
+  answer: 'Явно определить поведение отсутствующего значения: orElseThrow с доменной
+    ошибкой, fallback или другой контракт. Не прятать отсутствие за NoSuchElementException.'
+  category: Optional
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: |
+    User user = repository.findById(id)
+        .orElseThrow(() -> new NotFoundException(id));
+- id: d7e68fa1-bf93-4091-98c9-b48ed8d06106
+  question: В catch(Exception e) только логируют ошибку и возвращают успешный ответ.
+    Что не так?
+  answer: Вызывающий получает ложный успех, хотя операция могла не выполниться. Нужно
+    определить ошибочный результат, rollback и политику повтора; лог не заменяет контракт.
+  category: Ошибки
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: bb6caf5e-cfd4-4a57-a968-4cc862955fcc
+  question: В тесте метода с Clock используют LocalDateTime.now(). Как улучшить дизайн?
+  answer: Внедрить Clock и явно задать ZoneId. Тогда тест устанавливает время, а бизнес-правило
+    проверяется на границе.
+  category: Тестируемость
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    Instant now = clock.instant();
+    // clock передан через конструктор
+- id: 34a681e7-2784-4633-bc69-98b6c29560db
+  question: В HashMap используют объект-ключ и после put меняют поле, участвующее
+    в hashCode. Что может случиться?
+  answer: Поиск по ключу перестанет находить запись в ожидаемой корзине. Сделать ключ
+    неизменяемым или не менять значимые поля после вставки.
+  category: Коллекции
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: d4784adb-7231-4d36-b532-1f221d168253
+  question: В методе подряд идут `if (size > 2) ...; if (size == 1) ...; else ...`.
+    Где риск?
+  answer: else относится ко второму if; при size>2 выполнится первая ветка и затем
+    else, перезаписав результат. Нужна взаимоисключающая цепочка if/else if/else.
+  category: Логика
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    if (size == 1) rank = "Начинающий";
+    else if (size == 2) rank = "Двоих";
+    else if (size > 2) rank = "Почётный";
+- id: 49668734-36d4-467e-bc9e-4a5d174f8239
+  question: Для поиска пользователя вызывают `repository.findAll().stream().filter(...)`.
+    Как улучшить?
+  answer: Фильтрация после загрузки всех строк расходует память и время. Выразить
+    поиск как запрос БД с нужным фильтром и индексом, проверить план.
+  category: БД
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 9cb2a777-70f0-4767-9359-21fe7b13d9e4
+  question: Для каждого заказа вызывают отдельный запрос к пользователю. Какой паттерн
+    проблемы и решение?
+  answer: Это N+1 запросов. В зависимости от сценария использовать join fetch, batch
+    loading или DTO-проекцию; измерить число запросов.
+  category: БД
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 8138ae52-6687-48cb-934c-bd32d37a53b8
+  question: В параллельном stream меняют внешний ArrayList. Что изменить?
+  answer: Общий ArrayList не потокобезопасен. Выразить сбор через collect/toList или
+    использовать подходящий синхронизированный механизм при особой необходимости.
+  category: Потоки
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    List<Result> results = input.parallelStream()
+        .map(this::convert).toList();
+- id: 530d6fbf-77d9-4a37-80d5-e725fba2d38c
+  question: В коде есть несколько одинаковых `if (type.equals(...))` по типам операции.
+    Когда вводить Strategy?
+  answer: Если ветви растут и различаются по бизнес-логике, выделить реализации общего
+    интерфейса и выбор по типу. Для двух коротких стабильных веток if может быть понятнее.
+  category: Дизайн
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 769ee6d9-5791-46dc-946e-2c51b6d2913d
+  question: В методе исключение оборачивают как `new RuntimeException("failed")` без
+    cause. Что исправить?
+  answer: Сохранять исходную причину, иначе теряется стек и контекст диагностики.
+    Новое исключение должно добавлять смысл операции.
+  category: Ошибки
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 'throw new ProcessingException("order " + id, e);'
+- id: be51e49a-c00d-4c5a-8702-9395a013924a
+  question: В коде повторяют HTTP-запрос после любого 4xx. Почему это плохая политика?
+  answer: Большинство 4xx требуют изменения запроса, а повтор только увеличивает нагрузку.
+    Retry нужен для временных ошибок и безопасных или идемпотентных операций по контракту.
+  category: Интеграции
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 4eba5a64-68ab-4de0-b39c-6d55fad287d3
+  question: При code review метода сначала видишь 200 строк. Как начать осмысленную
+    проверку?
+  answer: Определить контракт и границы метода, пройти основной и ошибочный путь,
+    побочные эффекты, транзакцию и тесты. После этого оценить разбиение на функции
+    без механического дробления.
+  category: Ревью
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: d1fcc446-0c17-40d8-a4bd-45122b68bb87
+  question: В запросе SQL склеивают строку с пользовательским input. Что предложить?
+  answer: Параметризованный запрос вместо конкатенации; он отделяет данные от SQL
+    и устраняет SQL injection в этом месте.
+  category: Безопасность
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 'SELECT id FROM users WHERE email = :email;'
+- id: 0faafe2a-3a44-4974-9153-685e00f68a56
+  question: В коде `BigDecimal` создают как `new BigDecimal(0.1)`. Почему результат
+    может удивить?
+  answer: double не хранит 0.1 точно, а конструктор сохраняет его двоичное приближение.
+    Использовать строку или BigDecimal.valueOf(double), если вход уже double.
+  category: Числа
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 'BigDecimal rate = new BigDecimal("0.1");'

@@ -1,18 +1,18 @@
 # LiveCoding: учебные карточки
 
-Набор для коротких ежедневных занятий с телефона на уровне middle/middle+. В карточках с задачей сначала дано условие, затем в `answer` — шаги решения и сложность, а в `code` — реализация. Кодовый блок в приложении прокручивается: строки можно добавлять ради понятности, без искусственного ограничения длины; большие самостоятельные программы в карточку не помещаем. Примеры Java ориентированы на Java 21+, стандартные импорты опущены; фрагменты предполагают окружающий класс и объявленные в условии типы. `draft` означает статус контента до импорта.
+Набор для коротких ежедневных занятий с телефона на уровне middle/middle+. В карточках с задачей сначала дано условие, затем в `answer` — шаги решения и сложность, а в `code` — реализация. Кодовый блок в приложении прокручивается: строки можно добавлять ради понятности, без искусственного ограничения длины; большие самостоятельные программы в карточку не помещаем. Примеры Java ориентированы на Java 21+, стандартные импорты опущены; фрагменты предполагают окружающий класс и объявленные в условии типы. Каждая подтема собрана в один YAML для последующего импорта.
 
 | Подтема | Карточек | Файлы |
 |---|---:|---|
-| Подход к задаче и сложность | 24 | [YAML](01-problem-solving-complexity/01-01-problem-solving-complexity-draft.yaml) |
-| Паттерны решения задач | 25 | [YAML](02-solution-patterns/01-02-solution-patterns-draft.yaml) |
-| Популярные алгоритмические задачи | 20 | [основной набор](03-common-algorithm-tasks/01-03-common-algorithm-tasks-draft.yaml) · [дополнения](03-common-algorithm-tasks/02-03-common-algorithm-tasks-essential-additions-draft.yaml) |
-| Java и Collections: практические задачи | 19 | [основной набор](04-java-collections-tasks/01-04-java-collections-tasks-draft.yaml) · [дополнения](04-java-collections-tasks/02-04-java-collections-tasks-essential-additions-draft.yaml) |
-| Stream API: практические задачи | 18 | [YAML](05-stream-api-tasks/01-05-stream-api-tasks-draft.yaml) |
-| SQL-задачи PostgreSQL | 20 | [YAML](06-sql-tasks/01-06-sql-tasks-draft.yaml) |
-| Многопоточность: задачи по коду | 17 | [YAML](07-concurrency-code/01-07-concurrency-code-draft.yaml) |
-| Чтение кода и debugging | 21 | [основной набор](08-code-reading-debugging/01-08-code-reading-debugging-draft.yaml) · [дополнения](08-code-reading-debugging/02-08-code-reading-debugging-essential-additions-draft.yaml) |
-| Рефакторинг и code review | 20 | [YAML](09-refactoring-code-review/01-09-refactoring-code-review-draft.yaml) |
+| Подход к задаче и сложность | 24 | [карточки](01-problem-solving-complexity.yaml) |
+| Паттерны решения задач | 25 | [карточки](02-solution-patterns.yaml) |
+| Популярные алгоритмические задачи | 20 | [карточки](03-common-algorithm-tasks.yaml) |
+| Java и Collections: практические задачи | 19 | [карточки](04-java-collections-tasks.yaml) |
+| Stream API: практические задачи | 18 | [карточки](05-stream-api-tasks.yaml) |
+| SQL-задачи PostgreSQL | 20 | [карточки](06-sql-tasks.yaml) |
+| Многопоточность: задачи по коду | 17 | [карточки](07-concurrency-code.yaml) |
+| Чтение кода и debugging | 21 | [карточки](08-code-reading-debugging.yaml) |
+| Рефакторинг и code review | 20 | [карточки](09-refactoring-code-review.yaml) |
 
 **Итого:** 184 карточки. В каждой подтеме не более 40; короткие ответы важнее заполнения квоты.
 

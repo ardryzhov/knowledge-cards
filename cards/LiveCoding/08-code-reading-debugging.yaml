@@ -1,0 +1,227 @@
+---
+topic: Чтение кода и debugging
+cards:
+- id: 4c7bb689-6336-402a-b474-8044d61d9aab
+  question: 'Что произойдёт: List<Integer> a = List.of(1, 2); a.add(3);?'
+  answer: 1) List.of создаёт неизменяемый список. 2) add выбросит UnsupportedOperationException.
+    3) Для изменения нужна изменяемая копия.
+  category: Коллекции
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: c2165c92-7a1f-4841-913d-f03d2f7c6ea1
+  question: 'Что произойдёт: List<String> a = Arrays.asList("a", "b"); a.set(0, "x");
+    a.add("c");?'
+  answer: '1) set сработает: список фиксированного размера. 2) add выбросит UnsupportedOperationException.
+    Список связан с исходным массивом, если он был передан.'
+  category: Коллекции
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 339e94ad-6b3b-4628-ae4c-c3ac3640c3a2
+  question: 'Что вернёт: List<Integer> a = new ArrayList<>(List.of(10,20,30)); a.remove(1);?'
+  answer: Вызовется remove(int index), он удалит элемент по индексу 1 и вернёт 20.
+    Чтобы удалить значение Integer(1), нужен remove(Object).
+  category: Перегрузка
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 6d91667e-2cab-4e94-90e8-edf36a843e76
+  question: 'Что напечатает: String s = "a"; s.concat("b"); System.out.println(s);?'
+  answer: Напечатает a. String неизменяем; concat возвращает новую строку, результат
+    нужно присвоить.
+  category: Строки
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 4bc3d20c-27ef-4c77-af6b-f0e79acda1b6
+  question: 'Что напечатает: Stream.of(1, 2).map(x -> { System.out.print(x); return
+    x; });?'
+  answer: Ничего. map — промежуточная ленивая операция; без терминальной операции
+    поток не выполняется.
+  category: Stream
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 832b2dc0-bbb7-42d7-a9d4-f32112195d07
+  question: Почему Stream.of(1,2).collect(Collectors.toMap(x -> 0, x -> x)) падает?
+  answer: Оба элемента дают ключ 0, а toMap без merge-функции бросает IllegalStateException
+    при повторе ключа.
+  category: Stream
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 60abf5fc-3ef3-4340-a72e-aa099fbba1fc
+  question: 'Что произойдёт: Map.of("a", null);?'
+  answer: Map.of не допускает null ключи и значения, поэтому при создании будет NullPointerException.
+  category: Коллекции
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 84381302-7f81-4360-b6a9-d63e82455e7c
+  question: 'Что произойдёт: Optional.of(null);?'
+  answer: Будет NullPointerException; для допустимого null используют Optional.ofNullable.
+  category: Optional
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: f28c3a6b-22f9-4981-880b-eaecca1039e6
+  question: Почему Optional.of("x").orElse(expensive()) вызывает expensive()?
+  answer: Аргументы метода вычисляются до вызова orElse. Для ленивого запасного значения
+    используют orElseGet(() -> expensive()).
+  category: Optional
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: bec805d3-60cd-4453-b2ff-2f10be30ffde
+  question: Что даст new BigDecimal("2.0").equals(new BigDecimal("2.00")) и почему?
+  answer: 'false: equals учитывает значение и scale. compareTo вернёт 0 для равного
+    числового значения; смешивать эти критерии в ключах осторожно.'
+  category: Числа
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 3a0c9ab5-c10d-4531-94cc-26d7968187d6
+  question: Есть `Data data = new Data(new ArrayList<>());`, где `record Data(List<String>
+    names) {}`. Что сделает `data.names().add("x")`?
+  answer: Если список изменяемый, его содержимое изменится. record не обеспечивает
+    глубокую неизменяемость; нужна защитная копия.
+  category: Records
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    record Data(List<String> names) {
+        Data {
+            names = List.copyOf(names);
+        }
+    }
+- id: 6ab3e41c-e8be-4132-8fd7-9965405851b2
+  question: Почему метод @Transactional внутри того же Spring-класса может выполниться
+    без своей транзакционной настройки?
+  answer: Вызов this.method() обходит proxy-based перехват Spring. Нужен вызов через
+    управляемую границу или другая архитектура.
+  category: Spring
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: eabf685d-ef15-4300-99cd-b2fd00815d22
+  question: Что вернёт List.of(1,2,3).stream().filter(x -> x > 5).findFirst()?
+  answer: Optional.empty(). Фильтр не оставит элементов; вызов get() после этого бросил
+    бы NoSuchElementException.
+  category: Stream
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: fceee4cb-4358-488b-b4c4-4bf876646dc8
+  question: Что делает IntStream.range(1, 4).sum()?
+  answer: 'Возвращает 6: range включает 1 и исключает 4, то есть элементы 1, 2, 3.'
+  category: Stream
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 0e2b684b-188a-4db5-b9d9-71503ccc64b0
+  question: Почему код `if (map.containsKey(k)) map.put(k, map.get(k)+1)` небезопасен
+    при общей HashMap?
+  answer: HashMap не потокобезопасна, а проверка и обновление неатомарны. Нужны ConcurrentHashMap
+    и атомарный merge/compute либо блокировка.
+  category: Concurrency
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 5344697c-9c6a-4ea7-b438-d6ef00232415
+  question: 'Что не так: catch (InterruptedException e) { } в worker?'
+  answer: Прерывание потеряно, worker может продолжить работу вопреки запросу остановки.
+    Нужно пробросить исключение или восстановить флаг и завершить цикл.
+  category: Concurrency
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: |
+    catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        return;
+    }
+- id: 859f92dd-2cda-45d2-9057-7438aeedfea9
+  question: Почему @Transactional(readOnly = true) не является защитой от любого UPDATE?
+  answer: Это подсказка для фреймворка/драйвера и возможная оптимизация, а не универсальный
+    запрет записи. Реальное поведение зависит от БД и конфигурации.
+  category: Spring
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 78a511bd-1668-487f-849a-453ddff54186
+  question: Что произойдёт при Map<String,Integer> m = new HashMap<>(); m.put("x",
+    null); m.getOrDefault("x", 5)?
+  answer: 'Вернётся null: ключ присутствует и связан с null. getOrDefault возвращает
+    запасное значение только при отсутствии ключа.'
+  category: Коллекции
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 0e600f9f-6c2c-45bf-9dbc-42f3d91ef4a4
+  question: Почему `a == b` для двух Integer не подходит для проверки равенства значений?
+  answer: "== сравнивает ссылки; часть небольших значений кэшируется, поэтому тест
+    может случайно проходить. Для значений используют equals или unboxing с учётом
+    null."
+  category: Числа
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 6795e137-320e-42d9-9a54-dd163848b4a0
+  question: 'Что произойдёт: List.of(1, 2).stream().toList().add(3);?'
+  answer: Stream.toList возвращает неизменяемый список; add выбросит UnsupportedOperationException.
+  category: Stream
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: d0ef7dee-7f9b-4163-a952-3bb364977605
+  question: Дан обычный PostgreSQL `SELECT ... JOIN ... WHERE ...` без FOR UPDATE.
+    Достаточно ли его самого, чтобы показать deadlock между двумя транзакциями?
+  answer: Нет. Нужны конкретные конкурирующие действия и порядок несовместимых блокировок.
+    Обычный SELECT берёт AccessShareLock на таблицы и не блокирует строки; он может
+    участвовать в более сложном deadlock с DDL, но один запрос этого не показывает.
+  category: SQL и блокировки
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 

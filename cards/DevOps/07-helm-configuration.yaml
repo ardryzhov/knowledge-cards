@@ -1,0 +1,246 @@
+---
+topic: Helm и конфигурация приложения
+cards:
+- id: 8ba6cb54-6b74-405c-86c3-e766004f684a
+  question: Что такое Helm chart?
+  answer: Пакет шаблонов Kubernetes-ресурсов, значений и метаданных для установки
+    приложения. Chart помогает повторно использовать конфигурацию между средами.
+  category: Helm
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: f95a402e-e57f-4542-8154-d5b99db1ed5a
+  question: Чем chart отличается от release?
+  answer: Chart — пакет описания ресурсов; release — установленный экземпляр chart
+    с конкретными values и историей изменений.
+  category: Helm
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 0c571531-499c-49df-a9a9-ef8691046b30
+  question: Для чего нужны Chart.yaml, values.yaml и templates?
+  answer: Chart.yaml хранит метаданные chart, values.yaml — значения по умолчанию,
+    templates — шаблоны итоговых Kubernetes-манифестов.
+  category: Структура chart
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 176b1d3f-c674-4193-a7c7-64a2dbdbfd9a
+  question: Что делает helm template?
+  answer: Рендерит манифесты локально из chart и values, позволяя увидеть итог до
+    применения. Это не подтверждает, что ресурсы успешно запустятся в кластере.
+  category: Проверка
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: dc9bf3cf-069c-451c-99ef-fcfb2da90c6b
+  question: Чем helm lint отличается от проверки готовности приложения?
+  answer: Lint проверяет структуру и распространённые ошибки chart; готовность приложения
+    зависит от ресурсов кластера, образа, конфигурации и работы сервиса.
+  category: Проверка
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 20f04975-0eb8-419f-bf9c-259bb14e9bea
+  question: Как values для разных сред влияют на итоговый Deployment?
+  answer: Шаблоны подставляют значения выбранных файлов и переопределений. Нужно просматривать
+    итоговый manifest, потому что порядок и правила слияния влияют на результат.
+  category: Values
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 83db2e59-86e9-482e-8e6d-7c41e8543e8a
+  question: Почему секрет нельзя помещать в обычный values.yaml в Git?
+  answer: Values может попасть в историю репозитория, вывод helm и артефакты релиза.
+    Секреты передают утверждённым механизмом с ограниченными правами.
+  category: Секреты
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: ee2fb1d1-8778-4531-8bac-85df907fe926
+  question: Что проверить перед helm upgrade в production?
+  answer: Версию chart и образа, итоговые манифесты и diff, миграции, права, ресурсы,
+    совместимость и план отката.
+  category: Релиз
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: f2917f2d-4dd8-422b-9c68-21e0bd3f27ea
+  question: Что делает helm rollback и чего он не откатывает автоматически?
+  answer: Возвращает release к предыдущей ревизии манифестов. Изменения данных, миграции
+    БД и внешние побочные эффекты требуют отдельного плана.
+  category: Откат
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 5a3a0622-e10f-4f12-a154-8b10a86d5778
+  question: Почему helm upgrade может пройти успешно, а приложение остаться неисправным?
+  answer: Применение ресурсов не доказывает корректность бизнес-логики; нужно проверять
+    rollout, probes, логи и пользовательский сценарий.
+  category: Проверка
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 9e13e816-7788-4580-be2f-1714d192fb95
+  question: Чем ConfigMap отличается от Secret в Kubernetes?
+  answer: ConfigMap хранит несекретные настройки, Secret предназначен для чувствительных
+    значений и иной обработки доступа. Secret сам по себе не означает шифрование данных
+    в etcd.
+  category: Kubernetes конфигурация
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 8134ffe6-4a97-4102-ad3f-a897099629e0
+  question: Как приложение получает значения ConfigMap?
+  answer: 'Например через переменные окружения или смонтированные файлы. Поведение
+    при изменении различается: env в существующем Pod не обновляются.'
+  category: Kubernetes конфигурация
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 64ca79aa-460c-4540-8c66-860abcbb094e
+  question: Почему изменение ConfigMap не всегда вызывает перезапуск Deployment?
+  answer: Шаблон Pod не изменился, а Deployment реагирует на изменение своего Pod
+    template. Часто применяют изменение аннотации с checksum или явный rollout.
+  category: Обновление конфигурации
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 8ad301f4-5f47-44d7-b7d4-d11daddb2784
+  question: Какие уровни конфигурации обычно есть у Spring Boot?
+  answer: Например файлы приложения, переменные окружения, системные свойства и аргументы
+    запуска; приоритет определяется правилами Spring Boot. Для конкретного случая
+    нужно проверить фактический источник свойства.
+  category: Spring Boot
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: ad45ee1a-2fac-4fd5-9dda-42f1d8471e08
+  question: Как обнаружить, что production использует не тот профиль Spring?
+  answer: Проверить активные профили, источники конфигурации, переменные Pod, параметры
+    запуска и безопасную диагностику эффективных настроек.
+  category: Spring Boot
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 2865ddd4-160d-4249-afc7-4649fb560e28
+  question: Почему нельзя полагаться на значение по умолчанию для критичной конфигурации?
+  answer: Если переменная не передана, приложение может стартовать с неверным адресом,
+    таймаутом или режимом. Критичные параметры проверяют при запуске.
+  category: Качество конфигурации
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 05b413a3-b35c-4c1d-9da7-e10f95ed34bb
+  question: Как настроить изменение конфигурации без пересборки образа?
+  answer: Вынести параметры среды в ConfigMap, Secret или внешний config service и
+    передавать их при запуске; предусмотреть применение изменений и rollback.
+  category: Качество конфигурации
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: d344f62f-eaa3-449e-9ca5-2a7fdc308342
+  question: Почему тип значения в values.yaml важен?
+  answer: YAML различает числа, строки и boolean; неверный тип может сломать шаблон
+    или изменить итоговый manifest. Полезны schema и проверка рендера.
+  category: Values
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: ae8eab46-e0db-497e-8e58-92076f5ff7c3
+  question: Что такое Helm dependency?
+  answer: Другой chart, используемый как зависимость основного. Нужно контролировать
+    версии и понимать, какие ресурсы он добавляет.
+  category: Зависимости
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 85f100af-79a9-4905-9627-8f9eb85a5622
+  question: Почему изменение общего chart может затронуть сервисы с разными values?
+  answer: Шаблоны используются несколькими release; изменение логики рендера может
+    проявиться только при определённой комбинации значений. Нужны тесты ключевых вариантов.
+  category: Зависимости
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 6d67ece0-1920-429a-b58f-9478783935f4
+  question: Зачем хранить конфигурацию релиза в Git?
+  answer: Это делает изменения обозримыми и воспроизводимыми, помогает ревью и расследованию
+    дрейфа. Секретные значения хранят отдельно безопасным способом.
+  category: Управление
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 03d0b447-1180-49c8-b198-9d776c5efa42
+  question: Как проверить, что параметр values действительно попал в работающий Pod?
+  answer: Сопоставить values, результат helm template или manifest release, spec Pod
+    и фактическую конфигурацию процесса без раскрытия секретов.
+  category: Диагностика
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: df7d749e-61aa-47a4-95dd-73669366080a
+  question: Когда Kustomize удобнее Helm?
+  answer: Когда достаточно декларативных наложений на YAML без пакетной системы и
+    шаблонной логики. Выбор зависит от сложности вариаций и стандартов команды.
+  category: Инструменты
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: dbf442b4-6dd5-4f80-a07d-3b3bedc91937
+  question: Почему Helm chart не должен содержать все бизнес-настройки как неограниченный
+    список env?
+  answer: Без схемы, документации и проверки обязательных параметров появляются скрытые
+    зависимости и ошибки между средами. Значения должны быть типизированы и описаны.
+  category: Дизайн конфигурации
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 

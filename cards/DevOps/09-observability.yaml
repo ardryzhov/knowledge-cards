@@ -1,0 +1,307 @@
+---
+topic: 'Наблюдаемость: метрики, логи и трассировка'
+cards:
+- id: db723cb9-36e9-4ae3-bf6e-9a720ace6d98
+  question: Чем метрики, логи и трассировка дополняют друг друга?
+  answer: Метрики показывают тенденции и масштаб, логи — конкретные события, трассировка
+    — путь одного запроса через сервисы. Вместе они сокращают время поиска причины.
+  category: Основы
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 668d2355-a75f-4a1c-ab15-eed3159a511a
+  question: Какие четыре показателя стоит видеть для HTTP-сервиса?
+  answer: Поток запросов, долю ошибок, задержку и насыщение ресурсов. Конкретные метрики
+    и пороги связывают с пользовательским сценарием.
+  category: Метрики
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: db982db7-9345-4a49-8558-735488200878
+  question: Чем counter отличается от gauge?
+  answer: Counter только растёт между сбросами процесса и удобен для количества событий;
+    gauge может расти и снижаться, отражая текущее состояние, например размер очереди.
+  category: Prometheus
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: ca285a4f-f6f8-4ce0-82bb-100e546b4edf
+  question: Когда histogram полезнее одного среднего времени ответа?
+  answer: Когда нужно увидеть распределение задержек, хвосты и долю запросов ниже
+    порога. Bucket-границы выбирают под SLO.
+  category: Prometheus
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 786b56d1-5912-4e09-80b0-ef73cc931022
+  question: Почему percentile нельзя корректно усреднять между Pod?
+  answer: Процентили отдельных распределений не складываются напрямую. Для общей оценки
+    используют исходные наблюдения или агрегируемые histogram buckets.
+  category: Метрики
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 884b37a2-3ab7-4c49-93c4-26470f99d77e
+  question: Что такое label cardinality и почему userId опасен как label?
+  answer: Каждая комбинация labels создаёт отдельный временной ряд. Уникальный userId
+    резко увеличит число рядов, память и стоимость хранения.
+  category: Prometheus
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 26470f3c-26ba-498d-982a-fed3fd85deda
+  question: Для чего rate() применяют к counter?
+  answer: Он оценивает скорость роста счётчика за окно и учитывает сбросы в типичных
+    сценариях. Прямое значение счётчика мало говорит о текущей интенсивности.
+  category: PromQL
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: c59a7b2c-a4a7-440f-9a4b-eb69f8f5055f
+  question: Почему график среднего CPU не показывает все проблемы с задержкой?
+  answer: Запросы могут ждать БД, сеть, блокировки или испытывать CPU throttling короткими
+    всплесками. Нужны метрики критического пути и ресурса.
+  category: Диагностика
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: dd9d57a3-f640-49fb-8062-cd6e7df68de5
+  question: Что означает SLI?
+  answer: Измеряемый показатель качества сервиса, например доля успешных запросов
+    или задержка определённой операции.
+  category: SLO
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: fadb0ba1-edd6-432a-bb37-ffdf8e3ae4db
+  question: Чем SLO отличается от SLA?
+  answer: SLO — целевой уровень измеряемого качества, SLA — договорное обязательство
+    с условиями. Внутренний SLO часто выбирают строже SLA.
+  category: SLO
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 94e7e9dc-e4c3-4d7e-aa0e-bcb1f1de9428
+  question: Что такое error budget?
+  answer: Допустимое отклонение от SLO за период. Его используют для решений о скорости
+    релизов и работе над надёжностью.
+  category: SLO
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 2725ecc7-b661-4bcc-a0ad-fce745628ced
+  question: Когда alert должен будить дежурного?
+  answer: Когда есть значимое воздействие на пользователей или близкое нарушение SLO
+    и требуется немедленное действие. Алерт без понятного действия создаёт шум.
+  category: Алертинг
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 876cda74-2428-45fd-834a-5bbeca0fa470
+  question: Почему алерт только по CPU часто шумный?
+  answer: Высокий CPU может быть нормой при нагрузке, а серьёзный отказ возможен при
+    низком CPU. Порог надо связать с насыщением и пользовательским влиянием.
+  category: Алертинг
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: fccefecd-63e6-4586-b0d2-cc2ebbbc5777
+  question: Какие метрики нужны для Kafka consumer?
+  answer: Lag и возраст необработанных сообщений, скорость обработки, ошибки и повторы;
+    один lag не показывает, успевает ли бизнес-сценарий.
+  category: Очереди
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 4c6a064f-68ba-4f4c-a64a-0f3c95dc5707
+  question: Какие метрики нужны для Artemis-очереди?
+  answer: Число и возраст ожидающих сообщений, скорость поступления и обработки, redelivery,
+    DLQ и состояние broker.
+  category: Очереди
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: d7b91358-80cc-4930-9c6a-edafabcce565
+  question: Почему структурированные логи удобнее произвольного текста?
+  answer: Поля времени, уровня, сервиса, операции и traceId можно надёжно фильтровать
+    и агрегировать без хрупкого парсинга строк.
+  category: Логи
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: a8506af4-de18-4d86-9d4c-39ff1f4ec45f
+  question: Что такое correlation ID и зачем он нужен?
+  answer: Идентификатор связывает события одного запроса или бизнес-операции между
+    сервисами. Его передают через границы вызовов и сообщений по согласованному контракту.
+  category: Логи
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: f8ea8e8f-7ec1-405a-a12d-0097d3f8e200
+  question: Чем traceId отличается от spanId?
+  answer: TraceId объединяет весь путь запроса; spanId обозначает отдельный участок
+    работы внутри trace. Связи parent-child показывают вложенность.
+  category: Трассировка
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: ac017f3e-67c3-496d-9112-4ed47ac2ffbe
+  question: Почему трассировка может не показывать каждый запрос?
+  answer: Из-за sampling и ограничений экспорта. Для редких критических ошибок может
+    потребоваться отдельная политика sampling и корректные логи.
+  category: Трассировка
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: fca18dc8-8f41-4661-b35d-b72dd7ab8aac
+  question: Какие поля нельзя записывать в технический лог?
+  answer: Пароли, токены, ключи и избыточные персональные данные. Для диагностики
+    нужны идентификаторы и безопасный контекст, соответствующий политике организации.
+  category: Безопасность
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: b7a0414c-2f2c-47d5-9df3-f8a7392a6d81
+  question: Почему высокие объёмы логов могут ухудшить работу сервиса?
+  answer: Формирование и отправка логов тратят CPU, диск и сеть; при синхронной записи
+    могут увеличить задержку. Нужны уровни и лимиты.
+  category: Логи
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 4dfee223-8aba-463c-9bbd-8c010cb648f7
+  question: Как проверить, что новый релиз не ухудшил качество?
+  answer: Сравнить ошибки, задержку, насыщение и бизнес-метрики с базой на сопоставимом
+    трафике; учитывать прогрев и долю canary.
+  category: Релиз
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: 3f12c616-5f92-4c7c-89ee-13f449556bca
+  question: Чем health check отличается от мониторинга пользовательского сценария?
+  answer: Health check показывает локальную способность процесса или Pod работать;
+    синтетический или реальный пользовательский путь проверяет результат через несколько
+    зависимостей.
+  category: Мониторинг
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: 2cef0f88-b4f4-49b9-8dff-8de59b6e09c0
+  question: Почему метрика «сервис доступен» без определения успешного запроса неоднозначна?
+  answer: 200 от health endpoint может сочетаться с ошибками основной операции. Нужны
+    граница наблюдения, набор операций и правила успеха.
+  category: SLO
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 4a445e38-c92f-4f31-86ed-4dcb62eedf07
+  question: Как обнаружить CPU throttling контейнера?
+  answer: Сопоставить лимит CPU, метрики throttled periods/time, использование и задержку
+    приложения. Высокая задержка при умеренном среднем CPU не исключает throttling.
+  category: Ресурсы
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 068b5774-d0a4-4b21-b26b-9a9704c9f49e
+  question: Как отличить рост heap Java от утечки памяти по метрикам?
+  answer: Смотреть память после GC, частоту и длительность сборок, нагрузку и тренд
+    во времени; устойчивый рост удерживаемых объектов требует heap dump и анализа
+    ссылок.
+  category: Java
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: de1606dc-3d1c-4678-93e0-8db59a58696b
+  question: Что должен содержать полезный dashboard для релиза?
+  answer: Версию, ошибки и задержку ключевых операций, трафик, насыщение, состояние
+    зависимостей и ссылки на логи или traces; графики должны отвечать на вопрос о
+    пользовательском влиянии.
+  category: Дашборды
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: medium
+  code: 
+- id: eec2efd0-183d-4559-8732-e95c2da3b6e7
+  question: Почему отсутствие данных в графике нельзя считать нулём ошибок?
+  answer: Сбор метрик может не работать, target может исчезнуть или label измениться.
+    Нужны проверки доступности источников наблюдения.
+  category: Надёжность мониторинга
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: hard
+  code: 
+- id: 2f384cff-c510-4f05-acb5-42a12407422f
+  question: Как Prometheus обычно получает метрики приложения?
+  answer: Он периодически опрашивает настроенные HTTP endpoints и сохраняет временные
+    ряды; targets могут обнаруживаться динамически. Пропущенный scrape требует отдельной
+    диагностики.
+  category: Prometheus
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
+- id: ca4d483e-19ef-45b2-931f-4f1f1c934680
+  question: Какую роль обычно играет Grafana рядом с Prometheus?
+  answer: Grafana строит панели и запросы к источнику метрик, а Prometheus собирает
+    и хранит временные ряды. Панель не заменяет настройку сбора и алертов.
+  category: Дашборды
+  context: 
+  hint_1: 
+  hint_2: 
+  difficulty: easy
+  code: 
